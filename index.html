@@ -1,57 +1,907 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>MegaCity — 3D Townscaper-style</title>
-  <link rel="stylesheet" href="./style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🌆 MEGA CITY 3D - TOWNSCAPER STYLE</title>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', Roboto, sans-serif;
+    user-select:none;
+}
+body{
+    background:#081823;
+    overflow:hidden;
+    touch-action:none;
+}
+.game{
+    width:100vw;
+    height:100vh;
+    position:relative;
+}
+canvas{
+    width:100%;
+    height:100%;
+    display:block;
+    touch-action:none;
+    cursor:grab;
+}
+canvas:active{cursor:grabbing}
+
+.ui{
+    position:fixed;
+    bottom:15px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:10px;
+    background:rgba(15,35,50,.95);
+    backdrop-filter:blur(10px);
+    padding:10px 20px;
+    border-radius:40px;
+    color:#fff;
+    font-size:clamp(14px,4vw,20px);
+    z-index:10;
+    border:1px solid #ffffff30;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:95%;
+}
+.ui div{
+    background:rgba(0,0,0,.3);
+    padding:6px 14px;
+    border-radius:30px;
+    white-space:nowrap;
+}
+
+.menu-left{
+    position:fixed;
+    top:50%;
+    left:10px;
+    transform:translateY(-50%);
+    width:min(320px,90vw);
+    max-height:80vh;
+    background:rgba(10,28,40,.95);
+    backdrop-filter:blur(10px);
+    border-radius:25px;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    z-index:10;
+    border:1px solid #ffffff20;
+}
+.menu-left h2{
+    color:#fff;
+    text-align:center;
+    font-size:clamp(16px,4vw,20px);
+}
+.categories{
+    display:flex;
+    flex-wrap:wrap;
+    gap:5px;
+    justify-content:center;
+}
+.categories button{
+    flex:1 0 auto;
+    min-width:60px;
+    padding:6px;
+    border-radius:20px;
+    border:none;
+    cursor:pointer;
+    background:#ffffff20;
+    color:#fff;
+    font-size:clamp(12px,3vw,14px);
+}
+.categories button.active{
+    background:#ffb84d;
+    color:#000;
+}
+.list{
+    flex:1;
+    overflow:auto;
+    scrollbar-width:thin;
+    scrollbar-color:#4a9ec0 #1f3f55;
+}
+.item{
+    background:rgba(255,255,255,.08);
+    margin-bottom:6px;
+    padding:10px;
+    border-radius:18px;
+    color:#fff;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:clamp(12px,3vw,14px);
+}
+.item.selected{
+    outline:2px solid #ffb84d;
+    background:rgba(255,184,77,.15);
+}
+.item-icon{
+    font-size:24px;
+}
+
+.menu-right{
+    position:fixed;
+    top:50%;
+    right:10px;
+    transform:translateY(-50%);
+    background:rgba(10,28,40,.95);
+    backdrop-filter:blur(10px);
+    border-radius:25px;
+    padding:15px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    z-index:10;
+    border:1px solid #ffffff20;
+    max-width:min(200px,40vw);
+}
+.menu-right button{
+    padding:12px;
+    font-size:clamp(14px,3.5vw,16px);
+    border-radius:25px;
+    border:none;
+    cursor:pointer;
+    background:#ffffff20;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    transition:0.2s;
+}
+.menu-right button:hover{
+    background:#ffffff40;
+    transform:translateX(-3px);
+}
+.menu-right button.collect{
+    background:#2e7d3240;
+    border:1px solid #4caf50;
+}
+.menu-right button.delete{
+    background:#b71c1c40;
+    border:1px solid #f44336;
+}
+.menu-right button:active{
+    transform:scale(0.98);
+}
+
+.info{
+    position:fixed;
+    top:10px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(10,28,40,.95);
+    backdrop-filter:blur(10px);
+    padding:10px 20px;
+    border-radius:30px;
+    color:#fff;
+    z-index:10;
+    font-size:clamp(14px,4vw,18px);
+    border:1px solid #ffffff30;
+    white-space:nowrap;
+    max-width:90%;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+</style>
 </head>
+
 <body>
-  <div id="app">
-    <div id="hud">
-      <div id="topRow">
-        <div id="money">💰 0</div>
-        <div id="population">👥 0</div>
-        <div id="income">📈 0</div>
-      </div>
+<div class="game">
+<canvas id="c"></canvas>
 
-      <div id="controls">
-        <button id="buildBtn" class="mode active">🏗 Строить</button>
-        <button id="roadBtn" class="mode">🛣 Дорога</button>
-        <button id="deleteBtn" class="mode">❌ Удалить</button>
-        <button id="upgradeBtn">⬆️ Улучшить</button>
-        <button id="waterBtn">🌊 Вода/Мост</button>
-        <button id="saveBtn">💾 Сохранить</button>
-        <button id="loadBtn">📂 Загрузить</button>
-        <button id="leaderBtn">🏆 Рейтинг</button>
-        <button id="resetBtn">🔄 Новый город</button>
-      </div>
-    </div>
+<div class="info" id="info">🏙️ MEGA CITY 3D - выберите здание</div>
 
-    <div id="canvasContainer"></div>
+<div class="ui">
+    <div>💰 <span id="money">50,000,000</span></div>
+    <div>👥 <span id="pop">0</span></div>
+    <div>📈 <span id="inc">0</span></div>
+    <div>🏗️ <span id="cnt">0/3600</span></div>
+</div>
 
-    <div id="panel">
-      <h3>Каталог зданий</h3>
-      <div id="buildingList"></div>
-      <hr/>
-      <div id="infoBox">Выбери клетку, чтобы строить. Tap/click для действий.</div>
-      <div id="leaderboard" class="hidden"><h4>Рейтинг</h4><ol id="leaders"></ol></div>
-    </div>
-  </div>
+<div class="menu-left">
+<h2>🏗️ 3D КАТАЛОГ</h2>
+<div class="categories" id="cats"></div>
+<div class="list" id="list"></div>
+</div>
 
-  <!-- three + orbitcontrols as modules -->
-  <script type="module">
-    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-    window.THREE = THREE; // make available to modules that expect global THREE
-  </script>
+<div class="menu-right">
+    <button class="collect" onclick="collectTaxes()"><span>💰</span> СБОР</button>
+    <button onclick="rotateLeft()"><span>↺</span> ВЛЕВО</button>
+    <button onclick="rotateRight()"><span>↻</span> ВПРАВО</button>
+    <button onclick="zoomIn()"><span>🔍+</span> ПРИБЛИЗИТЬ</button>
+    <button onclick="zoomOut()"><span>🔍-</span> ОТДАЛИТЬ</button>
+    <button onclick="toggleWeather()"><span>🌦️</span> ПОГОДА</button>
+    <button onclick="toggleTime()"><span>⏰</span> ВРЕМЯ</button>
+    <button class="delete" onclick="deleteMode()"><span>🗑️</span> УДАЛИТЬ</button>
+    <button onclick="cancel()"><span>❌</span> ОТМЕНА</button>
+    <button onclick="resetGame()"><span>🔄</span> НОВЫЙ ГОРОД</button>
+</div>
+</div>
 
-  <!-- modules (ESM) -->
-  <script type="module" src="./buildings.js"></script>
-  <script type="module" src="./world.js"></script>
-  <script type="module" src="./citizens.js"></script>
-  <script type="module" src="./cars.js"></script>
-  <script type="module" src="./save.js"></script>
-  <script type="module" src="./ui.js"></script>
-  <script type="module" src="./main.js"></script>
+<script>
+// ==================== ИНИЦИАЛИЗАЦИЯ ====================
+const tg = window.Telegram?.WebApp;
+tg?.expand(); tg?.ready();
+
+const GRID = 30; // 30x30 = 900 клеток (оптимально для 3D)
+const CELL = 60;
+
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+// ==================== 3D КАМЕРА ====================
+let camera = {
+    angle: 0.5,
+    height: 200,
+    distance: 800,
+    targetX: 0,
+    targetY: 0,
+    targetZ: 0
+};
+
+let drag = false, lastX = 0, lastY = 0;
+let selRow = -1, selCol = -1;
+let deleteModeActive = false;
+
+// ==================== СОСТОЯНИЕ ИГРЫ ====================
+let game = {
+    money: 50000000,
+    population: 0,
+    buildingsCount: 0,
+    weather: 0, // 0-ясно, 1-дождь, 2-снег
+    timeOfDay: 0.6,
+    grid: []
+};
+
+// Инициализация сетки
+for (let r = 0; r < GRID; r++) {
+    game.grid[r] = [];
+    for (let c = 0; c < GRID; c++) {
+        game.grid[r][c] = null;
+    }
+}
+
+// ==================== ГЕНЕРАЦИЯ 5000+ УНИКАЛЬНЫХ ЗДАНИЙ ====================
+const buildingStyles = [
+    { name: '🏠 Дом', baseHeight: 40, baseColor: '#e3b27c', roof: '#b54c4c' },
+    { name: '🏢 Офис', baseHeight: 70, baseColor: '#b0bec5', roof: '#607d8b' },
+    { name: '🏪 Магазин', baseHeight: 50, baseColor: '#ffb74d', roof: '#ff9800' },
+    { name: '🏥 Больница', baseHeight: 65, baseColor: '#ef9a9a', roof: '#e57373' },
+    { name: '🏫 Школа', baseHeight: 60, baseColor: '#ba68c8', roof: '#9c27b0' },
+    { name: '🏛️ Банк', baseHeight: 80, baseColor: '#7986cb', roof: '#3f51b5' },
+    { name: '🏭 Завод', baseHeight: 75, baseColor: '#8d6e63', roof: '#5d4037' },
+    { name: '🏰 Замок', baseHeight: 100, baseColor: '#b0a57c', roof: '#6b5a3a' },
+    { name: '🏨 Отель', baseHeight: 85, baseColor: '#4fc3f7', roof: '#03a9f4' },
+    { name: '🎭 Театр', baseHeight: 70, baseColor: '#f06292', roof: '#e91e63' },
+    { name: '⚡ Электро', baseHeight: 90, baseColor: '#ffb74d', roof: '#f57c00' },
+    { name: '🌳 Парк', baseHeight: 30, baseColor: '#81c784', roof: '#4caf50' },
+    { name: '🛣️ Дорога', baseHeight: 5, baseColor: '#b0bec5', roof: '#78909c' },
+    { name: '🚉 Вокзал', baseHeight: 55, baseColor: '#9e9e9e', roof: '#616161' },
+    { name: '✈️ Аэропорт', baseHeight: 60, baseColor: '#cfd8dc', roof: '#90a4ae' },
+    { name: '⛪ Церковь', baseHeight: 95, baseColor: '#f5f5f5', roof: '#b71c1c' }
+];
+
+const prefixes = [
+    'Уютный', 'Большой', 'Огромный', 'Мини', 'Макси', 'Супер', 'Ультра',
+    'Старинный', 'Современный', 'Классический', 'Элитный', 'Народный',
+    'Северный', 'Южный', 'Западный', 'Восточный', 'Центральный',
+    'Стеклянный', 'Каменный', 'Кирпичный', 'Деревянный', 'Металлический',
+    'Золотой', 'Серебряный', 'Бронзовый', 'Новый', 'Старый', 'Древний'
+];
+
+const buildings = {};
+let buildingId = 0;
+
+// Генерируем 5120 зданий (16 стилей × 320 вариаций)
+for (let s = 0; s < buildingStyles.length; s++) {
+    for (let i = 0; i < 320; i++) {
+        const prefix = prefixes[i % prefixes.length];
+        const style = buildingStyles[s];
+        const name = `${prefix} ${style.name} ${i+1}`;
+        const price = 1000 + (s * 500) + (i * 30);
+        const income = 20 + Math.floor(price * 0.05);
+        const population = Math.floor(price / 300) + 1;
+        
+        buildings['b' + buildingId] = {
+            id: 'b' + buildingId,
+            name: name,
+            price: price,
+            income: income,
+            population: population,
+            height: style.baseHeight + (i % 20),
+            color: style.baseColor,
+            roof: style.roof,
+            style: s,
+            emoji: style.name.split(' ')[0],
+            category: s % 8
+        };
+        buildingId++;
+    }
+}
+
+console.log('✅ Создано зданий:', buildingId);
+
+// ==================== АНИМАЦИОННЫЕ ОБЪЕКТЫ ====================
+let particles = [];
+let cars = [];
+let pedestrians = [];
+
+// Генерация машин
+for (let i = 0; i < 20; i++) {
+    cars.push({
+        x: Math.random() * GRID * CELL - GRID * CELL/2,
+        z: Math.random() * GRID * CELL - GRID * CELL/2,
+        speed: 0.5 + Math.random() * 2,
+        color: `hsl(${Math.random() * 360}, 80%, 60%)`,
+        dir: Math.floor(Math.random() * 4)
+    });
+}
+
+// Генерация пешеходов
+for (let i = 0; i < 30; i++) {
+    pedestrians.push({
+        x: Math.random() * GRID * CELL - GRID * CELL/2,
+        z: Math.random() * GRID * CELL - GRID * CELL/2,
+        speed: 0.2 + Math.random() * 1,
+        color: '#fff',
+        size: 5
+    });
+}
+
+// ==================== 3D ПРОЕКЦИЯ ====================
+function project3D(x, y, z) {
+    const cosA = Math.cos(camera.angle);
+    const sinA = Math.sin(camera.angle);
+    
+    // Поворот вокруг Y
+    const rx = x * cosA - z * sinA;
+    const rz = x * sinA + z * cosA;
+    
+    // Перспектива
+    const scale = camera.distance / (camera.distance + rz);
+    const screenX = canvas.width / 2 + rx * scale;
+    const screenY = canvas.height / 2 - (y - camera.height) * scale;
+    
+    return { x: screenX, y: screenY, scale: scale };
+}
+
+// ==================== 3D ОТРИСОВКА ====================
+function draw3D() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Небо с градиентом (зависит от времени)
+    const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    if (game.timeOfDay > 0.7) {
+        skyGrad.addColorStop(0, '#0b4b72');
+        skyGrad.addColorStop(1, '#1f7aa3');
+    } else if (game.timeOfDay > 0.4) {
+        skyGrad.addColorStop(0, '#2c4f6e');
+        skyGrad.addColorStop(1, '#4f7a9e');
+    } else if (game.timeOfDay > 0.2) {
+        skyGrad.addColorStop(0, '#1e3a50');
+        skyGrad.addColorStop(1, '#345e82');
+    } else {
+        skyGrad.addColorStop(0, '#0a1a2a');
+        skyGrad.addColorStop(1, '#1b3447');
+    }
+    ctx.fillStyle = skyGrad;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Солнце/Луна
+    ctx.shadowBlur = 80;
+    ctx.shadowColor = game.timeOfDay > 0.5 ? '#fff9c4' : '#e0e0e0';
+    ctx.beginPath();
+    ctx.arc(150, 100, game.timeOfDay > 0.5 ? 60 : 40, 0, Math.PI*2);
+    ctx.fillStyle = game.timeOfDay > 0.5 ? '#fff3b0' : '#f0f0f0';
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Рисуем землю
+    const size = GRID * CELL;
+    const startX = -size/2;
+    const startZ = -size/2;
+    
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const x = startX + r * CELL;
+            const z = startZ + c * CELL;
+            
+            const p1 = project3D(x, 0, z);
+            const p2 = project3D(x + CELL, 0, z);
+            const p3 = project3D(x + CELL, 0, z + CELL);
+            const p4 = project3D(x, 0, z + CELL);
+            
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.lineTo(p3.x, p3.y);
+            ctx.lineTo(p4.x, p4.y);
+            ctx.closePath();
+            
+            // Цвет земли
+            const grad = ctx.createLinearGradient(p1.x, p1.y, p3.x, p3.y);
+            if (game.grid[r] && game.grid[r][c] && buildings[game.grid[r][c]]?.style === 12) {
+                grad.addColorStop(0, '#b0bec5'); // Дорога
+                grad.addColorStop(1, '#8a9aa8');
+            } else {
+                grad.addColorStop(0, '#5f8b5f');
+                grad.addColorStop(1, '#3a6b3a');
+            }
+            ctx.fillStyle = grad;
+            ctx.fill();
+            
+            // Линии сетки
+            ctx.strokeStyle = '#2b4d2b';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+        }
+    }
+
+    // Рисуем здания
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const buildingId = game.grid[r]?.[c];
+            if (buildingId && buildings[buildingId]) {
+                const b = buildings[buildingId];
+                const x = startX + r * CELL + CELL/2;
+                const z = startZ + c * CELL + CELL/2;
+                
+                // Рисуем куб здания
+                drawBuilding(x, 0, z, CELL * 0.7, b.height, CELL * 0.7, b.color, b.roof);
+            }
+        }
+    }
+
+    // Рисуем машины (анимированные)
+    cars.forEach(car => {
+        car.x += car.speed * (car.dir === 0 ? 1 : car.dir === 1 ? -1 : 0);
+        car.z += car.speed * (car.dir === 2 ? 1 : car.dir === 3 ? -1 : 0);
+        
+        // Возвращаем в границы
+        if (Math.abs(car.x) > GRID * CELL/2) car.dir = Math.floor(Math.random() * 4);
+        if (Math.abs(car.z) > GRID * CELL/2) car.dir = Math.floor(Math.random() * 4);
+        
+        drawCar(car.x, 5, car.z, car.color);
+    });
+
+    // Рисуем пешеходов
+    pedestrians.forEach(p => {
+        p.x += (Math.random() - 0.5) * 2;
+        p.z += (Math.random() - 0.5) * 2;
+        
+        // Ограничиваем
+        p.x = Math.max(-GRID * CELL/2, Math.min(GRID * CELL/2, p.x));
+        p.z = Math.max(-GRID * CELL/2, Math.min(GRID * CELL/2, p.z));
+        
+        drawPedestrian(p.x, 5, p.z);
+    });
+
+    // Подсветка выбранной клетки
+    if (selRow !== -1 && selCol !== -1 && game.grid[selRow]?.[selCol] !== undefined) {
+        const x = startX + selRow * CELL + CELL/2;
+        const z = startZ + selCol * CELL + CELL/2;
+        
+        const p1 = project3D(x - CELL/2, 5, z - CELL/2);
+        const p2 = project3D(x + CELL/2, 5, z - CELL/2);
+        const p3 = project3D(x + CELL/2, 5, z + CELL/2);
+        const p4 = project3D(x - CELL/2, 5, z + CELL/2);
+        
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.closePath();
+        ctx.strokeStyle = deleteModeActive ? '#f44336' : '#ffd700';
+        ctx.lineWidth = 4;
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = deleteModeActive ? '#f44336' : '#ffd700';
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+    }
+
+    // Погодные эффекты
+    if (game.weather === 1) { // Дождь
+        ctx.fillStyle = '#a9d6e580';
+        for (let i = 0; i < 100; i++) {
+            ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 20);
+        }
+    } else if (game.weather === 2) { // Снег
+        ctx.fillStyle = '#ffffffc0';
+        for (let i = 0; i < 80; i++) {
+            ctx.beginPath();
+            ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 4, 0, Math.PI*2);
+            ctx.fill();
+        }
+    }
+}
+
+// Функция рисования здания
+function drawBuilding(x, y, z, w, h, d, color, roofColor) {
+    const w2 = w/2;
+    const h2 = h;
+    const d2 = d/2;
+    
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    ctx.shadowBlur = 15;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+
+    // Вершины куба
+    const verts = [
+        {x: x - w2, y: y, z: z - d2},
+        {x: x + w2, y: y, z: z - d2},
+        {x: x + w2, y: y, z: z + d2},
+        {x: x - w2, y: y, z: z + d2},
+        {x: x - w2, y: y - h2, z: z - d2},
+        {x: x + w2, y: y - h2, z: z - d2},
+        {x: x + w2, y: y - h2, z: z + d2},
+        {x: x - w2, y: y - h2, z: z + d2}
+    ];
+
+    const p = verts.map(v => project3D(v.x, v.y, v.z));
+
+    // Грани
+    const faces = [
+        [0,1,5,4], // перед
+        [1,2,6,5], // право
+        [2,3,7,6], // зад
+        [3,0,4,7], // лево
+        [4,5,6,7]  // верх
+    ];
+
+    const colors = [color, shadeColor(color, -20), shadeColor(color, -40), shadeColor(color, -20), roofColor];
+
+    faces.forEach((face, idx) => {
+        ctx.beginPath();
+        ctx.moveTo(p[face[0]].x, p[face[0]].y);
+        for (let i = 1; i < face.length; i++) {
+            ctx.lineTo(p[face[i]].x, p[face[i]].y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = colors[idx];
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.stroke();
+    });
+
+    // Окна
+    if (h2 > 20) {
+        ctx.fillStyle = '#f9e076';
+        ctx.shadowColor = '#ffd700';
+        const windowPos = [
+            project3D(x + w/4, y - h2/2, z + d2 - 5),
+            project3D(x - w/4, y - h2/2, z + d2 - 5)
+        ];
+        windowPos.forEach(pos => {
+            ctx.fillRect(pos.x - 6, pos.y - 10, 12, 15);
+        });
+    }
+
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+}
+
+// Рисование машины
+function drawCar(x, y, z, color) {
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = 'rgba(0,0,0,0.5)';
+    
+    const p1 = project3D(x - 10, y, z - 15);
+    const p2 = project3D(x + 10, y, z - 15);
+    const p3 = project3D(x + 10, y, z + 15);
+    const p4 = project3D(x - 10, y, z + 15);
+    
+    ctx.beginPath();
+    ctx.moveTo(p1.x, p1.y);
+    ctx.lineTo(p2.x, p2.y);
+    ctx.lineTo(p3.x, p3.y);
+    ctx.lineTo(p4.x, p4.y);
+    ctx.closePath();
+    ctx.fillStyle = color;
+    ctx.fill();
+    
+    ctx.shadowBlur = 0;
+}
+
+// Рисование пешехода
+function drawPedestrian(x, y, z) {
+    const p = project3D(x, y, z);
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.shadowBlur = 5;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+}
+
+function shadeColor(color, percent) {
+    let R = parseInt(color.substring(1,3), 16);
+    let G = parseInt(color.substring(3,5), 16);
+    let B = parseInt(color.substring(5,7), 16);
+    R = Math.min(255, Math.max(0, R + percent));
+    G = Math.min(255, Math.max(0, G + percent));
+    B = Math.min(255, Math.max(0, B + percent));
+    return `#${((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1)}`;
+}
+
+// ==================== УПРАВЛЕНИЕ ====================
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    draw3D();
+}
+window.addEventListener('resize', resize);
+resize();
+
+canvas.addEventListener('mousedown', (e) => {
+    drag = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+});
+
+canvas.addEventListener('mouseup', () => drag = false);
+canvas.addEventListener('mouseleave', () => drag = false);
+
+canvas.addEventListener('mousemove', (e) => {
+    if (!drag) return;
+    camera.angle += (e.clientX - lastX) * 0.005;
+    camera.height -= (e.clientY - lastY) * 0.5;
+    camera.height = Math.max(100, Math.min(400, camera.height));
+    lastX = e.clientX;
+    lastY = e.clientY;
+    draw3D();
+});
+
+canvas.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    camera.distance = Math.max(400, Math.min(1200, camera.distance + (e.deltaY > 0 ? 50 : -50)));
+    draw3D();
+});
+
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    let bestDist = Infinity;
+    let bestR = -1, bestC = -1;
+    
+    const size = GRID * CELL;
+    const startX = -size/2;
+    const startZ = -size/2;
+    
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const x = startX + r * CELL + CELL/2;
+            const z = startZ + c * CELL + CELL/2;
+            const p = project3D(x, 10, z);
+            
+            const dist = Math.hypot(mouseX - p.x, mouseY - p.y);
+            if (dist < bestDist && dist < 50) {
+                bestDist = dist;
+                bestR = r;
+                bestC = c;
+            }
+        }
+    }
+    
+    if (bestR !== -1) {
+        selRow = bestR;
+        selCol = bestC;
+        
+        if (deleteModeActive) {
+            deleteBuilding(bestR, bestC);
+        } else if (selectedBuilding) {
+            build(bestR, bestC);
+        }
+        draw3D();
+    }
+});
+
+// ==================== ИГРОВАЯ ЛОГИКА ====================
+let selectedBuilding = null;
+
+function build(r, c) {
+    const b = buildings[selectedBuilding];
+    if (!b) return;
+    
+    if (game.money < b.price) {
+        showMessage('❌ Недостаточно денег!');
+        return;
+    }
+    
+    if (game.grid[r][c] !== null) {
+        showMessage('❌ Клетка занята!');
+        return;
+    }
+    
+    game.money -= b.price;
+    game.grid[r][c] = b.id;
+    game.population += b.population || 0;
+    game.buildingsCount++;
+    
+    updateUI();
+    showMessage(`✅ Построено: ${b.name}`);
+}
+
+function deleteBuilding(r, c) {
+    const id = game.grid[r][c];
+    if (!id) {
+        showMessage('❌ Здесь нет здания');
+        return;
+    }
+    
+    const b = buildings[id];
+    game.money += Math.floor(b.price * 0.5); // Возвращаем 50%
+    game.population -= b.population || 0;
+    game.buildingsCount--;
+    game.grid[r][c] = null;
+    
+    updateUI();
+    showMessage('🗑️ Здание удалено');
+}
+
+function collectTaxes() {
+    let total = 0;
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const id = game.grid[r][c];
+            if (id && buildings[id]) {
+                total += buildings[id].income;
+            }
+        }
+    }
+    game.money += total;
+    updateUI();
+    showMessage(`💰 Собрано ${total.toLocaleString()} монет!`);
+}
+
+function toggleWeather() {
+    game.weather = (game.weather + 1) % 3;
+    draw3D();
+    showMessage(`🌦️ Погода: ${game.weather === 0 ? 'Ясно' : game.weather === 1 ? 'Дождь' : 'Снег'}`);
+}
+
+function toggleTime() {
+    game.timeOfDay = (game.timeOfDay + 0.3) % 1;
+    draw3D();
+    const timeStr = game.timeOfDay > 0.7 ? 'День' : game.timeOfDay > 0.4 ? 'Вечер' : game.timeOfDay > 0.2 ? 'Сумерки' : 'Ночь';
+    showMessage(`⏰ ${timeStr}`);
+}
+
+function deleteMode() {
+    deleteModeActive = !deleteModeActive;
+    showMessage(deleteModeActive ? '🗑️ Режим удаления включен' : '❌ Режим удаления выключен');
+}
+
+function cancel() {
+    selectedBuilding = null;
+    deleteModeActive = false;
+    document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+    document.getElementById('info').innerText = '👆 Выберите здание';
+}
+
+function resetGame() {
+    if (confirm('Начать новый город?')) {
+        location.reload();
+    }
+}
+
+function rotateLeft() {
+    camera.angle -= 0.3;
+    draw3D();
+}
+
+function rotateRight() {
+    camera.angle += 0.3;
+    draw3D();
+}
+
+function zoomIn() {
+    camera.distance = Math.max(400, camera.distance - 100);
+    draw3D();
+}
+
+function zoomOut() {
+    camera.distance = Math.min(1200, camera.distance + 100);
+    draw3D();
+}
+
+// ==================== ИНТЕРФЕЙС ====================
+function updateUI() {
+    document.getElementById('money').innerText = game.money.toLocaleString();
+    document.getElementById('pop').innerText = game.population.toLocaleString();
+    document.getElementById('cnt').innerText = `${game.buildingsCount}/${GRID*GRID}`;
+    
+    let totalIncome = 0;
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const id = game.grid[r][c];
+            if (id && buildings[id]) totalIncome += buildings[id].income;
+        }
+    }
+    document.getElementById('inc').innerText = totalIncome.toLocaleString();
+}
+
+function showMessage(msg) {
+    document.getElementById('info').innerText = msg;
+    setTimeout(() => {
+        document.getElementById('info').innerText = '🏙️ MEGA CITY 3D';
+    }, 3000);
+}
+
+// ==================== ПОСТРОЕНИЕ МЕНЮ ====================
+const catsDiv = document.getElementById('cats');
+const listDiv = document.getElementById('list');
+
+// Кнопка "Все"
+const allBtn = document.createElement('button');
+allBtn.textContent = '🏁 ВСЕ';
+allBtn.classList.add('active');
+allBtn.onclick = () => {
+    document.querySelectorAll('#cats button').forEach(b => b.classList.remove('active'));
+    allBtn.classList.add('active');
+    showCategory(null);
+};
+catsDiv.appendChild(allBtn);
+
+// Категории
+for (let i = 0; i < 8; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = `🏗️ Кат ${i+1}`;
+    btn.onclick = () => {
+        document.querySelectorAll('#cats button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showCategory(i);
+    };
+    catsDiv.appendChild(btn);
+}
+
+function showCategory(cat) {
+    listDiv.innerHTML = '';
+    
+    let filtered = Object.values(buildings);
+    if (cat !== null) {
+        filtered = filtered.filter(b => b.category === cat);
+    }
+    
+    filtered.slice(0, 200).forEach(b => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.innerHTML = `
+            <span class="item-icon">${b.emoji}</span>
+            <span>${b.name}<br><small>💰${b.price.toLocaleString()} | 📈+${b.income}</small></span>
+        `;
+        div.onclick = () => {
+            document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+            div.classList.add('selected');
+            selectedBuilding = b.id;
+            deleteModeActive = false;
+            document.getElementById('info').innerText = 'Выбрано: ' + b.name;
+        };
+        listDiv.appendChild(div);
+    });
+}
+
+// ==================== АНИМАЦИЯ ====================
+function animate() {
+    draw3D();
+    requestAnimationFrame(animate);
+}
+
+showCategory(null);
+updateUI();
+animate();
+</script>
 </body>
 </html>
