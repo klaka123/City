@@ -1,7 +1,0 @@
-tg_city_game/
-│
-├── bot.py              # Основной файл бота
-├── index.html          # HTML файл самой игры (Mini App)
-├── style.css           # Красота (по желанию)
-├── script.js           # Логика игры на стороне клиента
-└── requirements.txt    # Зависимости Python
