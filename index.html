@@ -1,350 +1,111 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏙️ Городок - простая версия</title>
+    <title>ПРОСТЕЙШАЯ ИГРА</title>
     <style>
-        body {
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .game-container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
-            border-radius: 30px;
-            padding: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            background: #f0f0f0;
-            padding: 15px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-        }
-        .stat {
-            text-align: center;
-        }
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-        .stat-label {
-            color: #666;
-            margin-top: 5px;
-        }
-        .city-area {
-            background: #a8d5e5;
-            min-height: 300px;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: flex-start;
-        }
-        .building {
-            width: 60px;
-            height: 60px;
-            background: #f0a500;
-            border-radius: 10px 10px 0 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-end;
-            cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 4px 0 #b87c1b;
-        }
-        .building:hover {
-            transform: translateY(-5px);
-        }
-        .building span {
-            background: white;
-            width: 100%;
-            text-align: center;
-            font-size: 20px;
-        }
-        .build-menu {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        .build-btn {
-            flex: 1;
-            min-width: 100px;
-            padding: 15px;
-            border: none;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .build-btn:hover {
-            transform: translateY(-3px);
-        }
-        .build-btn.selected {
-            border: 3px solid #ffd700;
-        }
-        .controls {
-            display: flex;
-            gap: 10px;
-        }
-        .action-btn {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 15px;
-            background: #4CAF50;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .action-btn.reset {
-            background: #f44336;
-        }
-        .info-panel {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f0f0f0;
-            border-radius: 15px;
-            text-align: center;
-            font-size: 18px;
-        }
+        body { font-family: Arial; padding: 20px; max-width: 600px; margin: 0 auto; }
+        .stats { background: #f0f0f0; padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .city { background: #a8d5e5; min-height: 200px; padding: 15px; border-radius: 10px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 10px; }
+        .building { width: 50px; height: 50px; background: #ffa500; border-radius: 5px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .menu { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; background: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .btn:hover { background: #45a049; }
+        .info { background: #e0e0e0; padding: 15px; border-radius: 10px; }
     </style>
 </head>
 <body>
-    <div class="game-container">
-        <!-- Статистика -->
-        <div class="stats">
-            <div class="stat">
-                <div class="stat-value" id="moneyDisplay">10000</div>
-                <div class="stat-label">💰 Деньги</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="popDisplay">0</div>
-                <div class="stat-label">👥 Жители</div>
-            </div>
-            <div class="stat">
-                <div class="stat-value" id="incomeDisplay">0</div>
-                <div class="stat-label">📈 Доход</div>
-            </div>
-        </div>
+    <h1>🏙️ Простая игра про город</h1>
+    
+    <div class="stats">
+        <p>💰 Деньги: <span id="money">1000</span></p>
+        <p>🏠 Построек: <span id="count">0</span></p>
+    </div>
 
-        <!-- Город -->
-        <div class="city-area" id="cityArea">
-            <!-- Сюда будут добавляться домики -->
-        </div>
+    <div class="city" id="city"></div>
 
-        <!-- Меню строительства -->
-        <div class="build-menu" id="buildMenu"></div>
+    <div class="menu">
+        <button class="btn" id="buildHouse">🏠 Построить дом (200💰)</button>
+        <button class="btn" id="collectMoney">💰 Собрать налоги</button>
+        <button class="btn" id="reset">🔄 Сбросить</button>
+    </div>
 
-        <!-- Кнопки управления -->
-        <div class="controls">
-            <button class="action-btn" id="collectBtn">💰 Собрать налоги</button>
-            <button class="action-btn reset" id="resetBtn">🔄 Новый город</button>
-        </div>
-
-        <!-- Информация -->
-        <div class="info-panel" id="infoPanel">
-            👆 Нажмите на здание, чтобы построить
-        </div>
+    <div class="info" id="info">
+        Нажмите "Построить дом" чтобы построить здание
     </div>
 
     <script>
-        // ==================== СОСТОЯНИЕ ИГРЫ ====================
-        let gameState = {
-            money: 10000,
-            buildings: [],  // массив зданий [{type, x, y}]
-            selectedType: null,
-            lastTaxTime: Date.now(),
-        };
+        // Состояние игры
+        let money = 1000;
+        let buildings = [];
+        let lastCollect = Date.now();
 
-        // ==================== ТИПЫ ЗДАНИЙ (1000+ вариаций) ====================
-        const buildingTypes = [];
-        
-        // Генерируем 1000+ зданий
-        const categories = [
-            { name: '🏠 Дом', basePrice: 100, baseIncome: 5, basePop: 2 },
-            { name: '🏢 Офис', basePrice: 300, baseIncome: 15, basePop: 5 },
-            { name: '🏪 Магазин', basePrice: 200, baseIncome: 10, basePop: 3 },
-            { name: '🏭 Завод', basePrice: 500, baseIncome: 25, basePop: 8 },
-            { name: '🏥 Больница', basePrice: 400, baseIncome: 20, basePop: 0 },
-            { name: '🏫 Школа', basePrice: 350, baseIncome: 18, basePop: 0 },
-            { name: '🏛️ Банк', basePrice: 600, baseIncome: 30, basePop: 2 },
-            { name: '🏰 Замок', basePrice: 1000, baseIncome: 50, basePop: 15 },
-            { name: '🗼 Башня', basePrice: 450, baseIncome: 22, basePop: 4 },
-            { name: '⛪ Церковь', basePrice: 380, baseIncome: 19, basePop: 0 },
-            { name: '🎭 Театр', basePrice: 420, baseIncome: 21, basePop: 1 },
-            { name: '🏟️ Стадион', basePrice: 800, baseIncome: 40, basePop: 10 },
-            { name: '🚉 Вокзал', basePrice: 550, baseIncome: 27, basePop: 3 },
-            { name: '✈️ Аэропорт', basePrice: 1200, baseIncome: 60, basePop: 20 },
-            { name: '⚡ Электро', basePrice: 700, baseIncome: 35, basePop: 1 },
-            { name: '🌳 Парк', basePrice: 150, baseIncome: 7, basePop: 1 },
-        ];
+        // Элементы
+        const moneySpan = document.getElementById('money');
+        const countSpan = document.getElementById('count');
+        const cityDiv = document.getElementById('city');
+        const infoDiv = document.getElementById('info');
 
-        // Создаём 1000+ вариаций
-        for (let cat of categories) {
-            for (let i = 1; i <= 70; i++) { // 16 * 70 = 1120 зданий
-                buildingTypes.push({
-                    id: `building_${buildingTypes.length}`,
-                    name: `${cat.name} ${i}`,
-                    price: cat.basePrice * (1 + (i * 0.1)),
-                    income: Math.floor(cat.baseIncome * (1 + (i * 0.05))),
-                    population: Math.floor(cat.basePop * (1 + (i * 0.05))),
-                    emoji: cat.name.split(' ')[0],
-                });
-            }
-        }
-
-        console.log(`Создано ${buildingTypes.length} зданий`);
-
-        // ==================== ОТОБРАЖЕНИЕ МЕНЮ ====================
-        const buildMenu = document.getElementById('buildMenu');
-        const cityArea = document.getElementById('cityArea');
-        const moneyDisplay = document.getElementById('moneyDisplay');
-        const popDisplay = document.getElementById('popDisplay');
-        const incomeDisplay = document.getElementById('incomeDisplay');
-        const infoPanel = document.getElementById('infoPanel');
-
-        // Показываем первые 20 зданий в меню (чтобы не перегружать)
-        for (let i = 0; i < 30; i++) {
-            const b = buildingTypes[i];
-            const btn = document.createElement('button');
-            btn.className = 'build-btn';
-            btn.innerHTML = `${b.emoji} ${b.name}<br>💰${Math.floor(b.price)} 👥+${b.population}`;
-            btn.dataset.index = i;
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('selected'));
-                btn.classList.add('selected');
-                gameState.selectedType = i;
-                infoPanel.innerHTML = `Выбрано: ${b.name}`;
-            });
-            buildMenu.appendChild(btn);
-        }
-
-        // ==================== ОБНОВЛЕНИЕ СТАТИСТИКИ ====================
-        function updateStats() {
-            moneyDisplay.textContent = gameState.money;
+        // Обновление интерфейса
+        function updateDisplay() {
+            moneySpan.textContent = money;
+            countSpan.textContent = buildings.length;
             
-            let totalPop = 0;
-            let totalIncome = 0;
-            
-            gameState.buildings.forEach(b => {
-                const type = buildingTypes[b.type];
-                totalPop += type.population;
-                totalIncome += type.income;
-            });
-            
-            popDisplay.textContent = totalPop;
-            incomeDisplay.textContent = totalIncome;
-        }
-
-        // ==================== ОТОБРАЖЕНИЕ ГОРОДА ====================
-        function renderCity() {
-            cityArea.innerHTML = '';
-            gameState.buildings.forEach((b, index) => {
+            cityDiv.innerHTML = '';
+            buildings.forEach((b, index) => {
                 const div = document.createElement('div');
                 div.className = 'building';
-                div.style.background = `hsl(${b.type * 30 % 360}, 70%, 60%)`;
-                div.innerHTML = `<span>${buildingTypes[b.type].emoji}</span>`;
-                div.title = buildingTypes[b.type].name;
-                div.addEventListener('click', () => {
-                    // Информация о здании
-                    const type = buildingTypes[b.type];
-                    infoPanel.innerHTML = `${type.emoji} ${type.name}<br>💰 Доход: ${type.income} | 👥 Жители: ${type.population}`;
-                });
-                cityArea.appendChild(div);
+                div.textContent = '🏠';
+                div.onclick = () => {
+                    infoDiv.textContent = `Дом №${index + 1}`;
+                };
+                cityDiv.appendChild(div);
             });
         }
 
-        // ==================== ПОСТРОЙКА ЗДАНИЯ ====================
-        function addBuilding() {
-            if (gameState.selectedType === null) {
-                alert('Сначала выберите здание!');
-                return;
+        // Постройка дома
+        document.getElementById('buildHouse').onclick = function() {
+            if (money >= 200) {
+                money -= 200;
+                buildings.push({});
+                infoDiv.textContent = '✅ Дом построен!';
+                updateDisplay();
+            } else {
+                infoDiv.textContent = '❌ Недостаточно денег!';
             }
-            
-            const type = buildingTypes[gameState.selectedType];
-            
-            if (gameState.money < type.price) {
-                alert('Недостаточно денег!');
-                return;
-            }
-            
-            gameState.money -= Math.floor(type.price);
-            gameState.buildings.push({ type: gameState.selectedType });
-            
-            updateStats();
-            renderCity();
-            infoPanel.innerHTML = `✅ Построено: ${type.name}`;
-        }
+        };
 
-        // ==================== СБОР НАЛОГОВ ====================
-        function collectTaxes() {
+        // Сбор налогов
+        document.getElementById('collectMoney').onclick = function() {
             const now = Date.now();
-            const timeSinceLast = now - gameState.lastTaxTime;
+            const timePassed = now - lastCollect;
             
-            if (timeSinceLast < 5000) {
-                alert(`Подождите ${Math.ceil((5000 - timeSinceLast)/1000)} секунд!`);
+            if (timePassed < 5000) {
+                const wait = Math.ceil((5000 - timePassed) / 1000);
+                infoDiv.textContent = `⏳ Подождите ${wait} секунд!`;
                 return;
             }
             
-            let total = 0;
-            gameState.buildings.forEach(b => {
-                total += buildingTypes[b.type].income;
-            });
-            
-            gameState.money += total;
-            gameState.lastTaxTime = now;
-            
-            updateStats();
-            infoPanel.innerHTML = `💰 Собрано ${total} монет!`;
-        }
+            const tax = buildings.length * 50;
+            money += tax;
+            lastCollect = now;
+            infoDiv.textContent = `💰 Собрано ${tax} монет!`;
+            updateDisplay();
+        };
 
-        // ==================== НОВЫЙ ГОРОД ====================
-        function resetGame() {
-            if (confirm('Начать новый город?')) {
-                gameState.money = 10000;
-                gameState.buildings = [];
-                gameState.selectedType = null;
-                gameState.lastTaxTime = Date.now();
-                
-                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('selected'));
-                updateStats();
-                renderCity();
-                infoPanel.innerHTML = '🔄 Новый город создан!';
+        // Сброс
+        document.getElementById('reset').onclick = function() {
+            if (confirm('Начать заново?')) {
+                money = 1000;
+                buildings = [];
+                lastCollect = Date.now();
+                infoDiv.textContent = '🔄 Игра сброшена';
+                updateDisplay();
             }
-        }
+        };
 
-        // ==================== ОБРАБОТЧИКИ КНОПОК ====================
-        document.getElementById('collectBtn').addEventListener('click', collectTaxes);
-        document.getElementById('resetBtn').addEventListener('click', resetGame);
-
-        // Постройка по клику на город
-        cityArea.addEventListener('click', (e) => {
-            if (e.target === cityArea) { // клик по пустому месту
-                addBuilding();
-            }
-        });
-
-        // Начальная отрисовка
-        renderCity();
-        updateStats();
+        // Начальное отображение
+        updateDisplay();
     </script>
 </body>
 </html>
