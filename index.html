@@ -3,356 +3,720 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MEGA CITY 5120</title>
-
+<title>MEGA CITY 5120 - Эволюция</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI, Roboto, sans-serif;
-    user-select:none;
-}
-body{
-    background:#081823;
-    overflow:hidden;
-}
-.game{
-    width:100vw;
-    height:100vh;
-    position:relative;
-}
-canvas{
-    width:100%;
-    height:100%;
-    display:block;
-    touch-action:none;
-    cursor:grab;
-}
-canvas:active{cursor:grabbing}
-
-.ui{
-    position:fixed;
-    bottom:15px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:15px;
-    background:rgba(15,35,50,.95);
-    padding:12px 25px;
-    border-radius:40px;
-    color:#fff;
-    font-size:18px;
-    z-index:10;
-}
-.ui div{
-    background:rgba(0,0,0,.3);
-    padding:6px 14px;
-    border-radius:30px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    user-select: none;
 }
 
-.menu-left{
-    position:fixed;
-    top:50%;
-    left:15px;
-    transform:translateY(-50%);
-    width:320px;
-    height:80vh;
-    background:rgba(10,28,40,.95);
-    border-radius:25px;
-    padding:15px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    z-index:10;
-}
-.menu-left h2{
-    color:#fff;
-    text-align:center;
-}
-.categories{
-    display:flex;
-    flex-wrap:wrap;
-    gap:5px;
-}
-.categories button{
-    flex:1;
-    padding:6px;
-    border-radius:20px;
-    border:none;
-    cursor:pointer;
-}
-.list{
-    flex:1;
-    overflow:auto;
-}
-.item{
-    background:rgba(255,255,255,.08);
-    margin-bottom:6px;
-    padding:8px;
-    border-radius:18px;
-    color:#fff;
-    cursor:pointer;
-}
-.item.selected{
-    outline:2px solid #ffb84d;
+body {
+    background: #0a1a2a;
+    overflow: hidden;
 }
 
-.menu-right{
-    position:fixed;
-    top:50%;
-    right:15px;
-    transform:translateY(-50%);
-    background:rgba(10,28,40,.95);
-    border-radius:25px;
-    padding:15px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    z-index:10;
-}
-.menu-right button{
-    padding:12px;
-    font-size:16px;
-    border-radius:25px;
-    border:none;
-    cursor:pointer;
+.game {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
 }
 
-.info{
-    position:fixed;
-    top:15px;
-    left:50%;
-    transform:translateX(-50%);
-    background:rgba(10,28,40,.95);
-    padding:12px 25px;
-    border-radius:30px;
-    color:#fff;
-    z-index:10;
+canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    touch-action: none;
+}
+
+.ui {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+    background: rgba(10, 25, 35, 0.85);
+    backdrop-filter: blur(10px);
+    padding: 15px 30px;
+    border-radius: 50px;
+    color: #fff;
+    font-size: 18px;
+    z-index: 20;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.ui div {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 8px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.menu-left {
+    position: fixed;
+    top: 50%;
+    left: 20px;
+    transform: translateY(-50%);
+    width: 340px;
+    height: 80vh;
+    background: rgba(10, 25, 35, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 20;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+.menu-left h2 {
+    color: #ffd700;
+    text-align: center;
+    font-size: 24px;
+    text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+    letter-spacing: 2px;
+}
+
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.categories button {
+    flex: 1;
+    padding: 10px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-weight: bold;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+
+.categories button:hover {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: #ffd700;
+    transform: scale(1.02);
+}
+
+.list {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background: #ffd700;
+    border-radius: 10px;
+}
+
+.item {
+    background: rgba(255, 255, 255, 0.08);
+    margin-bottom: 8px;
+    padding: 12px;
+    border-radius: 20px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.item:hover {
+    background: rgba(255, 215, 0, 0.15);
+    transform: translateX(5px);
+}
+
+.item.selected {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.2);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.menu-right {
+    position: fixed;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+    background: rgba(10, 25, 35, 0.9);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 20;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.menu-right button {
+    padding: 14px 25px;
+    font-size: 16px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-weight: bold;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+    min-width: 140px;
+}
+
+.menu-right button:hover {
+    background: rgba(255, 215, 0, 0.3);
+    border-color: #ffd700;
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+.info {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(10, 25, 35, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 15px 40px;
+    border-radius: 50px;
+    color: #ffd700;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 20;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+}
+
+.time-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(10, 25, 35, 0.9);
+    backdrop-filter: blur(10px);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: #fff;
+    z-index: 20;
+    border: 1px solid rgba(255, 215, 0, 0.3);
 }
 </style>
 </head>
-
 <body>
 <div class="game">
-<canvas id="c"></canvas>
-
-<div class="info" id="info">Выберите здание</div>
-
-<div class="ui">
-    <div>💰 <span id="money">50000000</span></div>
-    <div>👥 <span id="pop">0</span></div>
-    <div>📈 <span id="inc">0</span></div>
-    <div>🏗️ <span id="cnt">0/3600</span></div>
-</div>
-
-<div class="menu-left">
-<h2>🏗️ ЗДАНИЯ</h2>
-<div class="categories" id="cats"></div>
-<div class="list" id="list"></div>
-</div>
-
-<div class="menu-right">
-<button onclick="collect()">💰 СБОР</button>
-<button onclick="weather()">🌦️ ПОГОДА</button>
-<button onclick="timeDay()">⏰ ВРЕМЯ</button>
-<button onclick="cancel()">❌ ОТМЕНА</button>
-<button onclick="resetGame()">🔄 НОВЫЙ ГОРОД</button>
-</div>
+    <canvas id="c"></canvas>
+    
+    <div class="info" id="info">🏗️ Выберите здание для строительства</div>
+    <div class="time-indicator" id="timeIndicator">☀️ День</div>
+    
+    <div class="ui">
+        <div>💰 <span id="money">50,000,000</span></div>
+        <div>👥 <span id="pop">0</span></div>
+        <div>⚡ <span id="inc">0</span></div>
+        <div>🏗️ <span id="cnt">0/3600</span></div>
+    </div>
+    
+    <div class="menu-left">
+        <h2>🏗️ КАТАЛОГ ЗДАНИЙ</h2>
+        <div class="categories" id="cats"></div>
+        <div class="list" id="list"></div>
+    </div>
+    
+    <div class="menu-right">
+        <button onclick="collect()">💰 СБОР ДОХОДА</button>
+        <button onclick="weather()">🌦️ СМЕНИТЬ ПОГОДУ</button>
+        <button onclick="timeDay()">⏰ СМЕНИТЬ ВРЕМЯ</button>
+        <button onclick="cancel()">❌ ОТМЕНА ВЫБОРА</button>
+        <button onclick="resetGame()">🔄 НОВЫЙ ГОРОД</button>
+    </div>
 </div>
 
 <script>
 const tg = window.Telegram?.WebApp;
-tg?.expand(); tg?.ready();
+tg?.expand();
+tg?.ready();
 
-const GRID=60, CELL=70;
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d');
+const GRID = 60;
+const CELL = 80;
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
 
-let cam={x:0,y:0,z:1};
-let drag=false, lx=0, ly=0;
-let selRow=-1, selCol=-1;
-
-let game={
-money:50000000,
-pop:0,
-cnt:0,
-weather:0,
-time:0.6,
-grid:[]
+// Плавная камера
+let cam = {
+    x: 0,
+    y: 0,
+    z: 1,
+    targetX: 0,
+    targetY: 0,
+    targetZ: 1
 };
 
-for(let r=0;r<GRID;r++){
-game.grid[r]=[];
-for(let c=0;c<GRID;c++)game.grid[r][c]=null;
+let drag = false;
+let lx = 0, ly = 0;
+
+let selRow = -1, selCol = -1;
+let selected = null;
+let hoverRow = -1, hoverCol = -1;
+
+let game = {
+    money: 50000000,
+    pop: 0,
+    cnt: 0,
+    weather: 0, // 0: ясно, 1: дождь, 2: снег
+    time: 0.6, // 0-1 время дня
+    grid: []
+};
+
+// Инициализация сетки
+for (let r = 0; r < GRID; r++) {
+    game.grid[r] = [];
+    for (let c = 0; c < GRID; c++) {
+        game.grid[r][c] = null;
+    }
 }
 
-const cats=[
-{id:'res',n:'Жилые',e:'🏠',p:1000},
-{id:'com',n:'Торг',e:'🏪',p:2000},
-{id:'ind',n:'Заводы',e:'🏭',p:3000},
-{id:'fun',n:'Развлеч',e:'🎡',p:4000},
-{id:'gov',n:'Гос',e:'🏛️',p:6000},
+// Категории зданий
+const cats = [
+    { id: 'res', n: 'Жилые', e: '🏠', p: 1000, color: '#4CAF50' },
+    { id: 'com', n: 'Торговые', e: '🏪', p: 2000, color: '#FF9800' },
+    { id: 'ind', n: 'Промышленные', e: '🏭', p: 3000, color: '#F44336' },
+    { id: 'fun', n: 'Развлечения', e: '🎡', p: 4000, color: '#9C27B0' },
+    { id: 'gov', n: 'Государственные', e: '🏛️', p: 6000, color: '#2196F3' }
 ];
 
-const buildings={};
-let id=0;
-cats.forEach((c,ci)=>{
-for(let i=0;i<1024;i++){
-const price=c.p*(i+1)*(ci+1);
-buildings['b'+id]={
-id:'b'+id,
-cat:c.id,
-name:c.n+' '+(i+1),
-price,
-inc:Math.floor(price*0.12),
-pop:Math.floor(price/200),
-lvl:1,
-e:c.e,
-col:`hsl(${(ci*50+i)%360},70%,60%)`
-};
-id++;
-}});
-const all=Object.values(buildings);
+// Генерация зданий
+const buildings = {};
+let id = 0;
+cats.forEach((c, ci) => {
+    for (let i = 0; i < 100; i++) {
+        const price = c.p * (i + 1) * (ci + 1) * 0.8;
+        const level = i + 1;
+        buildings['b' + id] = {
+            id: 'b' + id,
+            cat: c.id,
+            name: c.n + ' ур.' + level,
+            price: Math.floor(price),
+            inc: Math.floor(price * 0.15),
+            pop: Math.floor(price / 150),
+            level: level,
+            emoji: c.e,
+            color: c.color,
+            height: 30 + level * 10,
+            width: 40 + level * 5
+        };
+        id++;
+    }
+});
+const all = Object.values(buildings);
 
-function resize(){
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-draw();
+function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    draw();
 }
-addEventListener('resize',resize);
+
+window.addEventListener('resize', resize);
 resize();
 
-function iso(r,c){
-return{
-x:(c-r)*CELL/2*cam.z+cam.x+canvas.width/2,
-y:(c+r)*CELL/4*cam.z+cam.y+canvas.height/3
+// Изометрическая проекция с эффектом перспективы
+function iso(r, c) {
+    const x = (c - r) * CELL / 2 * cam.z + cam.x + canvas.width / 2;
+    const y = (c + r) * CELL / 4 * cam.z + cam.y + canvas.height / 3;
+    return { x, y };
+}
+
+// Отрисовка здания с красивой 3D-моделью
+function drawBuilding(r, c, building, isHover = false) {
+    const p = iso(r, c);
+    const height = building.height * cam.z;
+    const width = building.width * cam.z;
+    const color = building.color;
+    
+    // Основные координаты для 3D-эффекта
+    const x1 = p.x - width/2;
+    const x2 = p.x + width/2;
+    const yBase = p.y;
+    const yTop = yBase - height;
+    
+    // Тень
+    ctx.save();
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+    ctx.shadowBlur = 15 * cam.z;
+    ctx.shadowOffsetX = 5 * cam.z;
+    ctx.shadowOffsetY = 5 * cam.z;
+    
+    // Передняя стена
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x1, yBase);
+    ctx.lineTo(x2, yBase);
+    ctx.lineTo(x2 - 15 * cam.z, yBase + 20 * cam.z);
+    ctx.lineTo(x1 - 15 * cam.z, yBase + 20 * cam.z);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Боковая стена
+    ctx.fillStyle = adjustColor(color, -30);
+    ctx.beginPath();
+    ctx.moveTo(x2, yBase);
+    ctx.lineTo(x2 + 15 * cam.z, yBase + 10 * cam.z);
+    ctx.lineTo(x2 + 15 * cam.z, yTop + 10 * cam.z);
+    ctx.lineTo(x2, yTop);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Крыша
+    ctx.fillStyle = adjustColor(color, 20);
+    ctx.beginPath();
+    ctx.moveTo(x1 - 5 * cam.z, yTop + 5 * cam.z);
+    ctx.lineTo(x2 - 5 * cam.z, yTop + 5 * cam.z);
+    ctx.lineTo(x2 + 10 * cam.z, yTop - 10 * cam.z);
+    ctx.lineTo(x1 + 10 * cam.z, yTop - 10 * cam.z);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Окна (эффект подсветки)
+    ctx.shadowBlur = 10 * cam.z;
+    ctx.fillStyle = 'rgba(255, 255, 200, 0.8)';
+    for (let i = 0; i < 3; i++) {
+        const wx = x1 + 10 * cam.z + i * 15 * cam.z;
+        const wy = yBase - 20 * cam.z - i * 15 * cam.z;
+        ctx.fillRect(wx, wy, 8 * cam.z, 12 * cam.z);
+    }
+    
+    // Эмодзи на здании
+    ctx.restore();
+    ctx.save();
+    ctx.shadowColor = 'black';
+    ctx.shadowBlur = 10;
+    ctx.font = `${Math.floor(30 * cam.z)}px Arial`;
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.fillText(building.emoji, p.x, p.y - height/2);
+    ctx.restore();
+    
+    // Подсветка при наведении
+    if (isHover) {
+        ctx.save();
+        ctx.strokeStyle = '#ffd700';
+        ctx.lineWidth = 4 * cam.z;
+        ctx.shadowColor = '#ffd700';
+        ctx.shadowBlur = 20;
+        ctx.beginPath();
+        ctx.moveTo(x1, yBase);
+        ctx.lineTo(x2, yBase);
+        ctx.lineTo(x2 + 15 * cam.z, yBase + 10 * cam.z);
+        ctx.lineTo(x2 + 15 * cam.z, yTop + 10 * cam.z);
+        ctx.lineTo(x2, yTop);
+        ctx.lineTo(x1, yTop);
+        ctx.lineTo(x1 - 15 * cam.z, yTop - 10 * cam.z);
+        ctx.lineTo(x1 - 15 * cam.z, yBase - 10 * cam.z);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+}
+
+function adjustColor(color, percent) {
+    const num = parseInt(color.replace('#', ''), 16);
+    const r = (num >> 16) + percent;
+    const g = ((num >> 8) & 0x00FF) + percent;
+    const b = (num & 0x0000FF) + percent;
+    return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+}
+
+// Отрисовка клетки земли
+function drawCell(r, c) {
+    const p = iso(r, c);
+    
+    // Эффект травы в зависимости от погоды и времени
+    let grassColor = '#7cb57c';
+    if (game.weather === 1) grassColor = '#5a8f5a'; // дождь
+    if (game.weather === 2) grassColor = '#e0f0ff'; // снег
+    
+    // Затемнение в зависимости от времени
+    const timeDarkness = Math.sin(game.time * Math.PI) * 0.3 + 0.7;
+    
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 2;
+    ctx.shadowOffsetY = 2;
+    
+    // Рисуем плитку земли
+    ctx.fillStyle = grassColor;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x + CELL/2 * cam.z, p.y + CELL/4 * cam.z);
+    ctx.lineTo(p.x, p.y + CELL/2 * cam.z);
+    ctx.lineTo(p.x - CELL/2 * cam.z, p.y + CELL/4 * cam.z);
+    ctx.closePath();
+    ctx.fill();
+    
+    // Добавляем текстуру травы
+    ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(p.x - 10 * cam.z + i * 15 * cam.z, p.y + 5 * cam.z);
+        ctx.lineTo(p.x - 15 * cam.z + i * 15 * cam.z, p.y + 15 * cam.z);
+        ctx.stroke();
+    }
+    
+    ctx.restore();
+    
+    // Эффект погоды
+    if (game.weather === 1 && Math.random() < 0.1) {
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.beginPath();
+        ctx.arc(p.x + Math.random() * 20, p.y + Math.random() * 20, 2, 0, Math.PI * 2);
+        ctx.fill();
+    }
+}
+
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Эффект неба в зависимости от времени
+    const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    if (game.time < 0.3 || game.time > 0.8) {
+        skyGradient.addColorStop(0, '#0a1a2a');
+        skyGradient.addColorStop(1, '#2a3a4a');
+    } else {
+        skyGradient.addColorStop(0, '#87CEEB');
+        skyGradient.addColorStop(1, '#E0F6FF');
+    }
+    ctx.fillStyle = skyGradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Рисуем сетку
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            drawCell(r, c);
+            
+            const buildingId = game.grid[r][c];
+            if (buildingId) {
+                drawBuilding(r, c, buildings[buildingId], r === hoverRow && c === hoverCol);
+            }
+        }
+    }
+    
+    updateTimeIndicator();
+}
+
+// Плавное движение камеры
+function updateCamera() {
+    cam.x += (cam.targetX - cam.x) * 0.1;
+    cam.y += (cam.targetY - cam.y) * 0.1;
+    cam.z += (cam.targetZ - cam.z) * 0.1;
+    draw();
+    requestAnimationFrame(updateCamera);
+}
+
+updateCamera();
+
+// Обработчики мыши
+canvas.onmousedown = (e) => {
+    drag = true;
+    lx = e.clientX;
+    ly = e.clientY;
 };
-}
 
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle='#7cb57c';
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const p=iso(r,c);
-ctx.beginPath();
-ctx.moveTo(p.x,p.y);
-ctx.lineTo(p.x+CELL/2*cam.z,p.y+CELL/4*cam.z);
-ctx.lineTo(p.x,p.y+CELL/2*cam.z);
-ctx.lineTo(p.x-CELL/2*cam.z,p.y+CELL/4*cam.z);
-ctx.closePath();
-ctx.fill();
-
-const id=game.grid[r][c];
-if(id){
-const b=buildings[id];
-ctx.fillStyle=b.col;
-ctx.fill();
-ctx.fillStyle='#fff';
-ctx.textAlign='center';
-ctx.fillText(b.e,p.x,p.y);
-}
-}
-}
-
-canvas.onmousedown=e=>{drag=true;lx=e.clientX;ly=e.clientY}
-canvas.onmouseup=_=>drag=false;
-canvas.onmousemove=e=>{
-if(!drag)return;
-cam.x+=e.clientX-lx;
-cam.y+=e.clientY-ly;
-lx=e.clientX;ly=e.clientY;
-draw();
-}
-canvas.onwheel=e=>{
-cam.z=Math.min(3,Math.max(.4,cam.z+(e.deltaY<0?.1:-.1)));
-draw();
-}
-
-canvas.onclick=e=>{
-const rect=canvas.getBoundingClientRect();
-let mx=e.clientX-rect.left,my=e.clientY-rect.top;
-let best=null,br=-1,bc=-1;
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const p=iso(r,c);
-const d=Math.hypot(mx-p.x,my-p.y);
-if(d<40 && (!best||d<best)){best=d;br=r;bc=c;}
-}
-if(br!=-1){
-selRow=br;selCol=bc;
-if(selected)build(br,bc);
-}
-}
-
-let selected=null;
-
-function build(r,c){
-const b=buildings[selected];
-if(game.money<b.price||game.grid[r][c])return;
-game.money-=b.price;
-game.grid[r][c]=b.id;
-game.pop+=b.pop;
-game.cnt++;
-update();
-draw();
-}
-
-function collect(){
-let t=0;
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const id=game.grid[r][c];
-if(id)t+=buildings[id].inc;
-}
-game.money+=t;
-update();
-}
-
-function weather(){game.weather=(game.weather+1)%3;draw();}
-function timeDay(){game.time=(game.time+.3)%1;draw();}
-function cancel(){selected=null;info.innerText='Выбор сброшен'}
-function resetGame(){location.reload()}
-
-function update(){
-money.innerText=game.money.toLocaleString();
-pop.innerText=game.pop.toLocaleString();
-cnt.innerText=game.cnt+'/3600';
-let inc=0;
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const id=game.grid[r][c];
-if(id)inc+=buildings[id].inc;
-}
-incSpan.innerText=inc.toLocaleString();
-}
-
-const catsDiv=document.getElementById('cats');
-const list=document.getElementById('list');
-const info=document.getElementById('info');
-const money=document.getElementById('money');
-const pop=document.getElementById('pop');
-const incSpan=document.getElementById('inc');
-const cnt=document.getElementById('cnt');
-
-cats.forEach(c=>{
-const btn=document.createElement('button');
-btn.textContent=c.e+' '+c.n;
-btn.onclick=_=>{
-list.innerHTML='';
-all.filter(b=>b.cat===c.id).slice(0,200).forEach(b=>{
-const d=document.createElement('div');
-d.className='item';
-d.innerText=b.e+' '+b.name+' 💰'+b.price;
-d.onclick=_=>{
-document.querySelectorAll('.item').forEach(i=>i.classList.remove('selected'));
-d.classList.add('selected');
-selected=b.id;
-info.innerText='Выбрано: '+b.name;
+canvas.onmouseup = () => {
+    drag = false;
 };
-list.appendChild(d);
+
+canvas.onmousemove = (e) => {
+    if (drag) {
+        cam.targetX += e.clientX - lx;
+        cam.targetY += e.clientY - ly;
+        lx = e.clientX;
+        ly = e.clientY;
+    }
+    
+    // Ховер над клетками
+    const rect = canvas.getBoundingClientRect();
+    let mx = e.clientX - rect.left;
+    let my = e.clientY - rect.top;
+    
+    hoverRow = -1;
+    hoverCol = -1;
+    let bestDist = Infinity;
+    
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const p = iso(r, c);
+            const dist = Math.hypot(mx - p.x, my - p.y);
+            if (dist < 40 && dist < bestDist) {
+                bestDist = dist;
+                hoverRow = r;
+                hoverCol = c;
+            }
+        }
+    }
+    
+    draw();
+};
+
+canvas.onwheel = (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+    cam.targetZ = Math.min(3, Math.max(0.5, cam.targetZ + delta));
+};
+
+canvas.onclick = (e) => {
+    if (hoverRow !== -1 && hoverCol !== -1 && selected) {
+        build(hoverRow, hoverCol);
+    }
+};
+
+function build(r, c) {
+    const building = buildings[selected];
+    if (!building) return;
+    
+    if (game.money < building.price) {
+        info.innerText = '❌ Недостаточно средств!';
+        return;
+    }
+    
+    if (game.grid[r][c]) {
+        info.innerText = '❌ Клетка занята!';
+        return;
+    }
+    
+    game.money -= building.price;
+    game.grid[r][c] = building.id;
+    game.pop += building.pop;
+    game.cnt++;
+    
+    info.innerText = `✅ Построено: ${building.name}`;
+    update();
+    draw();
+}
+
+function collect() {
+    let total = 0;
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const id = game.grid[r][c];
+            if (id) total += buildings[id].inc;
+        }
+    }
+    game.money += total;
+    info.innerText = `💰 Собрано: ${total.toLocaleString()}`;
+    update();
+}
+
+function weather() {
+    game.weather = (game.weather + 1) % 3;
+    const weatherNames = ['☀️ Ясно', '🌧️ Дождь', '❄️ Снег'];
+    info.innerText = weatherNames[game.weather];
+    draw();
+}
+
+function timeDay() {
+    game.time = (game.time + 0.2) % 1;
+    draw();
+}
+
+function cancel() {
+    selected = null;
+    info.innerText = '🏗️ Выберите здание';
+    document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+}
+
+function resetGame() {
+    if (confirm('Начать новый город?')) {
+        location.reload();
+    }
+}
+
+function update() {
+    document.getElementById('money').innerText = game.money.toLocaleString();
+    document.getElementById('pop').innerText = game.pop.toLocaleString();
+    
+    let totalInc = 0;
+    for (let r = 0; r < GRID; r++) {
+        for (let c = 0; c < GRID; c++) {
+            const id = game.grid[r][c];
+            if (id) totalInc += buildings[id].inc;
+        }
+    }
+    document.getElementById('inc').innerText = totalInc.toLocaleString();
+    document.getElementById('cnt').innerText = `${game.cnt}/3600`;
+}
+
+function updateTimeIndicator() {
+    const indicator = document.getElementById('timeIndicator');
+    if (game.time < 0.25) indicator.innerHTML = '🌙 Ночь';
+    else if (game.time < 0.5) indicator.innerHTML = '🌅 Утро';
+    else if (game.time < 0.75) indicator.innerHTML = '☀️ День';
+    else indicator.innerHTML = '🌆 Вечер';
+}
+
+// Инициализация интерфейса
+const catsDiv = document.getElementById('cats');
+const listDiv = document.getElementById('list');
+const info = document.getElementById('info');
+
+cats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.innerHTML = `${cat.e} ${cat.n}`;
+    btn.onclick = () => {
+        listDiv.innerHTML = '';
+        const filtered = all.filter(b => b.cat === cat.id).slice(0, 50);
+        
+        filtered.forEach(building => {
+            const item = document.createElement('div');
+            item.className = 'item';
+            item.innerHTML = `
+                <span style="font-size: 24px;">${building.emoji}</span>
+                <div style="flex:1">
+                    <div style="font-weight:bold">${building.name}</div>
+                    <div style="font-size:14px; color:#aaa">
+                        💰 ${building.price.toLocaleString()} | ⚡ ${building.inc} | 👥 ${building.pop}
+                    </div>
+                </div>
+            `;
+            
+            item.onclick = (e) => {
+                e.stopPropagation();
+                document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+                item.classList.add('selected');
+                selected = building.id;
+                info.innerText = `🏗️ Выбрано: ${building.name}`;
+            };
+            
+            listDiv.appendChild(item);
+        });
+    };
+    catsDiv.appendChild(btn);
 });
-};
-catsDiv.appendChild(btn);
-});
 
+// Начальная отрисовка
 draw();
 update();
 </script>
