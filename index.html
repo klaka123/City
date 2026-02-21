@@ -3,222 +3,238 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Island Empire — графика премиум</title>
+    <title>3D Island Empire — новая эра</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
         }
         body {
-            background: #0a1a28;
+            background: #0a1c2f;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 12px;
+            padding: 10px;
         }
         .game-frame {
             width: 100%;
-            max-width: 640px;
-            background: linear-gradient(145deg, #1d4f6e, #123e58);
-            border-radius: 64px;
-            padding: 24px;
-            box-shadow: 0 40px 70px rgba(0,0,0,0.9), inset 0 3px 8px rgba(255,255,255,0.3);
-            border: 4px solid #4d8bb0;
+            max-width: 660px;
+            background: linear-gradient(145deg, #1a4f70, #0f3b55);
+            border-radius: 70px;
+            padding: 26px;
+            box-shadow: 0 50px 80px rgba(0,0,0,0.9), inset 0 4px 10px rgba(255,255,255,0.3);
+            border: 5px solid #5a9fc7;
         }
-        .resource-bar {
-            background: rgba(0, 25, 40, 0.8);
+        .resource-panel {
+            background: rgba(0, 30, 45, 0.85);
             backdrop-filter: blur(25px);
-            border-radius: 60px;
-            padding: 18px 28px;
+            border-radius: 70px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             color: white;
-            margin-bottom: 24px;
-            border: 2px solid #8ec9e0;
-            box-shadow: 0 12px 0 #0b4057;
+            margin-bottom: 28px;
+            border: 2px solid #9fd3f0;
+            box-shadow: 0 15px 0 #0f3f57;
         }
         .resource {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 24px;
+            gap: 12px;
+            font-size: 26px;
             font-weight: 700;
-            text-shadow: 0 4px 6px black;
-            background: rgba(0,0,0,0.4);
-            padding: 8px 22px;
-            border-radius: 50px;
+            text-shadow: 0 5px 8px black;
+            background: rgba(0,0,0,0.5);
+            padding: 10px 26px;
+            border-radius: 60px;
             backdrop-filter: blur(5px);
         }
         .resource-icon {
-            font-size: 34px;
-            filter: drop-shadow(0 5px 5px black);
+            font-size: 38px;
+            filter: drop-shadow(0 6px 6px black);
         }
         .canvas-holder {
-            background: #1a6d94;
-            border-radius: 56px;
-            padding: 24px;
+            background: #1e6f9a;
+            border-radius: 60px;
+            padding: 26px;
             display: flex;
             justify-content: center;
-            box-shadow: inset 0 -25px 50px #0a4057, 0 25px 40px black;
-            margin-bottom: 24px;
+            box-shadow: inset 0 -30px 60px #0a3f57, 0 30px 50px black;
+            margin-bottom: 28px;
         }
         #gameCanvas {
             width: 100%;
             height: auto;
-            border-radius: 48px;
-            background: #2f86b3;
+            border-radius: 52px;
+            background: #2e8fc0;
             cursor: pointer;
             touch-action: none;
-            max-width: 560px;
-            box-shadow: 0 0 0 6px #b2e2ff, 0 25px 50px black;
+            max-width: 580px;
+            box-shadow: 0 0 0 7px #c2e6ff, 0 30px 60px black;
         }
         .category-tabs {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 18px;
+            margin-bottom: 22px;
         }
         .tab {
             flex: 1;
             background: rgba(255,255,255,0.2);
             backdrop-filter: blur(20px);
-            border: 3px solid white;
-            border-radius: 60px;
-            padding: 16px;
+            border: 4px solid white;
+            border-radius: 70px;
+            padding: 18px;
             color: white;
             font-weight: bold;
-            font-size: 20px;
+            font-size: 22px;
             text-align: center;
-            box-shadow: 0 8px 0 #0b4057;
+            box-shadow: 0 10px 0 #0f3f57;
             transition: 0.1s;
             touch-action: manipulation;
         }
         .tab.active {
-            background: #ffdb8e;
-            color: #1d3b4f;
-            border-color: #ffb347;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 0 #b87c1b;
+            background: #ffe28f;
+            color: #1e3e55;
+            border-color: #ffb84d;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 0 #c68a2b;
         }
         .tab:active {
-            transform: translateY(5px);
-            box-shadow: 0 3px 0 #0b4057;
+            transform: translateY(7px);
+            box-shadow: 0 4px 0 #0f3f57;
         }
         .build-scroll {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(25px);
-            border-radius: 70px;
-            padding: 16px;
-            margin-bottom: 24px;
+            border-radius: 80px;
+            padding: 18px;
+            margin-bottom: 28px;
             overflow-x: auto;
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            border: 4px solid white;
-            box-shadow: inset 0 8px 20px #c0c0c0;
+            border: 5px solid white;
+            box-shadow: inset 0 10px 25px #b0b0b0;
         }
         .build-scroll::-webkit-scrollbar { display: none; }
         .build-track {
             display: inline-flex;
-            gap: 20px;
-            padding: 10px;
+            gap: 24px;
+            padding: 12px;
         }
         .build-card {
-            background: linear-gradient(145deg, #fffbf0, #f2e6ce);
-            border-radius: 60px;
-            padding: 24px 28px;
+            background: linear-gradient(145deg, #fffef8, #f5ecd8);
+            border-radius: 70px;
+            padding: 28px 32px;
             display: inline-flex;
             flex-direction: column;
             align-items: center;
-            min-width: 160px;
-            box-shadow: 0 15px 0 #b3a07e, 0 22px 40px rgba(0,0,0,0.5);
-            border: 5px solid #fff9e0;
+            min-width: 190px;
+            box-shadow: 0 18px 0 #c0af8b, 0 28px 45px rgba(0,0,0,0.5);
+            border: 6px solid #fffae6;
             transition: 0.1s;
             touch-action: manipulation;
         }
         .build-card.selected {
-            transform: translateY(-8px);
+            transform: translateY(-10px);
             border-color: #f7b731;
-            box-shadow: 0 18px 0 #c9912e, 0 30px 45px black;
+            box-shadow: 0 22px 0 #c9912e, 0 35px 55px black;
         }
         .build-card:active {
-            transform: translateY(8px);
-            box-shadow: 0 7px 0 #b3a07e;
+            transform: translateY(10px);
+            box-shadow: 0 8px 0 #c0af8b;
         }
         .card-preview {
-            width: 90px;
-            height: 90px;
-            background: #d9e9f0;
-            border-radius: 40px;
+            width: 110px;
+            height: 110px;
+            background: #d9ecf5;
+            border-radius: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 54px;
-            margin-bottom: 12px;
-            box-shadow: inset 0 -8px 0 #a0c4d0;
+            font-size: 70px;
+            margin-bottom: 14px;
+            box-shadow: inset 0 -10px 0 #aac6d4;
         }
         .card-name {
             font-weight: 800;
-            font-size: 18px;
-            color: #2b5a4a;
+            font-size: 20px;
+            color: #2e6652;
         }
         .card-price {
-            background: #cfb385;
-            padding: 8px 22px;
-            border-radius: 50px;
+            background: #d4b98c;
+            padding: 10px 28px;
+            border-radius: 60px;
             font-weight: 700;
-            margin-top: 10px;
-            font-size: 18px;
+            margin-top: 12px;
+            font-size: 20px;
             color: #2d2d2d;
         }
         .action-row {
             display: flex;
-            gap: 18px;
+            gap: 20px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
         .primary-btn {
             flex: 1 1 auto;
-            min-width: 180px;
-            background: linear-gradient(145deg, #3d93c0, #19658a);
+            min-width: 200px;
+            background: linear-gradient(145deg, #3f9ed4, #1c6fa0);
             border: none;
-            border-radius: 70px;
-            padding: 22px 24px;
+            border-radius: 80px;
+            padding: 24px 26px;
             color: white;
-            font-size: 26px;
+            font-size: 28px;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            box-shadow: 0 15px 0 #0f4b6b, 0 25px 40px black;
-            border: 4px solid #9fd3ff;
+            gap: 16px;
+            box-shadow: 0 18px 0 #12547a, 0 30px 50px black;
+            border: 5px solid #b0e2ff;
             touch-action: manipulation;
+            position: relative;
         }
         .primary-btn:active {
-            transform: translateY(8px);
-            box-shadow: 0 7px 0 #0f4b6b;
+            transform: translateY(10px);
+            box-shadow: 0 8px 0 #12547a;
+        }
+        .primary-btn:disabled {
+            opacity: 0.5;
+            transform: none;
+            pointer-events: none;
+        }
+        .cooldown-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            border-radius: 80px;
+            transition: width 0.1s linear;
+            pointer-events: none;
         }
         .info-card {
             background: #e5f2fa;
-            border-radius: 60px;
-            padding: 24px;
+            border-radius: 70px;
+            padding: 26px;
             color: #124257;
-            border: 5px solid white;
-            font-size: 20px;
+            border: 6px solid white;
+            font-size: 22px;
             font-weight: 600;
-            box-shadow: inset 0 8px 20px #b3d9f0, 0 15px 0 #548ea8;
+            box-shadow: inset 0 10px 25px #b3d9f0, 0 18px 0 #548ea8;
         }
     </style>
 </head>
 <body>
 <div class="game-frame">
-    <div class="resource-bar">
-        <div class="resource"><span class="resource-icon">💰</span> <span id="moneyDisplay">15000</span></div>
+    <div class="resource-panel">
+        <div class="resource"><span class="resource-icon">💰</span> <span id="moneyDisplay">20000</span></div>
         <div class="resource"><span class="resource-icon">👪</span> <span id="popDisplay">0</span></div>
         <div class="resource"><span class="resource-icon">📈</span> <span id="incomeDisplay">0</span></div>
         <div class="resource"><span class="resource-icon">🏝️</span> <span id="landDisplay">25</span></div>
@@ -239,8 +255,11 @@
     </div>
 
     <div class="action-row">
-        <button class="primary-btn" id="collectBtn"><span>💰</span> Сбор</button>
-        <button class="primary-btn" id="expandBtn"><span>🌊→🏝️</span> 1000💰</button>
+        <button class="primary-btn" id="collectBtn">
+            <span>💰</span> Сбор
+            <div class="cooldown-overlay" id="cooldownOverlay" style="width: 0%;"></div>
+        </button>
+        <button class="primary-btn" id="expandBtn"><span>🌊→🏝️</span> 1200💰</button>
         <button class="primary-btn" id="cancelBtn"><span>❌</span> Отмена</button>
     </div>
 
@@ -252,7 +271,6 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
     (function() {
-        // Telegram
         let tg = null;
         try {
             if (window.Telegram && Telegram.WebApp) {
@@ -262,166 +280,282 @@
             }
         } catch(e) { console.log('No TG'); }
 
-        // Изометрические параметры
+        // Размеры
         const GRID_SIZE = 7;
-        const CELL_W = 90;
-        const CELL_H = 52;
+        const CELL_W = 100;
+        const CELL_H = 60;
         const ISO_X0 = 280;
         const ISO_Y0 = 60;
 
-        // ---- Ультра-детализированные здания ----
+        // ---- 3D-модели зданий (детальная прорисовка) ----
         const BUILDINGS = {
             empty: {
                 name: 'Пусто', price: 0, income: 0, pop: 0,
-                draw: function(ctx, x, y) {
-                    // Основание с текстурой травы
+                draw: (ctx, x, y) => {
+                    // Земля с текстурой
                     ctx.fillStyle = '#7cb57c';
                     ctx.shadowColor = '#3a6b3a';
-                    ctx.shadowBlur = 12;
-                    ctx.shadowOffsetY = 8;
+                    ctx.shadowBlur = 20;
+                    ctx.shadowOffsetY = 12;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-5);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-5);
-                    ctx.lineTo(x, y + CELL_H-5);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-5);
+                    ctx.moveTo(x, y-6);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-6);
+                    ctx.lineTo(x, y + CELL_H-6);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-6);
                     ctx.closePath();
                     ctx.fill();
                     ctx.shadowBlur = 0;
-                    // Трава (штрихи)
+                    // Травяные кочки
                     ctx.fillStyle = '#5f8b5f';
-                    for (let i = -15; i <= 15; i+=8) {
-                        ctx.fillRect(x-4+i, y-18, 3, 12);
+                    for (let i = -20; i <= 20; i+=15) {
+                        ctx.beginPath();
+                        ctx.arc(x-10+i, y-24, 6, 0, 2*Math.PI);
+                        ctx.fill();
                     }
-                    // Цветочки
-                    ctx.fillStyle = '#f4a460';
-                    ctx.beginPath();
-                    ctx.arc(x-12, y-22, 4, 0, 2*Math.PI);
-                    ctx.fill();
-                    ctx.fillStyle = '#f0e68c';
-                    ctx.beginPath();
-                    ctx.arc(x+14, y-28, 5, 0, 2*Math.PI);
-                    ctx.fill();
                 }
             },
-            house1: { // Дом с черепичной крышей и садом
-                name: 'Дом', price: 200, income: 16, pop: 7,
+            house1: { // Уютный домик с черепицей
+                name: 'Дом', price: 250, income: 18, pop: 8,
                 draw: (ctx, x, y) => {
-                    // Фундамент
-                    ctx.fillStyle = '#dbb十七';
-                    ctx.shadowColor = '#8b6b4a';
-                    ctx.shadowBlur = 18;
-                    ctx.shadowOffsetY = 10;
+                    // Тень под домом
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 30;
+                    ctx.shadowOffsetY = 18;
+                    
+                    // Основание
+                    ctx.fillStyle = '#e3b27c';
                     ctx.beginPath();
-                    ctx.moveTo(x, y-20);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-20);
-                    ctx.lineTo(x, y + CELL_H-20);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-20);
+                    ctx.moveTo(x, y-22);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-22);
+                    ctx.lineTo(x, y + CELL_H-22);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-22);
                     ctx.closePath();
                     ctx.fill();
 
-                    // Крыша (черепица)
-                    ctx.fillStyle = '#b54c4c';
-                    ctx.shadowBlur = 16;
+                    // Стены (объём)
+                    ctx.fillStyle = '#c49a6c';
                     ctx.beginPath();
-                    ctx.moveTo(x-24, y-44);
-                    ctx.lineTo(x+24, y-44);
-                    ctx.lineTo(x, y-70);
+                    ctx.moveTo(x-10, y-40);
+                    ctx.lineTo(x+10, y-40);
+                    ctx.lineTo(x+10, y-10);
+                    ctx.lineTo(x-10, y-10);
                     ctx.closePath();
                     ctx.fill();
-                    // Черепица (полоски)
+
+                    // Крыша (красная)
+                    ctx.fillStyle = '#b54c4c';
+                    ctx.beginPath();
+                    ctx.moveTo(x-28, y-44);
+                    ctx.lineTo(x+28, y-44);
+                    ctx.lineTo(x, y-76);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Черепица
                     ctx.strokeStyle = '#8b3a3a';
                     ctx.lineWidth = 2;
-                    for (let i = -18; i <= 18; i+=12) {
+                    for (let i = -20; i <= 20; i+=10) {
                         ctx.beginPath();
-                        ctx.moveTo(x-24+i, y-48);
-                        ctx.lineTo(x-6+i, y-64);
+                        ctx.moveTo(x-20+i, y-50);
+                        ctx.lineTo(x-5+i, y-66);
                         ctx.stroke();
                     }
 
                     // Дверь
                     ctx.fillStyle = '#8b5a2b';
-                    ctx.fillRect(x-10, y-28, 20, 28);
-                    ctx.fillStyle = '#c49a6c';
+                    ctx.fillRect(x-12, y-28, 24, 28);
+                    ctx.fillStyle = '#d4af37';
                     ctx.beginPath();
-                    ctx.arc(x-2, y-14, 3, 0, 2*Math.PI);
-                    ctx.fill(); // ручка
+                    ctx.arc(x-4, y-14, 3, 0, 2*Math.PI);
+                    ctx.fill();
 
                     // Окна
                     ctx.fillStyle = '#f9e076';
-                    ctx.shadowBlur = 8;
-                    ctx.fillRect(x-22, y-34, 10, 12);
-                    ctx.fillRect(x+12, y-34, 10, 12);
-                    // Переплёты
+                    ctx.fillRect(x-24, y-38, 12, 14);
+                    ctx.fillRect(x+12, y-38, 12, 14);
                     ctx.strokeStyle = '#6b4c2c';
                     ctx.lineWidth = 2;
-                    ctx.strokeRect(x-22, y-34, 10, 12);
-                    ctx.strokeRect(x+12, y-34, 10, 12);
-                    ctx.beginPath();
-                    ctx.moveTo(x-17, y-28);
-                    ctx.lineTo(x-12, y-28);
-                    ctx.moveTo(x+17, y-28);
-                    ctx.lineTo(x+22, y-28);
-                    ctx.stroke();
+                    ctx.strokeRect(x-24, y-38, 12, 14);
+                    ctx.strokeRect(x+12, y-38, 12, 14);
 
                     // Труба
                     ctx.fillStyle = '#8b5a2b';
-                    ctx.fillRect(x+8, y-60, 8, 16);
+                    ctx.fillRect(x+14, y-62, 8, 18);
                     ctx.shadowBlur = 0;
                 }
             },
             house2: { // Коттедж с балконом
-                name: 'Коттедж', price: 550, income: 42, pop: 20,
+                name: 'Коттедж', price: 650, income: 48, pop: 22,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 30;
+                    ctx.shadowOffsetY = 18;
+
                     ctx.fillStyle = '#cf9f6b';
-                    ctx.shadowColor = '#8b6b4a';
-                    ctx.shadowBlur = 18;
-                    ctx.shadowOffsetY = 10;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-26);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-26);
-                    ctx.lineTo(x, y + CELL_H-26);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-26);
+                    ctx.moveTo(x, y-28);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-28);
+                    ctx.lineTo(x, y + CELL_H-28);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-28);
                     ctx.closePath();
                     ctx.fill();
 
                     // Основная крыша
                     ctx.fillStyle = '#8b5a2b';
                     ctx.beginPath();
-                    ctx.moveTo(x-30, y-52);
-                    ctx.lineTo(x+30, y-52);
-                    ctx.lineTo(x, y-84);
+                    ctx.moveTo(x-32, y-58);
+                    ctx.lineTo(x+32, y-58);
+                    ctx.lineTo(x, y-94);
                     ctx.closePath();
                     ctx.fill();
 
-                    // Мансардное окно
+                    // Мансарда
                     ctx.fillStyle = '#c49a6c';
-                    ctx.fillRect(x-8, y-58, 16, 14);
+                    ctx.fillRect(x-16, y-68, 32, 18);
                     ctx.fillStyle = '#f9e076';
-                    ctx.fillRect(x-6, y-56, 4, 4);
-                    ctx.fillRect(x+2, y-56, 4, 4);
+                    ctx.fillRect(x-10, y-64, 6, 6);
+                    ctx.fillRect(x+4, y-64, 6, 6);
 
                     // Балкон
                     ctx.fillStyle = '#a57248';
-                    ctx.fillRect(x-20, y-36, 40, 8);
-                    for (let i = -12; i <= 12; i+=12) {
+                    ctx.fillRect(x-24, y-40, 48, 8);
+                    for (let i = -14; i <= 14; i+=14) {
                         ctx.fillStyle = '#8b5a2b';
-                        ctx.fillRect(x-4+i, y-44, 6, 10);
+                        ctx.fillRect(x-6+i, y-50, 8, 12);
                     }
 
                     // Окна первого этажа
                     ctx.fillStyle = '#f9e076';
-                    ctx.fillRect(x-18, y-30, 8, 12);
-                    ctx.fillRect(x+10, y-30, 8, 12);
+                    ctx.fillRect(x-22, y-34, 12, 14);
+                    ctx.fillRect(x+10, y-34, 12, 14);
                     ctx.shadowBlur = 0;
                 }
             },
             house3: { // Многоквартирный дом
-                name: 'Многокв.', price: 1500, income: 120, pop: 65,
+                name: 'Многокв.', price: 1800, income: 140, pop: 75,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 35;
+                    ctx.shadowOffsetY = 20;
+
                     ctx.fillStyle = '#b0bec5';
-                    ctx.shadowColor = '#6b7a8a';
-                    ctx.shadowBlur = 22;
-                    ctx.shadowOffsetY = 12;
+                    ctx.beginPath();
+                    ctx.moveTo(x, y-36);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-36);
+                    ctx.lineTo(x, y + CELL_H-36);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-36);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = '#8a9aa8';
+                    ctx.fillRect(x-34, y-78, 68, 54);
+
+                    // Окна
+                    for (let i = -20; i <= 20; i+=22) {
+                        for (let j = -68; j <= -26; j+=22) {
+                            ctx.fillStyle = '#cfd8dc';
+                            ctx.fillRect(x-12+i, y+j, 14, 16);
+                            ctx.fillStyle = '#f9e076';
+                            ctx.fillRect(x-10+i, y+j+2, 4, 4);
+                            ctx.fillRect(x-2+i, y+j+2, 4, 4);
+                            ctx.fillStyle = '#cfd8dc';
+                        }
+                    }
+
+                    // Балконы
+                    ctx.fillStyle = '#a0aab3';
+                    ctx.fillRect(x-26, y-54, 22, 6);
+                    ctx.fillRect(x+4, y-54, 22, 6);
+                    ctx.shadowBlur = 0;
+                }
+            },
+            skyscraper: { // Небоскрёб
+                name: 'Небоскрёб', price: 6000, income: 500, pop: 300,
+                draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 40;
+                    ctx.shadowOffsetY = 25;
+
+                    ctx.fillStyle = '#607d8b';
+                    ctx.beginPath();
+                    ctx.moveTo(x, y-52);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-52);
+                    ctx.lineTo(x, y + CELL_H-52);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-52);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = '#4f6573';
+                    ctx.fillRect(x-40, y-130, 80, 90);
+
+                    // Окна
+                    for (let i = -28; i <= 28; i+=22) {
+                        for (let j = -115; j <= -25; j+=22) {
+                            ctx.fillStyle = '#ffd966';
+                            ctx.fillRect(x-14+i, y+j-5, 16, 18);
+                            ctx.fillStyle = '#fff';
+                            ctx.fillRect(x-12+i, y+j-3, 6, 6);
+                            ctx.fillRect(x-4+i, y+j-3, 6, 6);
+                        }
+                    }
+
+                    // Антенна
+                    ctx.fillStyle = '#b0bec5';
+                    ctx.fillRect(x-6, y-150, 12, 28);
+                    ctx.fillStyle = '#d4af37';
+                    ctx.beginPath();
+                    ctx.arc(x, y-160, 8, 0, 2*Math.PI);
+                    ctx.fill();
+
+                    ctx.shadowBlur = 0;
+                }
+            },
+            shop: { // Магазин
+                name: 'Магазин', price: 450, income: 55, pop: 5,
+                draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 28;
+                    ctx.shadowOffsetY = 16;
+
+                    ctx.fillStyle = '#ffb74d';
+                    ctx.beginPath();
+                    ctx.moveTo(x, y-22);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-22);
+                    ctx.lineTo(x, y + CELL_H-22);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-22);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    ctx.fillStyle = '#ff9800';
+                    ctx.fillRect(x-32, y-48, 64, 34);
+
+                    // Витрина
+                    ctx.fillStyle = '#fff2cc';
+                    ctx.fillRect(x-22, y-40, 16, 18);
+                    ctx.fillRect(x+6, y-40, 16, 18);
+                    
+                    ctx.fillStyle = '#8b5a2b';
+                    ctx.font = '28px sans-serif';
+                    ctx.fillText('🛒', x-32, y-16);
+                    ctx.fillText('🧃', x+10, y-20);
+
+                    // Вывеска
+                    ctx.fillStyle = '#c43a3a';
+                    ctx.fillRect(x-14, y-70, 28, 12);
+                    ctx.fillStyle = '#fff';
+                    ctx.font = '20px sans-serif';
+                    ctx.fillText('SALE', x-12, y-58);
+                    ctx.shadowBlur = 0;
+                }
+            },
+            office: { // Офис
+                name: 'Офис', price: 1300, income: 150, pop: 12,
+                draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 32;
+                    ctx.shadowOffsetY = 18;
+
+                    ctx.fillStyle = '#9e9e9e';
                     ctx.beginPath();
                     ctx.moveTo(x, y-32);
                     ctx.lineTo(x + CELL_W/2, y + CELL_H/2-32);
@@ -430,359 +564,241 @@
                     ctx.closePath();
                     ctx.fill();
 
-                    ctx.fillStyle = '#8a9aa8';
-                    ctx.fillRect(x-30, y-70, 60, 48);
-
-                    // Окна (ряды)
-                    ctx.fillStyle = '#cfd8dc';
-                    for (let i = -18; i <= 18; i+=22) {
-                        for (let j = -62; j <= -22; j+=22) {
-                            ctx.fillRect(x-10+i, y+j, 12, 14);
-                            ctx.fillStyle = '#f9e076';
-                            ctx.fillRect(x-8+i, y+j+2, 4, 4);
-                            ctx.fillRect(x+0+i, y+j+2, 4, 4);
-                            ctx.fillStyle = '#cfd8dc';
-                        }
-                    }
-
-                    // Балконы
-                    ctx.fillStyle = '#a0aab3';
-                    ctx.fillRect(x-24, y-48, 20, 6);
-                    ctx.fillRect(x+4, y-48, 20, 6);
-                    ctx.shadowBlur = 0;
-                }
-            },
-            skyscraper: { // Небоскрёб с антенной
-                name: 'Небоскрёб', price: 5000, income: 400, pop: 250,
-                draw: (ctx, x, y) => {
-                    ctx.fillStyle = '#607d8b';
-                    ctx.shadowColor = '#2f4a5a';
-                    ctx.shadowBlur = 26;
-                    ctx.shadowOffsetY = 16;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y-48);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-48);
-                    ctx.lineTo(x, y + CELL_H-48);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-48);
-                    ctx.closePath();
-                    ctx.fill();
-
-                    ctx.fillStyle = '#4f6573';
-                    ctx.fillRect(x-34, y-120, 68, 80);
-
-                    // Окна с подсветкой
-                    for (let i = -22; i <= 22; i+=18) {
-                        for (let j = -105; j <= -25; j+=22) {
-                            ctx.fillStyle = '#ffd966';
-                            ctx.fillRect(x-10+i, y+j-5, 12, 16);
-                            ctx.fillStyle = '#ffffff';
-                            ctx.fillRect(x-8+i, y+j-3, 4, 6);
-                            ctx.fillRect(x+0+i, y+j-3, 4, 6);
-                        }
-                    }
-
-                    // Антенна
-                    ctx.fillStyle = '#b0bec5';
-                    ctx.fillRect(x-4, y-138, 8, 22);
-                    ctx.fillStyle = '#d4af37';
-                    ctx.beginPath();
-                    ctx.arc(x, y-148, 6, 0, 2*Math.PI);
-                    ctx.fill();
-
-                    // Шпиль
-                    ctx.fillStyle = '#cfd8dc';
-                    ctx.fillRect(x-2, y-152, 4, 16);
-                    ctx.shadowBlur = 0;
-                }
-            },
-            shop: { // Магазин с витриной
-                name: 'Магазин', price: 380, income: 50, pop: 4,
-                draw: (ctx, x, y) => {
-                    ctx.fillStyle = '#ffb74d';
-                    ctx.shadowColor = '#b46f1a';
-                    ctx.shadowBlur = 18;
-                    ctx.shadowOffsetY = 9;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y-20);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-20);
-                    ctx.lineTo(x, y + CELL_H-20);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-20);
-                    ctx.closePath();
-                    ctx.fill();
-
-                    ctx.fillStyle = '#ff9800';
-                    ctx.fillRect(x-28, y-42, 56, 30);
-
-                    // Витрина
-                    ctx.fillStyle = '#fff2cc';
-                    ctx.fillRect(x-18, y-36, 12, 16);
-                    ctx.fillRect(x+6, y-36, 12, 16);
-                    // Товары
-                    ctx.font = '24px sans-serif';
-                    ctx.fillStyle = '#8b5a2b';
-                    ctx.fillText('🛒', x-28, y-16);
-                    ctx.fillText('🧃', x+12, y-20);
-
-                    // Вывеска
-                    ctx.fillStyle = '#c43a3a';
-                    ctx.fillRect(x-12, y-62, 24, 10);
-                    ctx.fillStyle = '#fff';
-                    ctx.font = '18px sans-serif';
-                    ctx.fillText('SALE', x-10, y-52);
-                    ctx.shadowBlur = 0;
-                }
-            },
-            office: { // Офисное здание
-                name: 'Офис', price: 1100, income: 130, pop: 10,
-                draw: (ctx, x, y) => {
-                    ctx.fillStyle = '#9e9e9e';
-                    ctx.shadowColor = '#6b6b6b';
-                    ctx.shadowBlur = 22;
-                    ctx.shadowOffsetY = 11;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y-28);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-28);
-                    ctx.lineTo(x, y + CELL_H-28);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-28);
-                    ctx.closePath();
-                    ctx.fill();
-
                     ctx.fillStyle = '#757575';
-                    ctx.fillRect(x-30, y-60, 60, 42);
+                    ctx.fillRect(x-34, y-68, 68, 48);
 
                     // Окна
-                    for (let i = -18; i <= 18; i+=20) {
+                    for (let i = -20; i <= 20; i+=24) {
                         ctx.fillStyle = '#cfd8dc';
-                        ctx.fillRect(x-12+i, y-52, 14, 10);
-                        ctx.fillRect(x-12+i, y-34, 14, 10);
+                        ctx.fillRect(x-14+i, y-58, 16, 12);
+                        ctx.fillRect(x-14+i, y-38, 16, 12);
                         ctx.fillStyle = '#aed6f1';
-                        ctx.fillRect(x-10+i, y-50, 6, 6);
-                        ctx.fillRect(x-10+i, y-32, 6, 6);
+                        ctx.fillRect(x-12+i, y-56, 6, 6);
+                        ctx.fillRect(x-12+i, y-36, 6, 6);
                     }
 
                     // Логотип
                     ctx.fillStyle = '#ffb74d';
                     ctx.beginPath();
-                    ctx.arc(x, y-72, 8, 0, 2*Math.PI);
+                    ctx.arc(x, y-82, 10, 0, 2*Math.PI);
                     ctx.fill();
                     ctx.fillStyle = '#fff';
-                    ctx.font = '16px sans-serif';
-                    ctx.fillText('LLC', x-12, y-70);
+                    ctx.font = '18px sans-serif';
+                    ctx.fillText('LLC', x-16, y-80);
                     ctx.shadowBlur = 0;
                 }
             },
-            school: { // Школа с колокольчиком
-                name: 'Школа', price: 2500, income: 70, pop: 0,
+            school: { // Школа
+                name: 'Школа', price: 3000, income: 85, pop: 0,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 32;
+                    ctx.shadowOffsetY = 18;
+
                     ctx.fillStyle = '#ff8a80';
-                    ctx.shadowColor = '#b2453a';
-                    ctx.shadowBlur = 22;
-                    ctx.shadowOffsetY = 10;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-26);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-26);
-                    ctx.lineTo(x, y + CELL_H-26);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-26);
+                    ctx.moveTo(x, y-30);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-30);
+                    ctx.lineTo(x, y + CELL_H-30);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-30);
                     ctx.closePath();
                     ctx.fill();
 
                     ctx.fillStyle = '#f06292';
-                    ctx.fillRect(x-32, y-58, 64, 44);
+                    ctx.fillRect(x-36, y-66, 72, 50);
 
                     // Окна
-                    for (let i = -18; i <= 18; i+=22) {
+                    for (let i = -20; i <= 20; i+=24) {
                         ctx.fillStyle = '#ffffff';
-                        ctx.fillRect(x-12+i, y-50, 14, 14);
-                        ctx.fillRect(x-12+i, y-28, 14, 14);
+                        ctx.fillRect(x-14+i, y-56, 16, 16);
+                        ctx.fillRect(x-14+i, y-32, 16, 16);
                     }
 
                     // Крыльцо
                     ctx.fillStyle = '#8b5a2b';
-                    ctx.fillRect(x-16, y-22, 32, 8);
+                    ctx.fillRect(x-18, y-26, 36, 10);
 
                     // Колокольчик
                     ctx.fillStyle = '#d4af37';
                     ctx.beginPath();
-                    ctx.arc(x, y-78, 8, 0, 2*Math.PI);
+                    ctx.arc(x, y-88, 10, 0, 2*Math.PI);
                     ctx.fill();
                     ctx.fillStyle = '#b8860b';
-                    ctx.fillRect(x-2, y-86, 4, 10);
+                    ctx.fillRect(x-3, y-98, 6, 12);
                     ctx.shadowBlur = 0;
                 }
             },
-            hospital: { // Больница с крестом
-                name: 'Больница', price: 3200, income: 105, pop: 0,
+            hospital: { // Больница
+                name: 'Больница', price: 3800, income: 130, pop: 0,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 32;
+                    ctx.shadowOffsetY = 18;
+
                     ctx.fillStyle = '#ef9a9a';
-                    ctx.shadowColor = '#a54444';
-                    ctx.shadowBlur = 22;
-                    ctx.shadowOffsetY = 10;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-28);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-28);
-                    ctx.lineTo(x, y + CELL_H-28);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-28);
+                    ctx.moveTo(x, y-32);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-32);
+                    ctx.lineTo(x, y + CELL_H-32);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-32);
                     ctx.closePath();
                     ctx.fill();
 
                     ctx.fillStyle = '#e57373';
-                    ctx.fillRect(x-32, y-62, 64, 46);
+                    ctx.fillRect(x-36, y-70, 72, 52);
 
                     // Крест
                     ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(x-8, y-52, 16, 8);
-                    ctx.fillRect(x-4, y-58, 8, 20);
+                    ctx.fillRect(x-10, y-58, 20, 10);
+                    ctx.fillRect(x-5, y-66, 10, 24);
 
                     // Окна
-                    for (let i = -18; i <= 18; i+=22) {
+                    for (let i = -20; i <= 20; i+=24) {
                         ctx.fillStyle = '#b0e0e6';
-                        ctx.fillRect(x-12+i, y-44, 10, 10);
-                        ctx.fillRect(x-12+i, y-24, 10, 10);
+                        ctx.fillRect(x-14+i, y-50, 12, 12);
+                        ctx.fillRect(x-14+i, y-28, 12, 12);
                     }
 
                     // Вход
                     ctx.fillStyle = '#8b5a2b';
-                    ctx.fillRect(x-10, y-22, 20, 16);
+                    ctx.fillRect(x-12, y-26, 24, 18);
                     ctx.shadowBlur = 0;
                 }
             },
-            park: { // Парк с деревьями и цветами
-                name: 'Парк', price: 280, income: 26, pop: 4,
+            park: { // Парк
+                name: 'Парк', price: 320, income: 30, pop: 5,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 24;
+                    ctx.shadowOffsetY = 14;
+
                     ctx.fillStyle = '#81c784';
-                    ctx.shadowColor = '#3f7840';
-                    ctx.shadowBlur = 18;
-                    ctx.shadowOffsetY = 8;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-10);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-10);
-                    ctx.lineTo(x, y + CELL_H-10);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-10);
+                    ctx.moveTo(x, y-14);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-14);
+                    ctx.lineTo(x, y + CELL_H-14);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-14);
                     ctx.closePath();
                     ctx.fill();
 
                     // Деревья
                     ctx.fillStyle = '#5f9b6b';
                     ctx.beginPath();
-                    ctx.arc(x-18, y-30, 12, 0, 2*Math.PI);
+                    ctx.arc(x-22, y-36, 16, 0, 2*Math.PI);
                     ctx.fill();
                     ctx.fillStyle = '#8b5a2b';
-                    ctx.fillRect(x-24, y-20, 6, 18);
-                    ctx.fillRect(x-16, y-20, 6, 18);
+                    ctx.fillRect(x-28, y-22, 8, 20);
+                    ctx.fillRect(x-20, y-22, 8, 20);
 
                     ctx.fillStyle = '#5f9b6b';
                     ctx.beginPath();
-                    ctx.arc(x+18, y-38, 10, 0, 2*Math.PI);
+                    ctx.arc(x+22, y-44, 14, 0, 2*Math.PI);
                     ctx.fill();
                     ctx.fillStyle = '#8b5a2b';
-                    ctx.fillRect(x+14, y-28, 6, 16);
+                    ctx.fillRect(x+16, y-30, 8, 18);
 
                     // Цветы
                     ctx.fillStyle = '#f4a460';
-                    for (let i = -10; i <= 10; i+=10) {
+                    for (let i = -10; i <= 10; i+=12) {
                         ctx.beginPath();
-                        ctx.arc(x+i, y-18, 4, 0, 2*Math.PI);
+                        ctx.arc(x+i, y-20, 6, 0, 2*Math.PI);
                         ctx.fill();
                     }
-                    ctx.fillStyle = '#f0e68c';
-                    ctx.beginPath();
-                    ctx.arc(x-5, y-24, 4, 0, 2*Math.PI);
-                    ctx.fill();
                     ctx.shadowBlur = 0;
                 }
             },
             road: { // Дорога с разметкой
-                name: 'Дорога', price: 120, income: 6, pop: 0,
+                name: 'Дорога', price: 150, income: 8, pop: 0,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 20;
+                    ctx.shadowOffsetY = 10;
+
                     ctx.fillStyle = '#b0bec5';
-                    ctx.shadowColor = '#6e7b8c';
-                    ctx.shadowBlur = 14;
-                    ctx.shadowOffsetY = 6;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-6);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-6);
-                    ctx.lineTo(x, y + CELL_H-6);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-6);
+                    ctx.moveTo(x, y-8);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-8);
+                    ctx.lineTo(x, y + CELL_H-8);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-8);
                     ctx.closePath();
                     ctx.fill();
 
                     // Разметка
                     ctx.fillStyle = '#f5f5f5';
-                    ctx.fillRect(x-30, y-12, 60, 4);
-                    ctx.fillRect(x-10, y-26, 4, 20);
+                    ctx.fillRect(x-34, y-16, 68, 6);
+                    ctx.fillRect(x-12, y-30, 6, 24);
                     ctx.fillStyle = '#ffd966';
                     ctx.beginPath();
-                    ctx.arc(x-15, y-18, 4, 0, 2*Math.PI);
+                    ctx.arc(x-18, y-22, 6, 0, 2*Math.PI);
                     ctx.fill();
                     ctx.beginPath();
-                    ctx.arc(x+15, y-18, 4, 0, 2*Math.PI);
+                    ctx.arc(x+18, y-22, 6, 0, 2*Math.PI);
                     ctx.fill();
 
                     // Бордюр
                     ctx.fillStyle = '#8a9aa8';
-                    ctx.fillRect(x-34, y-4, 68, 4);
+                    ctx.fillRect(x-38, y-4, 76, 6);
                     ctx.shadowBlur = 0;
                 }
             },
-            powerplant: { // Электростанция с дымом
-                name: 'Электро', price: 5500, income: 520, pop: 0,
+            powerplant: { // Электростанция
+                name: 'Электро', price: 6500, income: 600, pop: 0,
                 draw: (ctx, x, y) => {
+                    ctx.shadowColor = '#2b4d2b';
+                    ctx.shadowBlur = 45;
+                    ctx.shadowOffsetY = 28;
+
                     ctx.fillStyle = '#b0a57c';
-                    ctx.shadowColor = '#6b5d3a';
-                    ctx.shadowBlur = 26;
-                    ctx.shadowOffsetY = 14;
                     ctx.beginPath();
-                    ctx.moveTo(x, y-38);
-                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-38);
-                    ctx.lineTo(x, y + CELL_H-38);
-                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-38);
+                    ctx.moveTo(x, y-44);
+                    ctx.lineTo(x + CELL_W/2, y + CELL_H/2-44);
+                    ctx.lineTo(x, y + CELL_H-44);
+                    ctx.lineTo(x - CELL_W/2, y + CELL_H/2-44);
                     ctx.closePath();
                     ctx.fill();
 
                     ctx.fillStyle = '#8b7a5a';
-                    ctx.fillRect(x-34, y-90, 68, 62);
+                    ctx.fillRect(x-38, y-100, 76, 70);
 
                     // Трубы
                     ctx.fillStyle = '#6b5a3a';
-                    ctx.fillRect(x-20, y-122, 12, 40);
-                    ctx.fillRect(x+8, y-132, 12, 50);
+                    ctx.fillRect(x-24, y-136, 14, 46);
+                    ctx.fillRect(x+10, y-148, 14, 58);
 
-                    // Дым (полупрозрачный)
+                    // Дым
                     ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                    ctx.shadowBlur = 20;
                     ctx.beginPath();
-                    ctx.arc(x-14, y-142, 12, 0, 2*Math.PI);
+                    ctx.arc(x-18, y-160, 16, 0, 2*Math.PI);
                     ctx.fill();
                     ctx.beginPath();
-                    ctx.arc(x+14, y-152, 10, 0, 2*Math.PI);
+                    ctx.arc(x+16, y-172, 14, 0, 2*Math.PI);
                     ctx.fill();
 
                     // Окна
                     ctx.fillStyle = '#ffb74d';
-                    for (let i = -16; i <= 16; i+=20) {
-                        ctx.fillRect(x-8+i, y-60, 8, 10);
+                    for (let i = -18; i <= 18; i+=22) {
+                        ctx.fillRect(x-10+i, y-68, 10, 12);
                     }
 
                     // Молния
                     ctx.fillStyle = '#ffeb3b';
-                    ctx.font = '32px sans-serif';
-                    ctx.fillText('⚡', x-20, y-30);
+                    ctx.font = '36px sans-serif';
+                    ctx.fillText('⚡', x-24, y-30);
                     ctx.shadowBlur = 0;
                 }
             }
         };
 
-        // Состояние игры
         let gameState = {
-            balance: 15000,
+            balance: 20000,
             gridSize: 7,
             grid: [],
             land: [],
             population: 0,
             lastTaxTime: Date.now(),
-            taxCooldown: 30000,
+            taxCooldown: 5000, // 5 секунд
             selectedBuilding: null,
-            expandCost: 1000,
+            expandCost: 1200,
         };
 
         function initLand() {
@@ -812,58 +828,55 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        let timeOfDay = 0.5; // для смены неба
-
         function drawCity() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Небо с градиентом (закат/рассвет)
-            const gradSky = ctx.createLinearGradient(0, 0, 0, canvas.height);
-            gradSky.addColorStop(0, '#1b4f72');
-            gradSky.addColorStop(0.5, '#3d8bb9');
-            gradSky.addColorStop(1, '#16638a');
-            ctx.fillStyle = gradSky;
+            // Небо с градиентом
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, '#0b4b72');
+            grad.addColorStop(1, '#2379a3');
+            ctx.fillStyle = grad;
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Солнце/луна
-            ctx.shadowBlur = 40;
-            ctx.shadowColor = '#fffbc2';
+            // Солнце
+            ctx.shadowBlur = 60;
+            ctx.shadowColor = '#fff7b0';
             ctx.beginPath();
-            ctx.arc(100, 80, 30, 0, 2*Math.PI);
+            ctx.arc(120, 90, 40, 0, 2*Math.PI);
             ctx.fillStyle = '#fff3b0';
             ctx.fill();
 
             // Облака
-            ctx.shadowBlur = 30;
+            ctx.shadowBlur = 40;
             ctx.fillStyle = 'rgba(255,255,255,0.2)';
             ctx.beginPath();
-            ctx.ellipse(200, 120, 50, 25, 0, 0, 2*Math.PI);
+            ctx.ellipse(200, 140, 60, 30, 0, 0, 2*Math.PI);
             ctx.fill();
             ctx.beginPath();
-            ctx.ellipse(400, 150, 60, 30, 0, 0, 2*Math.PI);
+            ctx.ellipse(400, 180, 80, 40, 0, 0, 2*Math.PI);
             ctx.fill();
 
             ctx.shadowBlur = 0;
 
             // Вода с анимацией
-            let wave = Date.now() / 300;
-            for (let i = 0; i < 10; i++) {
-                ctx.fillStyle = `rgba(100, 200, 255, ${0.1 + Math.sin(wave + i)*0.05})`;
+            let wave = Date.now() / 400;
+            for (let i = 0; i < 12; i++) {
+                ctx.fillStyle = `rgba(100, 200, 255, ${0.15 + Math.sin(wave + i)*0.05})`;
                 ctx.beginPath();
-                ctx.ellipse(100 + i*70, 400 + Math.sin(wave + i)*10, 50, 15, 0, 0, 2*Math.PI);
+                ctx.ellipse(80 + i*70, 400 + Math.sin(wave + i)*10, 60, 20, 0, 0, 2*Math.PI);
                 ctx.fill();
             }
 
-            // Рисуем все клетки
+            // Отрисовка клеток
             for (let r = 0; r < gameState.gridSize; r++) {
                 for (let c = 0; c < gameState.gridSize; c++) {
                     const iso = gridToIso(r, c);
                     if (!gameState.land[r][c]) {
-                        // Вода с текстурой
+                        // Вода
                         ctx.fillStyle = '#1f7a9c';
                         ctx.shadowColor = '#0c4b66';
-                        ctx.shadowBlur = 14;
-                        ctx.shadowOffsetY = 6;
+                        ctx.shadowBlur = 20;
+                        ctx.shadowOffsetY = 8;
                         ctx.beginPath();
                         ctx.moveTo(iso.x, iso.y);
                         ctx.lineTo(iso.x + CELL_W/2, iso.y + CELL_H/2);
@@ -872,11 +885,10 @@
                         ctx.closePath();
                         ctx.fill();
 
-                        // Рябь
                         ctx.fillStyle = '#48b5e0';
-                        ctx.globalAlpha = 0.4 + Math.sin(wave + r*2)*0.1;
-                        ctx.font = '24px sans-serif';
-                        ctx.fillText('💧', iso.x-16, iso.y-6);
+                        ctx.globalAlpha = 0.5 + Math.sin(wave + r)*0.2;
+                        ctx.font = '28px sans-serif';
+                        ctx.fillText('💧', iso.x-20, iso.y-8);
                         ctx.globalAlpha = 1;
                         continue;
                     }
@@ -890,14 +902,14 @@
             if (selRow !== -1 && selCol !== -1 && gameState.land[selRow] && gameState.land[selRow][selCol]) {
                 const iso = gridToIso(selRow, selCol);
                 ctx.shadowColor = '#ffdf7e';
-                ctx.shadowBlur = 35;
+                ctx.shadowBlur = 45;
                 ctx.strokeStyle = '#ffdb7e';
-                ctx.lineWidth = 8;
+                ctx.lineWidth = 10;
                 ctx.beginPath();
-                ctx.moveTo(iso.x, iso.y-22);
-                ctx.lineTo(iso.x + CELL_W/2, iso.y + CELL_H/2-22);
-                ctx.lineTo(iso.x, iso.y + CELL_H-22);
-                ctx.lineTo(iso.x - CELL_W/2, iso.y + CELL_H/2-22);
+                ctx.moveTo(iso.x, iso.y-26);
+                ctx.lineTo(iso.x + CELL_W/2, iso.y + CELL_H/2-26);
+                ctx.lineTo(iso.x, iso.y + CELL_H-26);
+                ctx.lineTo(iso.x - CELL_W/2, iso.y + CELL_H/2-26);
                 ctx.closePath();
                 ctx.stroke();
                 ctx.shadowBlur = 0;
@@ -924,7 +936,7 @@
             const mouseX = (clientX - rect.left) * scaleX;
             const mouseY = (clientY - rect.top) * scaleY;
 
-            let bestDist = 100;
+            let bestDist = 120;
             for (let r = 0; r < gameState.gridSize; r++) {
                 for (let c = 0; c < gameState.gridSize; c++) {
                     const iso = gridToIso(r, c);
@@ -982,12 +994,13 @@
             }
         }
 
+        // Сбор налогов с кулдауном 5 сек
+        let cooldownInterval = null;
         function collectTax() {
             const now = Date.now();
-            if (now - gameState.lastTaxTime < gameState.taxCooldown) {
-                alert('Налоги можно собирать раз в 30 секунд');
-                return;
-            }
+            const timeSince = now - gameState.lastTaxTime;
+            if (timeSince < gameState.taxCooldown) return;
+
             let total = 0;
             for (let r = 0; r < gameState.gridSize; r++) {
                 for (let c = 0; c < gameState.gridSize; c++) {
@@ -1001,7 +1014,40 @@
             updateUI();
             saveGame();
             document.getElementById('infoPanel').innerHTML = `💰 Собрано ${total} монет!`;
-            if (tg) tg.HapticFeedback.notificationOccurred('success');
+
+            // Анимация монет (простая)
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    if (tg) tg.HapticFeedback.impactOccurred('light');
+                }, i*50);
+            }
+
+            // Запуск визуального кулдауна
+            startCooldown();
+        }
+
+        function startCooldown() {
+            const btn = document.getElementById('collectBtn');
+            const overlay = document.getElementById('cooldownOverlay');
+            const startTime = Date.now();
+            const endTime = startTime + gameState.taxCooldown;
+
+            btn.disabled = true;
+
+            function updateCooldown() {
+                const now = Date.now();
+                const remaining = endTime - now;
+                if (remaining <= 0) {
+                    btn.disabled = false;
+                    overlay.style.width = '0%';
+                    clearInterval(cooldownInterval);
+                    return;
+                }
+                const percent = ((gameState.taxCooldown - remaining) / gameState.taxCooldown) * 100;
+                overlay.style.width = percent + '%';
+            }
+            updateCooldown();
+            cooldownInterval = setInterval(updateCooldown, 50);
         }
 
         function expandIsland() {
@@ -1119,11 +1165,11 @@
                     population: gameState.population
                 }));
             }
-            localStorage.setItem('islandEmpireUltra', JSON.stringify(gameState));
+            localStorage.setItem('islandEmpire3D', JSON.stringify(gameState));
         }
 
         function loadGame() {
-            const saved = localStorage.getItem('islandEmpireUltra');
+            const saved = localStorage.getItem('islandEmpire3D');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
