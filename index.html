@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MEGA CITY 1024 - АРХИТЕКТУРНЫЙ ГИГАНТ</title>
+    <title>MEGA CITY 5000+ - ИДЕАЛЬНАЯ ВЕРСИЯ</title>
     <style>
-        /* ========== ИНТЕРФЕЙС - СОХРАНЁН ПОЛНОСТЬЮ ========== */
+        /* ========== ИНТЕРФЕЙС - УЛУЧШЕННЫЙ ========== */
         * {
             margin: 0;
             padding: 0;
@@ -15,7 +15,7 @@
         }
 
         body {
-            background: #0c1e2c;
+            background: #0a1a28;
             overflow: hidden;
             touch-action: none;
         }
@@ -25,7 +25,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background: radial-gradient(circle at 30% 50%, #1d4b6e, #0a1c2c);
+            background: radial-gradient(circle at 30% 50%, #1e4f72, #0b2638);
         }
 
         #gameCanvas {
@@ -40,84 +40,131 @@
             cursor: grabbing;
         }
 
+        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
         .ui-panel {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(20, 40, 55, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 80px;
-            padding: 20px 40px;
+            background: rgba(15, 35, 50, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 70px;
+            padding: 18px 35px;
             display: flex;
-            gap: 40px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            gap: 35px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7);
             z-index: 100;
+            border-bottom: 4px solid #3a7ca5;
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
             color: white;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: 600;
             text-shadow: 0 2px 5px black;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
         }
 
         .stat-icon {
-            font-size: 40px;
+            font-size: 36px;
             filter: drop-shadow(0 4px 6px black);
         }
 
+        /* ===== ЛЕВОЕ МЕНЮ (ПОСТРОЙКИ) ===== */
         .build-menu {
             position: fixed;
             top: 50%;
-            left: 30px;
+            left: 25px;
             transform: translateY(-50%);
-            background: rgba(20, 40, 55, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
-            padding: 25px 15px;
+            width: 350px;
+            max-height: 85vh;
+            background: rgba(10, 28, 40, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            z-index: 100;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
-            z-index: 100;
-            max-height: 80vh;
-            overflow-y: auto;
-            scrollbar-width: thin;
-            scrollbar-color: #4a9ec0 #1e3f55;
-            min-width: 320px;
+            overflow: hidden;
         }
 
-        .build-menu::-webkit-scrollbar {
+        .menu-header {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            border-bottom: 3px solid #4a9ec0;
+        }
+
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .cat-tab {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex: 1 1 auto;
+            min-width: 80px;
+        }
+
+        .cat-tab:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .cat-tab.active {
+            background: #ffb84d;
+            color: #1a3a4f;
+            border-color: #ff9f1c;
+            box-shadow: 0 0 15px #ffb84d;
+        }
+
+        .buildings-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #4a9ec0 #1a3f55;
+        }
+
+        .buildings-list::-webkit-scrollbar {
             width: 8px;
         }
 
-        .build-menu::-webkit-scrollbar-thumb {
+        .buildings-list::-webkit-scrollbar-thumb {
             background: #4a9ec0;
             border-radius: 10px;
         }
 
-        .build-category {
-            color: white;
-            font-size: 20px;
-            font-weight: 600;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 40px;
-            text-align: center;
-            letter-spacing: 1px;
-            margin-top: 10px;
-        }
-
         .build-item {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 40px;
-            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: 15px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 15px;
@@ -127,25 +174,25 @@
         }
 
         .build-item:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateX(5px);
         }
 
         .build-item.selected {
             border-color: #ffb84d;
-            background: rgba(255, 184, 77, 0.2);
+            background: rgba(255, 184, 77, 0.15);
             box-shadow: 0 0 20px rgba(255, 184, 77, 0.3);
         }
 
         .item-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 25px;
+            width: 55px;
+            height: 55px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 28px;
+            font-size: 32px;
         }
 
         .item-info {
@@ -156,7 +203,7 @@
             color: white;
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
 
         .item-price {
@@ -165,28 +212,30 @@
             font-weight: 500;
         }
 
+        /* ===== ПРАВОЕ МЕНЮ ===== */
         .control-menu {
             position: fixed;
             top: 50%;
-            right: 30px;
+            right: 25px;
             transform: translateY(-50%);
-            background: rgba(20, 40, 55, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
+            background: rgba(10, 28, 40, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
             padding: 25px 20px;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
             z-index: 100;
+            min-width: 220px;
         }
 
         .control-btn {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border: none;
             border-radius: 40px;
-            padding: 15px 25px;
+            padding: 18px 20px;
             color: white;
             font-size: 22px;
             font-weight: 600;
@@ -195,48 +244,51 @@
             gap: 12px;
             cursor: pointer;
             transition: all 0.2s;
-            border: 2px solid transparent;
-            min-width: 200px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
         }
 
         .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             transform: translateX(-5px);
         }
 
         .control-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
 
         .control-btn.collect {
-            background: rgba(76, 175, 80, 0.3);
+            background: rgba(46, 125, 50, 0.4);
             border-color: #4caf50;
         }
 
         .control-btn.cancel {
-            background: rgba(244, 67, 54, 0.3);
+            background: rgba(198, 40, 40, 0.4);
             border-color: #f44336;
         }
 
+        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .info-panel {
             position: fixed;
-            top: 30px;
+            top: 25px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(20, 40, 55, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 60px;
-            padding: 15px 40px;
+            background: rgba(10, 28, 40, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 50px;
+            padding: 15px 35px;
             color: white;
             font-size: 22px;
             font-weight: 500;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
             z-index: 100;
             text-align: center;
-            min-width: 400px;
+            min-width: 450px;
+            border-top: 3px solid #4a9ec0;
         }
 
+        /* ===== УВЕДОМЛЕНИЯ ===== */
         .notification {
             position: fixed;
             top: 100px;
@@ -244,17 +296,17 @@
             background: rgba(0, 0, 0, 0.95);
             backdrop-filter: blur(15px);
             color: white;
-            padding: 15px 30px;
+            padding: 18px 35px;
             border-radius: 60px;
             font-size: 20px;
             font-weight: 500;
             z-index: 1000;
-            animation: slideInRight 0.3s ease;
+            animation: slideIn 0.3s ease;
             border: 2px solid #ffb84d;
             box-shadow: 0 10px 30px black;
         }
 
-        @keyframes slideInRight {
+        @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
@@ -268,24 +320,30 @@
     <div class="ui-panel">
         <div class="stat-item">
             <span class="stat-icon">💰</span>
-            <span id="moneyDisplay">10,000,000</span>
+            <span id="moneyDisplay">50,000,000</span>
         </div>
         <div class="stat-item">
             <span class="stat-icon">👥</span>
             <span id="popDisplay">0</span>
         </div>
         <div class="stat-item">
-            <span class="stat-icon">📊</span>
+            <span class="stat-icon">📈</span>
             <span id="incomeDisplay">0</span>
         </div>
         <div class="stat-item">
             <span class="stat-icon">🏗️</span>
-            <span id="buildingsCount">0/2500</span>
+            <span id="buildingsCount">0/3600</span>
         </div>
     </div>
 
     <!-- Левое меню (постройки) -->
-    <div class="build-menu" id="buildMenu"></div>
+    <div class="build-menu" id="buildMenu">
+        <div class="menu-header">
+            <span>🏗️ КАТАЛОГ ПОСТРОЕК (5120)</span>
+        </div>
+        <div class="category-tabs" id="categoryTabs"></div>
+        <div class="buildings-list" id="buildingsList"></div>
+    </div>
 
     <!-- Правое меню (управление) -->
     <div class="control-menu">
@@ -293,10 +351,10 @@
             <span>💰</span> СБОР НАЛОГОВ
         </button>
         <button class="control-btn" id="weatherBtn">
-            <span>🌦️</span> СМЕНИТЬ ПОГОДУ
+            <span>🌦️</span> ПОГОДА
         </button>
         <button class="control-btn" id="timeBtn">
-            <span>⏰</span> СМЕНИТЬ ВРЕМЯ
+            <span>⏰</span> ВРЕМЯ
         </button>
         <button class="control-btn cancel" id="cancelBtn">
             <span>❌</span> ОТМЕНА
@@ -308,20 +366,21 @@
 
     <!-- Верхняя информационная панель -->
     <div class="info-panel" id="infoPanel">
-        👆 ВЫБЕРИТЕ ЗДАНИЕ И НАЖМИТЕ НА КАРТУ
+        👆 ВЫБЕРИТЕ ЗДАНИЕ И КЛИКНИТЕ НА КАРТУ
     </div>
 </div>
 
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 // ============================================================================
-// MEGA CITY 1024 - АБСОЛЮТНО РАБОЧАЯ ВЕРСИЯ
+// MEGA CITY 5120 - АБСОЛЮТНО РАБОЧАЯ ВЕРСИЯ
 // ============================================================================
-// - 1024 уникальных здания (16 категорий по 64 здания)
-// - Полностью функциональное строительство
-// - Рабочие кнопки управления
-// - Камера с зумом и перемещением
+// - 5120 уникальных зданий (20 категорий × 256 зданий)
+// - Полностью функциональный интерфейс
+// - Камера с перемещением и зумом
 // - Погода и время суток
 // - Сохранение в localStorage
+// - Все кнопки работают
 // ============================================================================
 
 (function() {
@@ -337,13 +396,13 @@
 
     // ==================== КОНФИГУРАЦИЯ ====================
     const CONFIG = {
-        GRID_SIZE: 50,
+        GRID_SIZE: 60,              // 60x60 = 3600 клеток
         CELL_SIZE: 70,
         TAX_COOLDOWN: 8000,
-        MAX_ZOOM: 3,
+        MAX_ZOOM: 3.0,
         MIN_ZOOM: 0.4,
         ZOOM_SPEED: 0.1,
-        START_MONEY: 10000000,
+        START_MONEY: 50000000,
     };
 
     // ==================== СОСТОЯНИЕ ИГРЫ ====================
@@ -361,6 +420,7 @@
         lastMouseX: 0,
         lastMouseY: 0,
         buildingsCount: 0,
+        currentCategory: 'all',
     };
 
     // Инициализация сетки
@@ -372,86 +432,106 @@
     }
 
     // ==========================================================================
-    // БИБЛИОТЕКА ИЗ 1024 УНИКАЛЬНЫХ ЗДАНИЙ
+    // ГЕНЕРАЦИЯ 5120 УНИКАЛЬНЫХ ЗДАНИЙ
     // ==========================================================================
     const buildings = {};
-
-    // Категории и их эмодзи
+    
+    // 20 категорий с эмодзи
     const categories = [
-        { id: 'residential', name: 'ЖИЛЫЕ', emoji: '🏘️', prefix: 'Res' },
-        { id: 'commercial', name: 'КОММЕРЦИЯ', emoji: '🏪', prefix: 'Com' },
-        { id: 'industrial', name: 'ПРОМЫШЛЕННОСТЬ', emoji: '🏭', prefix: 'Ind' },
-        { id: 'infrastructure', name: 'ИНФРАСТРУКТУРА', emoji: '🏗️', prefix: 'Inf' },
-        { id: 'cultural', name: 'КУЛЬТУРА', emoji: '🎭', prefix: 'Cul' },
-        { id: 'sports', name: 'СПОРТ', emoji: '⚽', prefix: 'Spo' },
-        { id: 'transport', name: 'ТРАНСПОРТ', emoji: '🚉', prefix: 'Tra' },
-        { id: 'education', name: 'ОБРАЗОВАНИЕ', emoji: '📚', prefix: 'Edu' },
-        { id: 'healthcare', name: 'МЕДИЦИНА', emoji: '🏥', prefix: 'Hea' },
-        { id: 'entertainment', name: 'РАЗВЛЕЧЕНИЯ', emoji: '🎡', prefix: 'Ent' },
-        { id: 'government', name: 'ГОСУДАРСТВО', emoji: '🏛️', prefix: 'Gov' },
-        { id: 'religious', name: 'РЕЛИГИЯ', emoji: '⛪', prefix: 'Rel' },
-        { id: 'military', name: 'ВОЕННЫЕ', emoji: '🎖️', prefix: 'Mil' },
-        { id: 'agricultural', name: 'СЕЛЬСКОЕ ХОЗЯЙСТВО', emoji: '🌾', prefix: 'Agr' },
-        { id: 'scientific', name: 'НАУКА', emoji: '🔬', prefix: 'Sci' },
-        { id: 'tourist', name: 'ТУРИЗМ', emoji: '🏨', prefix: 'Tou' }
+        { id: 'residential', name: 'ЖИЛЫЕ', emoji: '🏘️', basePrice: 1000 },
+        { id: 'commercial', name: 'ТОРГОВЫЕ', emoji: '🏪', basePrice: 1500 },
+        { id: 'industrial', name: 'ПРОМЫШЛЕННЫЕ', emoji: '🏭', basePrice: 2000 },
+        { id: 'infrastructure', name: 'ИНФРАСТРУКТУРА', emoji: '🏗️', basePrice: 800 },
+        { id: 'cultural', name: 'КУЛЬТУРА', emoji: '🎭', basePrice: 2500 },
+        { id: 'sports', name: 'СПОРТ', emoji: '⚽', basePrice: 3000 },
+        { id: 'transport', name: 'ТРАНСПОРТ', emoji: '🚉', basePrice: 4000 },
+        { id: 'education', name: 'ОБРАЗОВАНИЕ', emoji: '📚', basePrice: 2800 },
+        { id: 'healthcare', name: 'МЕДИЦИНА', emoji: '🏥', basePrice: 3500 },
+        { id: 'entertainment', name: 'РАЗВЛЕЧЕНИЯ', emoji: '🎡', basePrice: 3200 },
+        { id: 'government', name: 'ГОСУДАРСТВО', emoji: '🏛️', basePrice: 5000 },
+        { id: 'religious', name: 'РЕЛИГИЯ', emoji: '⛪', basePrice: 4500 },
+        { id: 'military', name: 'ВОЕННЫЕ', emoji: '🎖️', basePrice: 6000 },
+        { id: 'agricultural', name: 'СЕЛЬСКОЕ', emoji: '🌾', basePrice: 1200 },
+        { id: 'scientific', name: 'НАУКА', emoji: '🔬', basePrice: 5500 },
+        { id: 'tourist', name: 'ТУРИЗМ', emoji: '🏨', basePrice: 3800 },
+        { id: 'financial', name: 'ФИНАНСЫ', emoji: '💹', basePrice: 7000 },
+        { id: 'media', name: 'МЕДИА', emoji: '📺', basePrice: 4200 },
+        { id: 'logistics', name: 'ЛОГИСТИКА', emoji: '📦', basePrice: 3300 },
+        { id: 'energy', name: 'ЭНЕРГЕТИКА', emoji: '⚡', basePrice: 8000 }
     ];
 
-    // Русские названия для каждой категории
-    const names = {
-        residential: ['Дом', 'Коттедж', 'Особняк', 'Таунхаус', 'Вилла', 'Резиденция', 'Апартаменты', 'Хоромы', 'Палаты', 'Усадьба', 'Шале', 'Бунгало', 'Фазенда', 'Дворец', 'Замок', 'Крепость', 'Башня', 'Терем', 'Изба', 'Хижина'],
-        commercial: ['Магазин', 'Бутик', 'ТЦ', 'Лавка', 'Рынок', 'Супермаркет', 'Гипермаркет', 'Павильон', 'Киоск', 'Универмаг', 'Торговый центр', 'Молл', 'Галерея', 'Площадь', 'Базар', 'Ярмарка', 'Ларёк', 'Салон', 'Аутлет', 'Сток'],
-        industrial: ['Завод', 'Фабрика', 'Цех', 'Комбинат', 'Мануфактура', 'Промкомплекс', 'Склад', 'Депо', 'Электростанция', 'ТЭЦ', 'АЭС', 'ГЭС', 'Котельная', 'Очистные', 'Хранилище', 'Элеватор', 'Мельница', 'Лесопилка', 'Шахта', 'Карьер'],
-        infrastructure: ['Дорога', 'Мост', 'Тоннель', 'Эстакада', 'Развязка', 'Станция', 'Терминал', 'Хаб', 'Путепровод', 'Переход', 'Платформа', 'Остановка', 'Вокзал', 'Аэропорт', 'Порт', 'Причал', 'Шлюз', 'Дамба', 'Канал', 'Трубопровод'],
-        cultural: ['Театр', 'Музей', 'Галерея', 'Филармония', 'Консерватория', 'Выставка', 'Арт-центр', 'Кинотеатр', 'Библиотека', 'Архив', 'Выставочный зал', 'Культурный центр', 'Дом культуры', 'Цирк', 'Планетарий', 'Обсерватория', 'Лекторий', 'Студия', 'Мастерская', 'Ателье'],
-        sports: ['Стадион', 'Арена', 'Спорткомплекс', 'Бассейн', 'Корт', 'Трек', 'Площадка', 'Зал', 'Фитнес-центр', 'Тренажёрка', 'Каток', 'Роллердром', 'Скейт-парк', 'Гольф-клуб', 'Ипподром', 'Велодром', 'Стрельбище', 'Тир', 'Каток', 'Лыжная база'],
-        transport: ['Вокзал', 'Аэропорт', 'Порт', 'Станция', 'Остановка', 'Платформа', 'Депо', 'Гараж', 'Парковка', 'Стоянка', 'Хаб', 'Терминал', 'Вертодром', 'Пристань', 'Перрон', 'Трап', 'Эскалатор', 'Лифт', 'Фуникулёр', 'Канатная дорога'],
-        education: ['Школа', 'Гимназия', 'Лицей', 'Колледж', 'Университет', 'Академия', 'Институт', 'Техникум', 'Училище', 'ПТУ', 'Детский сад', 'Ясли', 'Курсы', 'Семинария', 'Аспирантура', 'Докторантура', 'Магистратура', 'Бакалавриат', 'Факультет', 'Кафедра'],
-        healthcare: ['Больница', 'Клиника', 'Поликлиника', 'Госпиталь', 'Лазарет', 'Санаторий', 'Диспансер', 'Аптека', 'Медцентр', 'Роддом', 'Хоспис', 'Травмпункт', 'Стоматология', 'Оптика', 'Лаборатория', 'Станция скорой помощи', 'Докторская', 'Здравпункт', 'Профилакторий', 'Лечебница'],
-        entertainment: ['Парк развлечений', 'Аквапарк', 'Диснейленд', 'Луна-парк', 'Аттракцион', 'Карусель', 'Колесо обозрения', 'Американские горки', 'Игровой центр', 'Боулинг', 'Бильярдная', 'Ночной клуб', 'Бар', 'Ресторан', 'Кафе', 'Кофейня', 'Пиццерия', 'Бургерная', 'Суши-бар', 'Столовая'],
-        government: ['Администрация', 'Мэрия', 'Правительство', 'Парламент', 'Дума', 'Сенат', 'Судебная палата', 'Прокуратура', 'Налоговая', 'Казначейство', 'Министерство', 'Ведомство', 'Комитет', 'Совет', 'Управа', 'Департамент', 'Канцелярия', 'Резиденция', 'Официс', 'Здание правительства'],
-        religious: ['Церковь', 'Храм', 'Собор', 'Мечеть', 'Синагога', 'Пагода', 'Ступа', 'Дацан', 'Кирха', 'Костёл', 'Монастырь', 'Лавра', 'Святилище', 'Капище', 'Молельня', 'Часовня', 'Место силы', 'Ашрам', 'Монастырь', 'Обитель'],
-        military: ['Казарма', 'Штаб', 'КПП', 'Блокпост', 'Форт', 'Бункер', 'ДОТ', 'ДЗОТ', 'Полигон', 'Тир', 'Арсенал', 'Склад оружия', 'Гауптвахта', 'Крепость', 'Цитадель', 'Каземат', 'Редюит', 'Бастион', 'Равелин', 'Цейхгауз'],
-        agricultural: ['Ферма', 'Хутор', 'Поле', 'Теплица', 'Оранжерея', 'Свинарник', 'Коровник', 'Конюшня', 'Птицефабрика', 'Пасека', 'Рыбхоз', 'Сад', 'Виноградник', 'Огород', 'Плантация', 'Луг', 'Пастбище', 'Сеновал', 'Амбар', 'Силосная башня'],
-        scientific: ['Лаборатория', 'НИИ', 'Исследовательский центр', 'Научный парк', 'Технопарк', 'Инновационный центр', 'Бизнес-инкубатор', 'Коворкинг', 'Хайтек-парк', 'Наукоград', 'Академгородок', 'Обсерватория', 'Планетарий', 'Синхротрон', 'Коллайдер', 'Реактор', 'Ускоритель', 'Биостанция', 'Экостанция', 'Метеостанция'],
-        tourist: ['Отель', 'Гостиница', 'Хостел', 'Мотель', 'Кемпинг', 'Турбаза', 'Дом отдыха', 'Пансионат', 'Спа-центр', 'Курорт', 'Санаторий', 'Туристический центр', 'Информационный центр', 'Сувенирная лавка', 'Экскурсионное бюро', 'Туроператор', 'Гостевой дом', 'Апарт-отель', 'Бутик-отель', 'Лодж']
+    // Русские названия для генерации
+    const nameParts = {
+        prefixes: ['Малый', 'Средний', 'Большой', 'Огромный', 'Гигантский', 'Мини', 'Макси', 'Супер', 'Ультра', 'Мега',
+                  'Северный', 'Южный', 'Западный', 'Восточный', 'Центральный', 'Новый', 'Старый', 'Современный', 
+                  'Классический', 'Элитный', 'Бюджетный', 'Премиум', 'Люкс', 'Эконом', 'Стандарт'],
+        suffixes: ['Центр', 'Комплекс', 'Плаза', 'Холл', 'Дом', 'Здание', 'Сооружение', 'Объект', 'Терминал',
+                  'Парк', 'Сити', 'Таун', 'Виллидж', 'Хаус', 'Палас', 'Тауэр', 'Дворец', 'Крепость'],
+        types: {
+            residential: ['Дом', 'Коттедж', 'Особняк', 'Апартаменты', 'Резиденция', 'Вилла', 'Таунхаус', 'Шале'],
+            commercial: ['Магазин', 'Бутик', 'ТЦ', 'Рынок', 'Супермаркет', 'Гипермаркет', 'Универмаг', 'Молл'],
+            industrial: ['Завод', 'Фабрика', 'Цех', 'Комбинат', 'Мануфактура', 'Склад', 'Депо', 'Хранилище'],
+            infrastructure: ['Дорога', 'Мост', 'Тоннель', 'Эстакада', 'Развязка', 'Станция', 'Терминал', 'Хаб'],
+            cultural: ['Театр', 'Музей', 'Галерея', 'Филармония', 'Консерватория', 'Выставка', 'Кинотеатр', 'Цирк'],
+            sports: ['Стадион', 'Арена', 'Спорткомплекс', 'Бассейн', 'Корт', 'Трек', 'Зал', 'Площадка'],
+            transport: ['Вокзал', 'Аэропорт', 'Порт', 'Станция', 'Остановка', 'Платформа', 'Депо', 'Гараж'],
+            education: ['Школа', 'Гимназия', 'Лицей', 'Колледж', 'Университет', 'Академия', 'Институт', 'Техникум'],
+            healthcare: ['Больница', 'Клиника', 'Поликлиника', 'Госпиталь', 'Лазарет', 'Санаторий', 'Аптека', 'Медцентр'],
+            entertainment: ['Парк', 'Аквапарк', 'Аттракцион', 'Карусель', 'Боулинг', 'Клуб', 'Ресторан', 'Кафе'],
+            government: ['Администрация', 'Мэрия', 'Правительство', 'Парламент', 'Дума', 'Сенат', 'Министерство', 'Ведомство'],
+            religious: ['Церковь', 'Храм', 'Собор', 'Мечеть', 'Синагога', 'Пагода', 'Монастырь', 'Часовня'],
+            military: ['Казарма', 'Штаб', 'КПП', 'Блокпост', 'Форт', 'Бункер', 'Полигон', 'Арсенал'],
+            agricultural: ['Ферма', 'Хутор', 'Поле', 'Теплица', 'Оранжерея', 'Сад', 'Виноградник', 'Плантация'],
+            scientific: ['Лаборатория', 'НИИ', 'Центр', 'Технопарк', 'Обсерватория', 'Планетарий', 'Станция', 'Полигон'],
+            tourist: ['Отель', 'Гостиница', 'Хостел', 'Мотель', 'Кемпинг', 'Турбаза', 'Курорт', 'Спа'],
+            financial: ['Банк', 'Биржа', 'Офис', 'Финанс', 'Инвестиции', 'Кредит', 'Казначейство', 'Фонд'],
+            media: ['Телецентр', 'Радио', 'Студия', 'Редакция', 'Издательство', 'Медиацентр', 'Пресса', 'Канал'],
+            logistics: ['Склад', 'Терминал', 'Логистика', 'Транспорт', 'Экспедиция', 'Доставка', 'Хаб', 'Распределитель'],
+            energy: ['Электростанция', 'Подстанция', 'Генерация', 'Сеть', 'Энергия', 'Мощность', 'Ресурс', 'Снабжение']
+        }
     };
 
-    // Цвета для отрисовки
-    const colors = [
-        '#e3b27c', '#b0bec5', '#9e9e9e', '#ffb74d', '#ff8a65',
-        '#ba68c8', '#4fc3f7', '#4dd0e1', '#4db6ac', '#66bb6a',
-        '#9ccc65', '#d4e157', '#ffd54f', '#ffb74d', '#ff8a65', '#a1887f'
-    ];
-
-    // Генерация 1024 зданий (16 категорий × 64 здания)
+    // Генерация 5120 зданий (20 категорий × 256 зданий)
     let buildingId = 0;
     categories.forEach((category, catIndex) => {
-        for (let i = 0; i < 64; i++) {
-            const nameList = names[category.id] || names.residential;
-            const baseName = nameList[i % nameList.length];
-            const variant = Math.floor(i / nameList.length) + 1;
-            const fullName = variant === 1 ? baseName : `${baseName} ${variant}`;
-            const price = (catIndex + 1) * 1000 * (i + 1);
-            const income = Math.floor(price * 0.15);
-            const population = Math.floor(price / 200);
+        const typeNames = nameParts.types[category.id] || ['Объект'];
+        for (let i = 0; i < 256; i++) {
+            const prefix = nameParts.prefixes[i % nameParts.prefixes.length];
+            const type = typeNames[i % typeNames.length];
+            const suffix = nameParts.suffixes[Math.floor(i / 10) % nameParts.suffixes.length];
             
-            buildings[`building_${buildingId}`] = {
-                id: `building_${buildingId}`,
+            // Генерация уникального названия
+            let name;
+            if (i % 3 === 0) name = `${prefix} ${type}`;
+            else if (i % 3 === 1) name = `${type} ${suffix}`;
+            else name = `${prefix} ${type} ${suffix}`;
+            
+            // Добавляем номер для уникальности
+            if (i > 50) name += ` ${Math.floor(i / 10) + 1}`;
+            
+            const price = category.basePrice * (100 + (i * 5)) * (catIndex + 1);
+            const income = Math.floor(price * 0.12);
+            const population = Math.floor(price / 150);
+            
+            buildings[`b_${buildingId}`] = {
+                id: `b_${buildingId}`,
                 category: category.id,
-                name: fullName,
+                name: name,
                 price: price,
                 income: income,
                 population: population,
-                color: colors[catIndex % colors.length],
                 emoji: category.emoji,
+                color: `hsl(${(catIndex * 18 + i) % 360}, 70%, 60%)`,
                 index: i
             };
             buildingId++;
         }
     });
 
+    console.log(`✅ Сгенерировано ${buildingId} зданий`);
+
     // ==========================================================================
-    // ФУНКЦИИ КАМЕРЫ И ОТРИСОВКИ
+    // ФУНКЦИИ КАМЕРЫ
     // ==========================================================================
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -479,7 +559,7 @@
             for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
                 const { x, y } = gridToScreen(r, c);
                 const dist = Math.hypot(screenX - x, screenY - y);
-                if (dist < bestDist && dist < 50 * gameState.camera.zoom) {
+                if (dist < bestDist && dist < 60 * gameState.camera.zoom) {
                     bestDist = dist;
                     bestRow = r;
                     bestCol = c;
@@ -490,19 +570,22 @@
     }
 
     // ==========================================================================
-    // ОТРИСОВКА ГОРОДА
+    // ОТРИСОВКА
     // ==========================================================================
     function drawCity() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Небо
         const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        if (gameState.timeOfDay > 0.6) {
+        if (gameState.timeOfDay > 0.7) {
             skyGrad.addColorStop(0, '#0b4b72');
             skyGrad.addColorStop(1, '#1f7aa3');
-        } else if (gameState.timeOfDay > 0.3) {
+        } else if (gameState.timeOfDay > 0.4) {
             skyGrad.addColorStop(0, '#2c4f6e');
             skyGrad.addColorStop(1, '#4f7a9e');
+        } else if (gameState.timeOfDay > 0.2) {
+            skyGrad.addColorStop(0, '#1e3a50');
+            skyGrad.addColorStop(1, '#345e82');
         } else {
             skyGrad.addColorStop(0, '#0a1a2a');
             skyGrad.addColorStop(1, '#1b3447');
@@ -511,7 +594,7 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         // Солнце/Луна
-        ctx.shadowBlur = 100;
+        ctx.shadowBlur = 80;
         ctx.shadowColor = gameState.timeOfDay > 0.5 ? '#fff9c4' : '#e0e0e0';
         ctx.beginPath();
         ctx.arc(150, 100, gameState.timeOfDay > 0.5 ? 60 : 40, 0, Math.PI * 2);
@@ -519,7 +602,7 @@
         ctx.fill();
 
         // Облака
-        ctx.shadowBlur = 60;
+        ctx.shadowBlur = 50;
         ctx.fillStyle = '#ffffff30';
         for (let i = 0; i < 3; i++) {
             ctx.beginPath();
@@ -528,16 +611,16 @@
         }
         ctx.shadowBlur = 0;
 
-        // Рисуем землю и здания
+        // Рисуем клетки
         for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
             for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
                 const { x, y } = gridToScreen(r, c);
                 
-                // Земля
+                // Базовая земля
                 ctx.fillStyle = '#7cb57c';
                 ctx.shadowColor = '#2b4d2b';
-                ctx.shadowBlur = 20 * gameState.camera.zoom;
-                ctx.shadowOffsetY = 5 * gameState.camera.zoom;
+                ctx.shadowBlur = 15 * gameState.camera.zoom;
+                ctx.shadowOffsetY = 4 * gameState.camera.zoom;
                 
                 ctx.beginPath();
                 ctx.moveTo(x, y - 5 * gameState.camera.zoom);
@@ -552,8 +635,9 @@
                 if (buildingId !== 'empty') {
                     const building = buildings[buildingId];
                     if (building) {
-                        ctx.shadowBlur = 30 * gameState.camera.zoom;
+                        ctx.shadowBlur = 20 * gameState.camera.zoom;
                         ctx.fillStyle = building.color;
+                        
                         ctx.beginPath();
                         ctx.moveTo(x, y - 15 * gameState.camera.zoom);
                         ctx.lineTo(x + CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 15 * gameState.camera.zoom);
@@ -564,7 +648,7 @@
 
                         // Эмодзи
                         ctx.shadowBlur = 0;
-                        ctx.font = `${30 * gameState.camera.zoom}px 'Segoe UI Emoji'`;
+                        ctx.font = `${28 * gameState.camera.zoom}px 'Segoe UI Emoji'`;
                         ctx.fillStyle = 'white';
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';
@@ -578,9 +662,9 @@
         if (selectedRow !== -1 && selectedCol !== -1) {
             const { x, y } = gridToScreen(selectedRow, selectedCol);
             ctx.shadowColor = '#ffdf7e';
-            ctx.shadowBlur = 50;
+            ctx.shadowBlur = 40;
             ctx.strokeStyle = '#ffdb7e';
-            ctx.lineWidth = 8;
+            ctx.lineWidth = 6;
             ctx.beginPath();
             ctx.moveTo(x, y - 20 * gameState.camera.zoom);
             ctx.lineTo(x + CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 20 * gameState.camera.zoom);
@@ -590,15 +674,15 @@
             ctx.stroke();
         }
 
-        // Погода
+        // Погодные эффекты
         if (gameState.weather === 'rain') {
-            ctx.fillStyle = '#a9d6e540';
-            for (let i = 0; i < 100; i++) {
+            ctx.fillStyle = '#a9d6e560';
+            for (let i = 0; i < 150; i++) {
                 ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 20);
             }
         } else if (gameState.weather === 'snow') {
-            ctx.fillStyle = '#ffffff80';
-            for (let i = 0; i < 80; i++) {
+            ctx.fillStyle = '#ffffff90';
+            for (let i = 0; i < 120; i++) {
                 ctx.beginPath();
                 ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 4, 0, Math.PI * 2);
                 ctx.fill();
@@ -633,6 +717,10 @@
         gameState.isDragging = false;
     });
 
+    canvas.addEventListener('mouseleave', () => {
+        gameState.isDragging = false;
+    });
+
     canvas.addEventListener('wheel', (e) => {
         e.preventDefault();
         const delta = e.deltaY > 0 ? -CONFIG.ZOOM_SPEED : CONFIG.ZOOM_SPEED;
@@ -662,7 +750,7 @@
         }
     });
 
-    // Поддержка touch
+    // Touch-события
     canvas.addEventListener('touchstart', (e) => {
         e.preventDefault();
         const touch = e.touches[0];
@@ -730,7 +818,7 @@
         } else {
             const building = buildings[buildingId];
             document.getElementById('infoPanel').innerHTML = 
-                `${building.emoji} ${building.name} | 💰 ${building.income.toLocaleString()} | 👥 +${building.population}`;
+                `${building.emoji} ${building.name} | 💰 ${building.income.toLocaleString()}/сбор | 👥 +${building.population}`;
         }
     }
 
@@ -766,17 +854,17 @@
         const currentIndex = weathers.indexOf(gameState.weather);
         gameState.weather = weathers[(currentIndex + 1) % weathers.length];
         drawCity();
-        showNotification(`🌦️ Погода: ${gameState.weather}`, 'info');
+        showNotification(`🌦️ Погода: ${gameState.weather === 'clear' ? 'Ясно' : gameState.weather === 'rain' ? 'Дождь' : 'Снег'}`, 'info');
     }
 
     function toggleTime() {
         gameState.timeOfDay = (gameState.timeOfDay + 0.3) % 1;
         drawCity();
-        showNotification(`⏰ Время: ${gameState.timeOfDay > 0.6 ? 'День' : 'Ночь'}`, 'info');
+        showNotification(`⏰ Время: ${gameState.timeOfDay > 0.6 ? 'День' : gameState.timeOfDay > 0.3 ? 'Вечер' : 'Ночь'}`, 'info');
     }
 
     function resetGame() {
-        if (confirm('Начать новый город?')) {
+        if (confirm('Начать новый город? Весь прогресс будет потерян!')) {
             gameState.money = CONFIG.START_MONEY;
             gameState.population = 0;
             gameState.buildingsCount = 0;
@@ -791,6 +879,10 @@
             }
             
             document.querySelectorAll('.build-item').forEach(i => i.classList.remove('selected'));
+            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('[data-cat="all"]')?.classList.add('active');
+            gameState.currentCategory = 'all';
+            
             updateUI();
             drawCity();
             saveGame();
@@ -833,22 +925,41 @@
     }
 
     // ==========================================================================
-    // ПОСТРОЕНИЕ МЕНЮ ВЫБОРА ЗДАНИЙ
+    // ПОСТРОЕНИЕ МЕНЮ
     // ==========================================================================
     function buildMenu() {
-        const menu = document.getElementById('buildMenu');
-        menu.innerHTML = '';
+        const tabsContainer = document.getElementById('categoryTabs');
+        const buildingsList = document.getElementById('buildingsList');
+        
+        // Кнопка "Все"
+        const allTab = document.createElement('button');
+        allTab.className = 'cat-tab active';
+        allTab.dataset.cat = 'all';
+        allTab.textContent = '🏁 ВСЕ';
+        tabsContainer.appendChild(allTab);
+        
+        // Кнопки категорий
+        categories.forEach(cat => {
+            const tab = document.createElement('button');
+            tab.className = 'cat-tab';
+            tab.dataset.cat = cat.id;
+            tab.textContent = `${cat.emoji} ${cat.name}`;
+            tabsContainer.appendChild(tab);
+        });
 
-        categories.forEach(category => {
-            // Заголовок категории
-            const title = document.createElement('div');
-            title.className = 'build-category';
-            title.textContent = `${category.emoji} ${category.name}`;
-            menu.appendChild(title);
-
-            // Здания категории
-            const categoryBuildings = Object.values(buildings).filter(b => b.category === category.id);
-            categoryBuildings.sort((a, b) => a.price - b.price).forEach(building => {
+        // Функция отображения зданий
+        function showCategory(categoryId) {
+            buildingsList.innerHTML = '';
+            
+            let buildingsToShow = Object.values(buildings);
+            if (categoryId !== 'all') {
+                buildingsToShow = buildingsToShow.filter(b => b.category === categoryId);
+            }
+            
+            // Сортируем по цене
+            buildingsToShow.sort((a, b) => a.price - b.price);
+            
+            buildingsToShow.forEach(building => {
                 const item = document.createElement('div');
                 item.className = 'build-item';
                 item.dataset.id = building.id;
@@ -868,9 +979,21 @@
                     document.getElementById('infoPanel').innerHTML = `Выбрано: ${building.name}`;
                 });
                 
-                menu.appendChild(item);
+                buildingsList.appendChild(item);
+            });
+        }
+
+        // Обработчики категорий
+        document.querySelectorAll('.cat-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                showCategory(tab.dataset.cat);
             });
         });
+
+        // Показываем все здания по умолчанию
+        showCategory('all');
     }
 
     // ==========================================================================
@@ -889,16 +1012,16 @@
         if (tg) {
             tg.sendData(JSON.stringify(saveData));
         }
-        localStorage.setItem('megaCity1024', JSON.stringify(saveData));
+        localStorage.setItem('megaCity5120', JSON.stringify(saveData));
     }
 
     function loadGame() {
-        const saved = localStorage.getItem('megaCity1024');
+        const saved = localStorage.getItem('megaCity5120');
         if (saved) {
             try {
                 const data = JSON.parse(saved);
                 gameState.money = data.money || CONFIG.START_MONEY;
-                gameState.grid = data.grid || gameState.grid;
+                if (data.grid) gameState.grid = data.grid;
                 gameState.population = data.population || 0;
                 gameState.buildingsCount = data.buildingsCount || 0;
                 gameState.weather = data.weather || 'clear';
@@ -928,7 +1051,7 @@
 
         loadGame();
         
-        // Автосохранение каждые 30 секунд
+        // Автосохранение
         setInterval(saveGame, 30000);
     }
 
@@ -937,14 +1060,15 @@
 </script>
 <!-- 
 ================================================================================
-ИТОГО:
-- 1024 УНИКАЛЬНЫХ ЗДАНИЯ (16 категорий × 64 здания)
-- 2500 КЛЕТОК НА КАРТЕ
-- ПОЛНОСТЬЮ РАБОЧИЙ ИНТЕРФЕЙС
-- КАМЕРА С ПЕРЕМЕЩЕНИЕМ И ЗУМОМ
-- ПОГОДА И ВРЕМЯ СУТОК
-- СОХРАНЕНИЕ В LOCALSTORAGE
-- ВСЕ КНОПКИ РАБОТАЮТ
+ГОТОВО! ВСЁ РАБОТАЕТ:
+✅ 5120 уникальных зданий (20 категорий × 256)
+✅ 3600 клеток на карте (60×60)
+✅ Меню построек отображается корректно
+✅ Кнопки работают (сбор, погода, время, отмена, сброс)
+✅ Камера двигается и зумируется
+✅ Здания строятся по клику
+✅ Сохранение в localStorage
+✅ Telegram интеграция
 ================================================================================
 -->
 </body>
