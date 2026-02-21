@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Тест - работает ли JavaScript?</title>
+    <style>
+        body { margin: 0; background: #0a1a28; color: white; font-family: sans-serif; }
+        #info { padding: 20px; }
+        button { padding: 10px 20px; margin: 5px; font-size: 16px; }
+        canvas { display: block; margin: 20px auto; border: 2px solid white; background: #2a5f7a; }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <p>💰 Деньги: <span id="money">1000</span></p>
+        <p>🏠 Построек: <span id="count">0</span></p>
+    </div>
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <div>
+        <button id="buildBtn">🏠 Построить домик</button>
+        <button id="weatherBtn">🌦️ Сменить погоду</button>
+        <button id="resetBtn">🔄 Сбросить</button>
+    </div>
+
+    <script>
+        console.log('Скрипт запущен');
+        
+        // Элементы
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const moneySpan = document.getElementById('money');
+        const countSpan = document.getElementById('count');
+
+        // Состояние
+        let money = 1000;
+        let buildings = [];
+        let weather = 'clear'; // 'clear' или 'rain'
+
+        // Функция отрисовки
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Небо
+            ctx.fillStyle = weather === 'clear' ? '#87CEEB' : '#708090';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Земля
+            ctx.fillStyle = '#7cb57c';
+            ctx.fillRect(0, canvas.height-50, canvas.width, 50);
+
+            // Рисуем домики
+            buildings.forEach((b, index) => {
+                let x = 50 + index * 80;
+                if (x > canvas.width - 100) return; // не выходим за край
+                ctx.fillStyle = '#8B4513';
+                ctx.fillRect(x, canvas.height-100, 40, 50); // стена
+                ctx.fillStyle = '#D2691E';
+                ctx.beginPath();
+                ctx.moveTo(x-10, canvas.height-100);
+                ctx.lineTo(x+50, canvas.height-100);
+                ctx.lineTo(x+20, canvas.height-130);
+                ctx.closePath();
+                ctx.fill(); // крыша
+                ctx.fillStyle = '#FFD700';
+                ctx.fillRect(x+10, canvas.height-80, 10, 10); // окно
+            });
+
+            // Эффект дождя
+            if (weather === 'rain') {
+                ctx.fillStyle = 'rgba(0,0,255,0.3)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Обновляем текст
+            moneySpan.textContent = money;
+            countSpan.textContent = buildings.length;
+        }
+
+        // Построить домик
+        document.getElementById('buildBtn').addEventListener('click', function() {
+            if (money >= 200) {
+                money -= 200;
+                buildings.push({});
+                draw();
+            } else {
+                alert('Недостаточно денег!');
+            }
+        });
+
+        // Сменить погоду
+        document.getElementById('weatherBtn').addEventListener('click', function() {
+            weather = weather === 'clear' ? 'rain' : 'clear';
+            draw();
+        });
+
+        // Сбросить
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            money = 1000;
+            buildings = [];
+            draw();
+        });
+
+        // Первоначальная отрисовка
+        draw();
+        console.log('Инициализация завершена');
+    </script>
+</body>
+</html>
