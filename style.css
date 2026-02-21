@@ -1,36 +1,41 @@
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background: #0c0f1a;
-  font-family: system-ui, sans-serif;
+:root{
+  --bg:#0a1620;
+  --panel:#0f2430;
+  --accent:#ffb84d;
+  --muted:#8da6b3;
 }
+*{box-sizing:border-box}
+html,body,#app{height:100%; margin:0; padding:0; background:var(--bg); color:#e6f0f2; font-family:Inter, Roboto, Arial, sans-serif}
+#app{display:flex; flex-direction:row; gap:12px; padding:12px}
 
-#game {
-  width: 100vw;
-  height: 100vh;
-  display: block;
-}
+/* HUD + Controls */
+#hud{position:fixed; top:12px; left:12px; z-index:60; display:flex; flex-direction:column; gap:8px}
+#topRow{display:flex; gap:8px}
+#topRow > div{background:rgba(255,255,255,0.03); padding:8px 12px; border-radius:10px; font-weight:600}
+#controls{display:flex; gap:8px; margin-top:6px; flex-wrap:wrap; width:760px}
+button{background:#14313d; color:#eaf6ff; border:1px solid rgba(255,255,255,0.03); padding:8px 10px; border-radius:10px; cursor:pointer; font-weight:700}
+button.mode.active{background:var(--accent); color:#0b2a36; box-shadow:0 6px 18px rgba(0,0,0,0.6)}
+button:active{transform:translateY(1px)}
+#resetBtn {background:#c94b4b}
 
-#ui {
-  position: fixed;
-  top: 12px;
-  left: 12px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
+/* Canvas container */
+#canvasContainer{flex:1; border-radius:12px; overflow:hidden; background:linear-gradient(180deg,#07202b,#02121a); box-shadow:0 20px 50px rgba(0,0,0,0.7); min-width:600px}
 
-.ui-btn {
-  background: #1e2438;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 14px;
-}
+/* Side panel */
+#panel{width:320px; background:var(--panel); padding:12px; border-radius:12px; height:calc(100vh - 24px); overflow:auto; position:relative}
+#panel h3{margin:0 0 8px 0}
+#buildingList{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.buildCard{background:rgba(255,255,255,0.03); padding:8px; border-radius:8px; cursor:pointer; display:flex; flex-direction:column; gap:6px; border:1px solid transparent}
+.buildCard:hover{border-color:rgba(255,255,255,0.06)}
+.buildCard.selected{border-color:var(--accent); box-shadow:0 8px 20px rgba(255,184,77,0.06)}
+#infoBox{margin-top:10px; padding:8px; background:rgba(0,0,0,0.15); border-radius:8px; color:var(--muted)}
 
-.ui-btn.active {
-  background: #4c7cff;
+.hidden{display:none}
+
+/* responsive */
+@media (max-width:1100px){
+  #app{flex-direction:column}
+  #panel{width:100%; height:auto; order:2}
+  #canvasContainer{min-width:0; height:60vh; order:1}
+  #controls{width:100%}
 }
