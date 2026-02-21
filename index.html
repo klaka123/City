@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Архипелаг — 3D градостроительный симулятор</title>
+    <title>Архипелаг — фотореалистичная графика</title>
     <style>
         * {
             margin: 0;
@@ -12,230 +12,231 @@
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         }
         body {
-            background: #0a1f30;
+            background: #0a1c2c;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 12px;
+            padding: 15px;
         }
-        .game-wrapper {
+        .game-frame {
             width: 100%;
-            max-width: 780px;
-            background: linear-gradient(145deg, #23658b, #154a68);
-            border-radius: 90px;
-            padding: 35px;
-            box-shadow: 0 70px 120px rgba(0,0,0,0.9), inset 0 6px 20px rgba(255,255,255,0.4);
-            border: 6px solid #7fbee0;
+            max-width: 800px;
+            background: linear-gradient(145deg, #236f9c, #154f73);
+            border-radius: 100px;
+            padding: 40px;
+            box-shadow: 0 80px 150px rgba(0,0,0,0.9), inset 0 8px 25px rgba(255,255,255,0.5);
+            border: 7px solid #8fc9ec;
         }
         .stats-panel {
             background: rgba(0, 30, 45, 0.9);
-            backdrop-filter: blur(40px);
-            border-radius: 90px;
-            padding: 24px 40px;
+            backdrop-filter: blur(50px);
+            border-radius: 100px;
+            padding: 28px 45px;
             display: flex;
             justify-content: space-between;
             color: white;
-            margin-bottom: 35px;
-            border: 3px solid #b8e2ff;
-            box-shadow: 0 22px 0 #13445c;
+            margin-bottom: 40px;
+            border: 4px solid #c0e6ff;
+            box-shadow: 0 28px 0 #145e7c;
         }
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            font-size: 30px;
+            gap: 18px;
+            font-size: 34px;
             font-weight: 700;
-            background: rgba(0,0,0,0.45);
-            padding: 12px 35px;
-            border-radius: 80px;
-            backdrop-filter: blur(5px);
+            background: rgba(0,0,0,0.5);
+            padding: 14px 40px;
+            border-radius: 90px;
+            backdrop-filter: blur(8px);
         }
         .stat-icon {
-            font-size: 48px;
-            filter: drop-shadow(0 8px 10px black);
+            font-size: 54px;
+            filter: drop-shadow(0 10px 12px black);
         }
         .canvas-area {
-            background: #1e729c;
-            border-radius: 80px;
-            padding: 35px;
+            background: #1f7aa8;
+            border-radius: 90px;
+            padding: 40px;
             display: flex;
             justify-content: center;
-            box-shadow: inset 0 -40px 80px #0e405a, 0 45px 80px black;
-            margin-bottom: 35px;
+            box-shadow: inset 0 -45px 90px #0d405c, 0 50px 100px black;
+            margin-bottom: 40px;
         }
         #gameCanvas {
             width: 100%;
             height: auto;
-            border-radius: 70px;
-            background: #3b8fc2;
+            border-radius: 80px;
+            background: #2f8ec9;
             cursor: pointer;
             touch-action: none;
-            max-width: 640px;
-            box-shadow: 0 0 0 10px #d9f0ff, 0 45px 90px black;
+            max-width: 680px;
+            box-shadow: 0 0 0 12px #dff3ff, 0 50px 110px black;
         }
         .category-bar {
             display: flex;
-            gap: 24px;
-            margin-bottom: 28px;
+            gap: 28px;
+            margin-bottom: 32px;
         }
         .cat-btn {
             flex: 1;
             background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(30px);
-            border: 5px solid white;
-            border-radius: 90px;
-            padding: 22px;
+            backdrop-filter: blur(40px);
+            border: 6px solid white;
+            border-radius: 100px;
+            padding: 24px;
             color: white;
-            font-size: 26px;
+            font-size: 30px;
             font-weight: bold;
             text-align: center;
-            box-shadow: 0 15px 0 #134a64;
+            box-shadow: 0 18px 0 #146185;
             transition: 0.1s;
         }
         .cat-btn.active {
             background: #ffdb94;
             color: #1c4a66;
             border-color: #ffb84d;
-            transform: translateY(-7px);
-            box-shadow: 0 22px 0 #cc9530;
+            transform: translateY(-9px);
+            box-shadow: 0 27px 0 #cc9530;
         }
         .cat-btn:active {
-            transform: translateY(10px);
-            box-shadow: 0 6px 0 #134a64;
+            transform: translateY(12px);
+            box-shadow: 0 8px 0 #146185;
         }
         .buildings-scroll {
-            background: rgba(255,255,255,0.96);
-            backdrop-filter: blur(35px);
-            border-radius: 100px;
-            padding: 24px;
-            margin-bottom: 35px;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(45px);
+            border-radius: 110px;
+            padding: 28px;
+            margin-bottom: 40px;
             overflow-x: auto;
             white-space: nowrap;
-            border: 6px solid white;
-            box-shadow: inset 0 12px 35px #aaa;
+            border: 7px solid white;
+            box-shadow: inset 0 15px 45px #aaa;
         }
         .buildings-scroll::-webkit-scrollbar { display: none; }
         .buildings-track {
             display: inline-flex;
-            gap: 32px;
-            padding: 18px;
+            gap: 38px;
+            padding: 22px;
         }
         .build-card {
             background: linear-gradient(145deg, #fffef8, #f7eedb);
-            border-radius: 90px;
-            padding: 36px 42px;
+            border-radius: 100px;
+            padding: 42px 48px;
             display: inline-flex;
             flex-direction: column;
             align-items: center;
-            min-width: 250px;
-            box-shadow: 0 28px 0 #d4bf98, 0 45px 70px rgba(0,0,0,0.6);
-            border: 7px solid #fffae6;
+            min-width: 280px;
+            box-shadow: 0 34px 0 #d4bf98, 0 55px 85px rgba(0,0,0,0.7);
+            border: 8px solid #fffae6;
             transition: 0.1s;
         }
         .build-card.selected {
-            transform: translateY(-15px);
+            transform: translateY(-18px);
             border-color: #f7b731;
-            box-shadow: 0 35px 0 #c9912e, 0 55px 80px black;
+            box-shadow: 0 42px 0 #c9912e, 0 65px 100px black;
         }
         .build-card:active {
-            transform: translateY(15px);
-            box-shadow: 0 13px 0 #d4bf98;
+            transform: translateY(18px);
+            box-shadow: 0 16px 0 #d4bf98;
         }
         .card-icon {
-            width: 150px;
-            height: 150px;
+            width: 180px;
+            height: 180px;
             background: #e3f0f5;
-            border-radius: 70px;
+            border-radius: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 100px;
-            margin-bottom: 20px;
-            box-shadow: inset 0 -15px 0 #c2d9e4;
+            font-size: 120px;
+            margin-bottom: 24px;
+            box-shadow: inset 0 -18px 0 #c2d9e4;
         }
         .card-name {
             font-weight: 800;
-            font-size: 28px;
+            font-size: 32px;
             color: #2b7059;
         }
         .card-price {
             background: #d9bf94;
-            padding: 14px 40px;
-            border-radius: 80px;
+            padding: 16px 48px;
+            border-radius: 90px;
             font-weight: 700;
-            margin-top: 18px;
-            font-size: 26px;
+            margin-top: 22px;
+            font-size: 30px;
         }
         .action-bar {
             display: flex;
-            gap: 25px;
+            gap: 30px;
             justify-content: center;
             flex-wrap: wrap;
-            margin-bottom: 35px;
+            margin-bottom: 40px;
         }
         .action-button {
             flex: 1 1 auto;
-            min-width: 250px;
+            min-width: 280px;
             background: linear-gradient(145deg, #3f9ed4, #1c6fa0);
             border: none;
-            border-radius: 100px;
-            padding: 32px 35px;
+            border-radius: 110px;
+            padding: 38px 42px;
             color: white;
-            font-size: 34px;
+            font-size: 38px;
             font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
-            box-shadow: 0 28px 0 #12547a, 0 45px 75px black;
-            border: 6px solid #b0e2ff;
+            gap: 24px;
+            box-shadow: 0 34px 0 #12547a, 0 55px 90px black;
+            border: 7px solid #b0e2ff;
             position: relative;
         }
         .action-button:active {
-            transform: translateY(15px);
-            box-shadow: 0 13px 0 #12547a;
+            transform: translateY(18px);
+            box-shadow: 0 16px 0 #12547a;
         }
         .cooldown-indicator {
             position: absolute;
             top: 0;
             left: 0;
             height: 100%;
-            background: rgba(0,0,0,0.45);
-            border-radius: 100px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 110px;
             transition: width 0.1s linear;
             pointer-events: none;
         }
         .info-area {
             background: #e5f2fa;
-            border-radius: 90px;
-            padding: 32px;
+            border-radius: 100px;
+            padding: 36px;
             color: #12597a;
-            border: 7px solid white;
-            font-size: 28px;
+            border: 8px solid white;
+            font-size: 32px;
             font-weight: 600;
-            box-shadow: inset 0 15px 35px #b3d9f0, 0 28px 0 #548ea8;
+            box-shadow: inset 0 18px 45px #b3d9f0, 0 34px 0 #548ea8;
         }
     </style>
 </head>
 <body>
-<div class="game-wrapper">
+<div class="game-frame">
     <div class="stats-panel">
-        <div class="stat-item"><span class="stat-icon">💰</span> <span id="moneyDisplay">35000</span></div>
+        <div class="stat-item"><span class="stat-icon">💰</span> <span id="moneyDisplay">50000</span></div>
         <div class="stat-item"><span class="stat-icon">👥</span> <span id="popDisplay">0</span></div>
         <div class="stat-item"><span class="stat-icon">📊</span> <span id="incomeDisplay">0</span></div>
-        <div class="stat-item"><span class="stat-icon">🏝️</span> <span id="landDisplay">25</span></div>
+        <div class="stat-item"><span class="stat-icon">🏝️</span> <span id="landDisplay">36</span></div>
     </div>
 
     <div class="canvas-area">
-        <canvas id="gameCanvas" width="640" height="540"></canvas>
+        <canvas id="gameCanvas" width="700" height="580"></canvas>
     </div>
 
     <div class="category-bar">
         <div class="cat-btn active" id="catRes">🏘️ Жилые</div>
         <div class="cat-btn" id="catCom">🏪 Коммерция</div>
         <div class="cat-btn" id="catInd">🏭 Индустрия</div>
-        <div class="cat-btn" id="catInf">🏥 Соц. сфера</div>
+        <div class="cat-btn" id="catInf">🏛️ Соц. сфера</div>
+        <div class="cat-btn" id="catDec">🌳 Декор</div>
     </div>
 
     <div class="buildings-scroll">
@@ -247,7 +248,7 @@
             <span>💰</span> Сбор
             <div class="cooldown-indicator" id="cooldownBar" style="width: 0%;"></div>
         </button>
-        <button class="action-button" id="expandBtn"><span>🌊🏝️</span> 2000💰</button>
+        <button class="action-button" id="expandBtn"><span>🌊🏝️</span> 2500💰</button>
         <button class="action-button" id="cancelBtn"><span>❌</span> Отмена</button>
     </div>
 
@@ -259,7 +260,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>
 (function() {
-    // ==================== Инициализация Telegram ====================
+    // ==================== Telegram ====================
     let tg = null;
     try {
         if (window.Telegram?.WebApp) {
@@ -270,33 +271,31 @@
     } catch {}
 
     // ==================== Константы изометрии ====================
-    const GRID_SIZE = 8;               // 8x8 для большего простора
-    const CELL_W = 100;                 // ширина основания
-    const CELL_H = 55;                  // высота основания
-    const ISO_OFFSET_X = 300;            // центрирование на canvas 640x540
+    const GRID_SIZE = 8;
+    const CELL_W = 110;
+    const CELL_H = 60;
+    const ISO_OFFSET_X = 330;
     const ISO_OFFSET_Y = 70;
 
     // ==================== Глобальное состояние ====================
     let gameState = {
-        money: 35000,
+        money: 50000,
         grid: [],
         land: [],
         population: 0,
         lastTaxTime: Date.now(),
-        taxCooldown: 5000,                // 5 секунд
+        taxCooldown: 5000,
         selectedBuilding: null,
-        expandCost: 2000,
+        expandCost: 2500,
         gridSize: GRID_SIZE,
-        buildingsCount: {},                // счётчик построек для вариаций
-        season: 0,                         // для смены цвета листвы (0-3)
+        timeOfDay: 0.5, // 0 - ночь, 1 - день
     };
 
-    // ==================== Инициализация острова (больше суши) ====================
+    // Инициализация острова (6x6 суша)
     for (let r = 0; r < GRID_SIZE; r++) {
         gameState.grid[r] = [];
         gameState.land[r] = [];
         for (let c = 0; c < GRID_SIZE; c++) {
-            // Центральная область 6x6 — суша
             if (r >= 1 && r <= 6 && c >= 1 && c <= 6) {
                 gameState.land[r][c] = true;
                 gameState.grid[r][c] = 'empty';
@@ -307,119 +306,174 @@
         }
     }
 
-    // ==================== БИБЛИОТЕКА ЗДАНИЙ (РАСШИРЕННАЯ) ====================
-    // Каждое здание имеет множество вариаций, которые выбираются случайно при постройке
-    // Это позволяет генерировать уникальный внешний вид без дублирования кода.
+    // ==================== БИБЛИОТЕКА МЕГА-ДЕТАЛИЗИРОВАННЫХ ЗДАНИЙ ====================
+    // Каждое здание имеет множество вариаций и рисуется с использованием сложных техник:
+    // текстуры, тени, блики, отражения, мелкие детали.
 
     const BUILDING_VARIANTS = {
-        house: [
-            { name: 'Дом с мезонином', colorBase: '#e3b27c', colorRoof: '#b54c4c', windows: 2, hasChimney: true, doorColor: '#8b5a2b' },
-            { name: 'Коттедж', colorBase: '#cf9f6b', colorRoof: '#8b5a2b', windows: 3, hasChimney: false, doorColor: '#a57248' },
-            { name: 'Таунхаус', colorBase: '#c49a6c', colorRoof: '#7a4c4c', windows: 4, hasChimney: true, doorColor: '#6b4c2c' },
-            { name: 'Вилла', colorBase: '#d9b382', colorRoof: '#b34b4b', windows: 4, hasChimney: true, doorColor: '#8b5a2b' },
-            { name: 'Шале', colorBase: '#b38b5a', colorRoof: '#6b4c2c', windows: 3, hasChimney: true, doorColor: '#5a3e24' }
+        // Жилые
+        cottage: [
+            { name: 'Коттедж с мезонином', baseColor: '#e3b27c', roofColor: '#b54c4c', doorColor: '#8b5a2b', windowColor: '#f9e076', hasChimney: true, hasShutters: true, hasFlowers: true, texture: 'brick' },
+            { name: 'Дом с верандой', baseColor: '#cf9f6b', roofColor: '#8b5a2b', doorColor: '#a57248', windowColor: '#f9e076', hasChimney: false, hasShutters: false, hasFlowers: true, texture: 'wood' },
+            { name: 'Шале', baseColor: '#b38b5a', roofColor: '#6b4c2c', doorColor: '#5a3e24', windowColor: '#ffe68f', hasChimney: true, hasShutters: true, hasFlowers: false, texture: 'stone' }
+        ],
+        mansion: [
+            { name: 'Особняк', baseColor: '#d9b382', roofColor: '#b34b4b', doorColor: '#8b5a2b', windowColor: '#f9e076', hasColumns: true, hasBalcony: true, hasGarage: false },
+            { name: 'Вилла', baseColor: '#f0c48b', roofColor: '#b34b4b', doorColor: '#8b5a2b', windowColor: '#f9e076', hasColumns: true, hasBalcony: true, hasGarage: true }
         ],
         apartment: [
-            { name: 'Многоквартирный', colorBase: '#b0bec5', colorAccent: '#8a9aa8', windowsRows: 3, balconies: true },
-            { name: 'Жилой комплекс', colorBase: '#9e9e9e', colorAccent: '#757575', windowsRows: 4, balconies: true },
-            { name: 'Башня', colorBase: '#8a9aa8', colorAccent: '#607d8b', windowsRows: 5, balconies: false }
+            { name: 'Жилой комплекс', baseColor: '#b0bec5', accentColor: '#8a9aa8', windowColor: '#cfd8dc', hasBalconies: true, floors: 4 },
+            { name: 'Многоэтажка', baseColor: '#9e9e9e', accentColor: '#757575', windowColor: '#cfd8dc', hasBalconies: false, floors: 5 }
         ],
         skyscraper: [
-            { name: 'Небоскрёб', colorBase: '#607d8b', colorAccent: '#4f6573', windowsRows: 8, hasSpire: true, antenna: true },
-            { name: 'Бизнес-центр', colorBase: '#546e7a', colorAccent: '#37474f', windowsRows: 7, hasSpire: false, antenna: true },
-            { name: 'Офисная башня', colorBase: '#78909c', colorAccent: '#546e7a', windowsRows: 8, hasSpire: true, antenna: false }
+            { name: 'Небоскрёб', baseColor: '#607d8b', accentColor: '#4f6573', windowColor: '#ffd966', hasSpire: true, hasAntenna: true, floors: 12 },
+            { name: 'Бизнес-центр', baseColor: '#546e7a', accentColor: '#37474f', windowColor: '#ffd966', hasSpire: false, hasAntenna: true, floors: 10 }
         ],
+        // Коммерция
         shop: [
-            { name: 'Магазин', colorBase: '#ffb74d', colorRoof: '#ff9800', hasSign: true, windows: 2 },
-            { name: 'Супермаркет', colorBase: '#ff8a65', colorRoof: '#f57c00', hasSign: true, windows: 3 },
-            { name: 'Бутик', colorBase: '#f9a825', colorRoof: '#f57f17', hasSign: true, windows: 2 }
+            { name: 'Магазин', baseColor: '#ffb74d', roofColor: '#ff9800', windowColor: '#fff2cc', hasSign: true, hasAwning: true },
+            { name: 'Супермаркет', baseColor: '#ff8a65', roofColor: '#f57c00', windowColor: '#fff2cc', hasSign: true, hasAwning: false }
         ],
         office: [
-            { name: 'Офис', colorBase: '#9e9e9e', colorAccent: '#757575', windowsRows: 3, hasLogo: true },
-            { name: 'Бизнес-парк', colorBase: '#b0bec5', colorAccent: '#78909c', windowsRows: 4, hasLogo: false }
-        ],
-        school: [
-            { name: 'Школа', colorBase: '#ff8a80', colorAccent: '#f06292', hasBell: true, columns: 2 },
-            { name: 'Гимназия', colorBase: '#ffab91', colorAccent: '#ff8a80', hasBell: true, columns: 3 }
-        ],
-        hospital: [
-            { name: 'Больница', colorBase: '#ef9a9a', colorAccent: '#e57373', hasCross: true, windows: 4 },
-            { name: 'Клиника', colorBase: '#ffcdd2', colorAccent: '#ef9a9a', hasCross: true, windows: 3 }
-        ],
-        park: [
-            { name: 'Парк', colorBase: '#81c784', treeCount: 3, hasFountain: true },
-            { name: 'Сквер', colorBase: '#66bb6a', treeCount: 4, hasFountain: false },
-            { name: 'Бульвар', colorBase: '#4caf50', treeCount: 5, hasFountain: false }
-        ],
-        road: [
-            { name: 'Дорога', colorBase: '#b0bec5', hasMarkup: true, hasLights: true },
-            { name: 'Шоссе', colorBase: '#9e9e9e', hasMarkup: true, hasLights: false }
-        ],
-        powerplant: [
-            { name: 'Электростанция', colorBase: '#b0a57c', colorAccent: '#8b7a5a', chimneys: 2, hasSmoke: true },
-            { name: 'ТЭЦ', colorBase: '#9e8f72', colorAccent: '#6b5d3a', chimneys: 3, hasSmoke: true }
-        ],
-        factory: [
-            { name: 'Завод', colorBase: '#b0bec5', colorAccent: '#8a9aa8', chimneys: 2, hasSmoke: true },
-            { name: 'Фабрика', colorBase: '#9e9e9e', colorAccent: '#757575', chimneys: 1, hasSmoke: true }
+            { name: 'Офис', baseColor: '#9e9e9e', accentColor: '#757575', windowColor: '#cfd8dc', hasLogo: true, floors: 3 },
+            { name: 'Бизнес-парк', baseColor: '#b0bec5', accentColor: '#78909c', windowColor: '#cfd8dc', hasLogo: false, floors: 4 }
         ],
         bank: [
-            { name: 'Банк', colorBase: '#cfd8dc', colorAccent: '#b0bec5', columns: 4, hasStatue: true },
-            { name: 'Финансовый центр', colorBase: '#b0bec5', colorAccent: '#90a4ae', columns: 6, hasStatue: false }
+            { name: 'Банк', baseColor: '#cfd8dc', accentColor: '#b0bec5', windowColor: '#fff2cc', hasColumns: true, hasStatue: true },
+            { name: 'Финансовый центр', baseColor: '#b0bec5', accentColor: '#90a4ae', windowColor: '#fff2cc', hasColumns: true, hasStatue: false }
         ],
         hotel: [
-            { name: 'Отель', colorBase: '#ffe082', colorAccent: '#ffd54f', windowsRows: 5, hasPool: true },
-            { name: 'Гостиница', colorBase: '#ffd54f', colorAccent: '#ffb300', windowsRows: 4, hasPool: false }
+            { name: 'Отель', baseColor: '#ffe082', accentColor: '#ffd54f', windowColor: '#fff2cc', hasPool: true, floors: 5 },
+            { name: 'Гостиница', baseColor: '#ffd54f', accentColor: '#ffb300', windowColor: '#fff2cc', hasPool: false, floors: 4 }
+        ],
+        // Индустрия
+        factory: [
+            { name: 'Завод', baseColor: '#b0bec5', accentColor: '#8a9aa8', chimney: true, smoke: true, windows: 3 },
+            { name: 'Фабрика', baseColor: '#9e9e9e', accentColor: '#757575', chimney: true, smoke: true, windows: 2 }
+        ],
+        powerplant: [
+            { name: 'Электростанция', baseColor: '#b0a57c', accentColor: '#8b7a5a', chimneys: 2, smoke: true, windows: 2 },
+            { name: 'ТЭЦ', baseColor: '#9e8f72', accentColor: '#6b5d3a', chimneys: 3, smoke: true, windows: 3 }
+        ],
+        // Социальная сфера
+        school: [
+            { name: 'Школа', baseColor: '#ff8a80', accentColor: '#f06292', hasBell: true, windows: 4 },
+            { name: 'Гимназия', baseColor: '#ffab91', accentColor: '#ff8a80', hasBell: true, windows: 5 }
+        ],
+        hospital: [
+            { name: 'Больница', baseColor: '#ef9a9a', accentColor: '#e57373', hasCross: true, windows: 4 },
+            { name: 'Клиника', baseColor: '#ffcdd2', accentColor: '#ef9a9a', hasCross: true, windows: 3 }
         ],
         church: [
-            { name: 'Церковь', colorBase: '#f5f5f5', colorRoof: '#b71c1c', hasSpire: true, hasCross: true },
-            { name: 'Собор', colorBase: '#eeeeee', colorRoof: '#7b1f1f', hasSpire: true, hasCross: true }
+            { name: 'Церковь', baseColor: '#f5f5f5', roofColor: '#b71c1c', hasSpire: true, hasCross: true },
+            { name: 'Собор', baseColor: '#eeeeee', roofColor: '#7b1f1f', hasSpire: true, hasCross: true }
         ],
         monument: [
-            { name: 'Монумент', colorBase: '#b0bec5', height: 40, hasStatue: true },
-            { name: 'Стела', colorBase: '#9e9e9e', height: 35, hasStatue: false }
+            { name: 'Монумент', baseColor: '#b0bec5', height: 40, hasStatue: true },
+            { name: 'Стела', baseColor: '#9e9e9e', height: 35, hasStatue: false }
+        ],
+        // Декор
+        park: [
+            { name: 'Парк', baseColor: '#81c784', trees: 4, hasFountain: true, hasBench: true },
+            { name: 'Сквер', baseColor: '#66bb6a', trees: 5, hasFountain: false, hasBench: true }
+        ],
+        road: [
+            { name: 'Дорога', baseColor: '#b0bec5', hasMarkup: true, hasLights: true },
+            { name: 'Шоссе', baseColor: '#9e9e9e', hasMarkup: true, hasLights: false }
         ]
     };
 
-    // ==================== КАТАЛОГ ЗДАНИЙ (для UI и экономики) ====================
+    // Каталог зданий (для UI и экономики)
     const BUILDINGS_CATALOG = [
         // Жилые
-        { id: 'house1', category: 'residential', variantPool: 'house', basePrice: 300, baseIncome: 22, basePop: 9 },
-        { id: 'house2', category: 'residential', variantPool: 'house', basePrice: 600, baseIncome: 40, basePop: 18 },
-        { id: 'apartment1', category: 'residential', variantPool: 'apartment', basePrice: 2000, baseIncome: 150, basePop: 70 },
-        { id: 'skyscraper1', category: 'residential', variantPool: 'skyscraper', basePrice: 8000, baseIncome: 700, basePop: 350 },
+        { id: 'cottage1', category: 'residential', variantPool: 'cottage', basePrice: 400, baseIncome: 28, basePop: 12 },
+        { id: 'cottage2', category: 'residential', variantPool: 'cottage', basePrice: 700, baseIncome: 48, basePop: 22 },
+        { id: 'mansion1', category: 'residential', variantPool: 'mansion', basePrice: 1500, baseIncome: 110, basePop: 45 },
+        { id: 'apartment1', category: 'residential', variantPool: 'apartment', basePrice: 2500, baseIncome: 190, basePop: 85 },
+        { id: 'skyscraper1', category: 'residential', variantPool: 'skyscraper', basePrice: 9000, baseIncome: 800, basePop: 400 },
         // Коммерция
-        { id: 'shop1', category: 'commercial', variantPool: 'shop', basePrice: 500, baseIncome: 60, basePop: 4 },
-        { id: 'office1', category: 'commercial', variantPool: 'office', basePrice: 1800, baseIncome: 200, basePop: 12 },
-        { id: 'bank1', category: 'commercial', variantPool: 'bank', basePrice: 4000, baseIncome: 450, basePop: 8 },
-        { id: 'hotel1', category: 'commercial', variantPool: 'hotel', basePrice: 3500, baseIncome: 380, basePop: 25 },
+        { id: 'shop1', category: 'commercial', variantPool: 'shop', basePrice: 600, baseIncome: 70, basePop: 5 },
+        { id: 'office1', category: 'commercial', variantPool: 'office', basePrice: 2000, baseIncome: 230, basePop: 15 },
+        { id: 'bank1', category: 'commercial', variantPool: 'bank', basePrice: 4500, baseIncome: 500, basePop: 10 },
+        { id: 'hotel1', category: 'commercial', variantPool: 'hotel', basePrice: 4000, baseIncome: 420, basePop: 30 },
         // Индустрия
-        { id: 'factory1', category: 'industrial', variantPool: 'factory', basePrice: 3000, baseIncome: 350, basePop: 5 },
-        { id: 'powerplant1', category: 'industrial', variantPool: 'powerplant', basePrice: 7000, baseIncome: 800, basePop: 0 },
+        { id: 'factory1', category: 'industrial', variantPool: 'factory', basePrice: 3500, baseIncome: 400, basePop: 8 },
+        { id: 'powerplant1', category: 'industrial', variantPool: 'powerplant', basePrice: 8000, baseIncome: 900, basePop: 0 },
         // Социальная сфера
-        { id: 'school1', category: 'infrastructure', variantPool: 'school', basePrice: 3000, baseIncome: 90, basePop: 0 },
-        { id: 'hospital1', category: 'infrastructure', variantPool: 'hospital', basePrice: 5000, baseIncome: 160, basePop: 0 },
-        { id: 'park1', category: 'infrastructure', variantPool: 'park', basePrice: 400, baseIncome: 30, basePop: 4 },
-        { id: 'road1', category: 'infrastructure', variantPool: 'road', basePrice: 180, baseIncome: 8, basePop: 0 },
-        { id: 'church1', category: 'infrastructure', variantPool: 'church', basePrice: 2500, baseIncome: 60, basePop: 0 },
-        { id: 'monument1', category: 'infrastructure', variantPool: 'monument', basePrice: 1500, baseIncome: 25, basePop: 0 }
+        { id: 'school1', category: 'infrastructure', variantPool: 'school', basePrice: 3500, baseIncome: 110, basePop: 0 },
+        { id: 'hospital1', category: 'infrastructure', variantPool: 'hospital', basePrice: 5500, baseIncome: 190, basePop: 0 },
+        { id: 'church1', category: 'infrastructure', variantPool: 'church', basePrice: 3000, baseIncome: 70, basePop: 0 },
+        { id: 'monument1', category: 'infrastructure', variantPool: 'monument', basePrice: 2000, baseIncome: 30, basePop: 0 },
+        // Декор
+        { id: 'park1', category: 'decor', variantPool: 'park', basePrice: 500, baseIncome: 35, basePop: 5 },
+        { id: 'road1', category: 'decor', variantPool: 'road', basePrice: 200, baseIncome: 10, basePop: 0 }
     ];
 
-    // Создаём быстрый словарь для доступа по id
     const BUILDING_DICT = {};
     BUILDINGS_CATALOG.forEach(b => { BUILDING_DICT[b.id] = b; });
 
-    // Хранилище вариантов для каждой построенной клетки
-    let buildingVariants = {};
+    let buildingVariants = {}; // хранит выбранный вариант для каждой клетки
 
-    // ==================== ФУНКЦИИ ОТРИСОВКИ (ДЕТАЛЬНЫЕ, С ТЕНЯМИ) ====================
-    const ctx = document.getElementById('gameCanvas').getContext('2d');
+    // ==================== МЕГА-ДЕТАЛИЗИРОВАННЫЕ ФУНКЦИИ ОТРИСОВКИ ====================
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
 
+    // Вспомогательные функции для рисования текстур
+    function drawBrickTexture(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+        ctx.fillStyle = '#8b5a2b';
+        for (let i = 0; i < w; i += 15) {
+            ctx.fillRect(x + i, y, 2, h);
+        }
+        for (let i = 0; i < h; i += 10) {
+            ctx.fillRect(x, y + i, w, 2);
+        }
+    }
+
+    function drawWoodTexture(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+        ctx.strokeStyle = '#8b5a2b';
+        ctx.lineWidth = 1;
+        for (let i = 0; i < w; i += 8) {
+            ctx.beginPath();
+            ctx.moveTo(x + i, y);
+            ctx.lineTo(x + i, y + h);
+            ctx.stroke();
+        }
+    }
+
+    function drawStoneTexture(x, y, w, h, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, w, h);
+        ctx.fillStyle = '#a0a0a0';
+        for (let i = 0; i < 5; i++) {
+            ctx.beginPath();
+            ctx.arc(x + 5 + i*12, y + 5, 4, 0, 2*Math.PI);
+            ctx.fill();
+        }
+    }
+
+    // Функция рисования тени от здания на землю
+    function drawShadow(x, y, width, height) {
+        ctx.fillStyle = 'rgba(0,0,0,0.2)';
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.moveTo(x - width/2, y + height/2);
+        ctx.lineTo(x + width/2, y + height/2);
+        ctx.lineTo(x + width/2 + 10, y + height/2 + 10);
+        ctx.lineTo(x - width/2 + 10, y + height/2 + 10);
+        ctx.closePath();
+        ctx.fill();
+    }
+
+    // Базовая платформа
     function drawBase(x, y, color, heightOffset = 0) {
         ctx.fillStyle = color;
         ctx.shadowColor = '#2b4d2b';
-        ctx.shadowBlur = 30;
-        ctx.shadowOffsetY = 18;
+        ctx.shadowBlur = 35;
+        ctx.shadowOffsetY = 20;
         ctx.beginPath();
         ctx.moveTo(x, y - 5 - heightOffset);
         ctx.lineTo(x + CELL_W/2, y + CELL_H/2 - 5 - heightOffset);
@@ -427,214 +481,401 @@
         ctx.lineTo(x - CELL_W/2, y + CELL_H/2 - 5 - heightOffset);
         ctx.closePath();
         ctx.fill();
+        drawShadow(x, y, CELL_W, CELL_H);
     }
 
-    function drawHouse(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        // Стены
-        ctx.fillStyle = variant.colorBase;
-        ctx.fillRect(x-22, y-48, 44, 32);
+    // -------------------- Жилые --------------------
+    function drawCottage(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        // Стены с текстурой
+        if (variant.texture === 'brick') drawBrickTexture(x-25, y-50, 50, 32, variant.baseColor);
+        else if (variant.texture === 'wood') drawWoodTexture(x-25, y-50, 50, 32, variant.baseColor);
+        else ctx.fillStyle = variant.baseColor, ctx.fillRect(x-25, y-50, 50, 32);
+
         // Крыша
-        ctx.fillStyle = variant.colorRoof;
+        ctx.fillStyle = variant.roofColor;
+        ctx.shadowBlur = 25;
         ctx.beginPath();
-        ctx.moveTo(x-30, y-52);
-        ctx.lineTo(x+30, y-52);
-        ctx.lineTo(x, y-84);
+        ctx.moveTo(x-35, y-55);
+        ctx.lineTo(x+35, y-55);
+        ctx.lineTo(x, y-90);
         ctx.closePath();
         ctx.fill();
         // Черепица
         ctx.strokeStyle = '#8b3a3a';
         ctx.lineWidth = 2;
-        for (let i = -20; i <= 20; i+=12) {
+        for (let i = -25; i <= 25; i+=12) {
             ctx.beginPath();
-            ctx.moveTo(x-25+i, y-60);
-            ctx.lineTo(x-8+i, y-78);
+            ctx.moveTo(x-30+i, y-65);
+            ctx.lineTo(x-10+i, y-85);
             ctx.stroke();
         }
+
         // Окна
-        ctx.fillStyle = '#f9e076';
+        ctx.fillStyle = variant.windowColor;
         ctx.shadowBlur = 10;
-        if (variant.windows >= 2) {
-            ctx.fillRect(x-30, y-42, 10, 14);
-            ctx.fillRect(x+20, y-42, 10, 14);
-            if (variant.windows >= 3) {
-                ctx.fillRect(x-10, y-42, 10, 14);
-            }
-            if (variant.windows >= 4) {
-                ctx.fillRect(x-30, y-24, 10, 14);
-                ctx.fillRect(x+20, y-24, 10, 14);
-            }
+        ctx.fillRect(x-35, y-44, 10, 14);
+        ctx.fillRect(x+25, y-44, 10, 14);
+        if (variant.hasShutters) {
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x-40, y-44, 5, 14);
+            ctx.fillRect(x+35, y-44, 5, 14);
         }
+        // Цветы на окнах
+        if (variant.hasFlowers) {
+            ctx.fillStyle = '#ff69b4';
+            ctx.beginPath();
+            ctx.arc(x-30, y-48, 3, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(x+30, y-48, 3, 0, 2*Math.PI);
+            ctx.fill();
+        }
+
         // Дверь
         ctx.fillStyle = variant.doorColor;
-        ctx.fillRect(x-12, y-28, 24, 28);
+        ctx.fillRect(x-12, y-30, 24, 28);
         ctx.fillStyle = '#d4af37';
         ctx.beginPath();
-        ctx.arc(x-4, y-14, 3, 0, 2*Math.PI);
+        ctx.arc(x-4, y-16, 3, 0, 2*Math.PI);
         ctx.fill();
+
         // Труба
         if (variant.hasChimney) {
             ctx.fillStyle = '#8b5a2b';
-            ctx.fillRect(x+18, y-70, 8, 18);
+            ctx.fillRect(x+20, y-75, 8, 20);
         }
         ctx.shadowBlur = 0;
     }
 
-    function drawApartment(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-28, y-70, 56, 48);
+    function drawMansion(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.baseColor;
+        ctx.fillRect(x-35, y-60, 70, 40);
+        // Колонны
+        if (variant.hasColumns) {
+            ctx.fillStyle = '#f5f5f5';
+            for (let i = -20; i <= 20; i+=22) {
+                ctx.fillRect(x-6+i, y-52, 8, 30);
+            }
+        }
+        // Крыша
+        ctx.fillStyle = variant.roofColor;
+        ctx.beginPath();
+        ctx.moveTo(x-45, y-65);
+        ctx.lineTo(x+45, y-65);
+        ctx.lineTo(x, y-105);
+        ctx.closePath();
+        ctx.fill();
         // Окна
-        for (let i = -16; i <= 16; i+=20) {
-            for (let j = -60; j <= -24; j+=18) {
-                ctx.fillStyle = '#cfd8dc';
-                ctx.fillRect(x-10+i, y+j, 12, 12);
+        ctx.fillStyle = variant.windowColor;
+        ctx.fillRect(x-30, y-48, 10, 14);
+        ctx.fillRect(x+20, y-48, 10, 14);
+        ctx.fillRect(x-30, y-28, 10, 14);
+        ctx.fillRect(x+20, y-28, 10, 14);
+        // Балкон
+        if (variant.hasBalcony) {
+            ctx.fillStyle = '#a57248';
+            ctx.fillRect(x-20, y-40, 40, 6);
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x-12, y-50, 8, 12);
+            ctx.fillRect(x+4, y-50, 8, 12);
+        }
+        // Гараж
+        if (variant.hasGarage) {
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x-20, y-25, 40, 12);
+        }
+    }
+
+    function drawApartment(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-35, y-80, 70, 60);
+        // Окна
+        for (let f = 0; f < variant.floors; f++) {
+            for (let i = -20; i <= 20; i+=22) {
+                ctx.fillStyle = variant.windowColor;
+                ctx.fillRect(x-12+i, y-70 + f*18, 12, 12);
                 ctx.fillStyle = '#f9e076';
-                ctx.fillRect(x-8+i, y+j+2, 4, 4);
-                ctx.fillRect(x-2+i, y+j+2, 4, 4);
+                ctx.fillRect(x-10+i, y-68 + f*18, 4, 4);
+                ctx.fillRect(x-2+i, y-68 + f*18, 4, 4);
             }
         }
         // Балконы
-        if (variant.balconies) {
+        if (variant.hasBalconies) {
             ctx.fillStyle = '#a0aab3';
-            ctx.fillRect(x-34, y-46, 22, 6);
-            ctx.fillRect(x+12, y-46, 22, 6);
+            ctx.fillRect(x-40, y-52, 22, 6);
+            ctx.fillRect(x+18, y-52, 22, 6);
+            ctx.fillRect(x-40, y-34, 22, 6);
+            ctx.fillRect(x+18, y-34, 22, 6);
         }
     }
 
     function drawSkyscraper(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-36, y-120, 72, 90);
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-40, y-130, 80, 100);
         // Окна
-        for (let i = -24; i <= 24; i+=20) {
-            for (let j = -105; j <= -25; j+=20) {
-                ctx.fillStyle = '#ffd966';
-                ctx.fillRect(x-12+i, y+j-2, 14, 14);
+        for (let f = 0; f < variant.floors; f++) {
+            for (let i = -24; i <= 24; i+=20) {
+                ctx.fillStyle = variant.windowColor;
+                ctx.fillRect(x-14+i, y-120 + f*14, 12, 12);
                 ctx.fillStyle = '#fff';
-                ctx.fillRect(x-10+i, y+j, 4, 4);
-                ctx.fillRect(x-2+i, y+j, 4, 4);
+                ctx.fillRect(x-12+i, y-118 + f*14, 4, 4);
+                ctx.fillRect(x-4+i, y-118 + f*14, 4, 4);
             }
         }
-        // Шпиль/антенна
+        // Шпиль
         if (variant.hasSpire) {
             ctx.fillStyle = '#b0bec5';
-            ctx.fillRect(x-4, y-138, 8, 22);
+            ctx.fillRect(x-5, y-150, 10, 25);
             ctx.fillStyle = '#d4af37';
             ctx.beginPath();
-            ctx.arc(x, y-150, 8, 0, 2*Math.PI);
+            ctx.arc(x, y-165, 8, 0, 2*Math.PI);
             ctx.fill();
         }
-        if (variant.antenna) {
+        // Антенна
+        if (variant.hasAntenna) {
             ctx.fillStyle = '#b0bec5';
-            ctx.fillRect(x-2, y-148, 4, 28);
+            ctx.fillRect(x-3, y-155, 6, 30);
         }
     }
 
+    // -------------------- Коммерция --------------------
     function drawShop(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorRoof;
-        ctx.fillRect(x-30, y-48, 60, 30);
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.roofColor;
+        ctx.fillRect(x-35, y-55, 70, 30);
         // Витрина
-        ctx.fillStyle = '#fff2cc';
-        ctx.fillRect(x-22, y-42, 16, 18);
-        ctx.fillRect(x+6, y-42, 16, 18);
+        ctx.fillStyle = variant.windowColor;
+        ctx.fillRect(x-25, y-48, 20, 20);
+        ctx.fillRect(x+5, y-48, 20, 20);
         // Товары
         ctx.fillStyle = '#8b5a2b';
         ctx.font = '28px sans-serif';
-        ctx.fillText('🛒', x-32, y-18);
-        ctx.fillText('🧃', x+10, y-22);
+        ctx.fillText('🛒', x-35, y-20);
+        ctx.fillText('🧃', x+8, y-25);
+        // Навес
+        if (variant.hasAwning) {
+            ctx.fillStyle = '#c43a3a';
+            ctx.fillRect(x-30, y-62, 60, 8);
+        }
         // Вывеска
         if (variant.hasSign) {
             ctx.fillStyle = '#c43a3a';
-            ctx.fillRect(x-16, y-70, 32, 14);
+            ctx.fillRect(x-18, y-75, 36, 12);
             ctx.fillStyle = '#fff';
-            ctx.font = '22px sans-serif';
-            ctx.fillText('SALE', x-14, y-58);
+            ctx.font = '20px sans-serif';
+            ctx.fillText('SALE', x-16, y-64);
         }
     }
 
     function drawOffice(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-32, y-68, 64, 48);
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-38, y-75, 76, 50);
         // Окна
-        for (let i = -18; i <= 18; i+=22) {
-            ctx.fillStyle = '#cfd8dc';
-            ctx.fillRect(x-14+i, y-58, 14, 10);
-            ctx.fillRect(x-14+i, y-38, 14, 10);
-            ctx.fillStyle = '#aed6f1';
-            ctx.fillRect(x-12+i, y-56, 4, 4);
-            ctx.fillRect(x-12+i, y-36, 4, 4);
+        for (let f = 0; f < variant.floors; f++) {
+            for (let i = -20; i <= 20; i+=24) {
+                ctx.fillStyle = variant.windowColor;
+                ctx.fillRect(x-14+i, y-68 + f*16, 14, 12);
+                ctx.fillStyle = '#aed6f1';
+                ctx.fillRect(x-12+i, y-66 + f*16, 4, 4);
+                ctx.fillRect(x-2+i, y-66 + f*16, 4, 4);
+            }
         }
         // Логотип
         if (variant.hasLogo) {
             ctx.fillStyle = '#ffb74d';
             ctx.beginPath();
-            ctx.arc(x, y-84, 10, 0, 2*Math.PI);
+            ctx.arc(x, y-92, 12, 0, 2*Math.PI);
             ctx.fill();
             ctx.fillStyle = '#fff';
             ctx.font = '18px sans-serif';
-            ctx.fillText('INC', x-16, y-82);
+            ctx.fillText('INC', x-18, y-90);
         }
     }
 
-    function drawSchool(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-36, y-68, 72, 50);
+    function drawBank(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-45, y-80, 90, 55);
         // Колонны
-        ctx.fillStyle = '#fff0e0';
-        for (let i = -20; i <= 20; i+=22) {
-            ctx.fillRect(x-12+i, y-50, 8, 28);
+        if (variant.hasColumns) {
+            ctx.fillStyle = '#f5f5f5';
+            for (let i = -30; i <= 30; i+=20) {
+                ctx.fillRect(x-8+i, y-68, 8, 40);
+            }
+        }
+        // Статуя
+        if (variant.hasStatue) {
+            ctx.fillStyle = '#b0bec5';
+            ctx.beginPath();
+            ctx.arc(x, y-100, 12, 0, 2*Math.PI);
+            ctx.fill();
+            ctx.fillRect(x-4, y-112, 8, 16);
+        }
+    }
+
+    function drawHotel(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-42, y-100, 84, 70);
+        // Окна
+        for (let f = 0; f < variant.floors; f++) {
+            for (let i = -24; i <= 24; i+=22) {
+                ctx.fillStyle = variant.windowColor;
+                ctx.fillRect(x-14+i, y-92 + f*18, 14, 14);
+            }
+        }
+        // Бассейн
+        if (variant.hasPool) {
+            ctx.fillStyle = '#7ec8e0';
+            ctx.fillRect(x-25, y-20, 50, 10);
+        }
+    }
+
+    // -------------------- Индустрия --------------------
+    function drawFactory(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-40, y-90, 80, 60);
+        // Труба
+        if (variant.chimney) {
+            ctx.fillStyle = '#6b5a3a';
+            ctx.fillRect(x-10, y-120, 8, 35);
+        }
+        // Дым
+        if (variant.smoke) {
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.beginPath();
+            ctx.arc(x-8, y-140, 12, 0, 2*Math.PI);
+            ctx.fill();
         }
         // Окна
-        for (let i = -20; i <= 20; i+=22) {
+        ctx.fillStyle = '#ffb74d';
+        for (let i = 0; i < variant.windows; i++) {
+            ctx.fillRect(x-25 + i*20, y-60, 10, 10);
+        }
+        // Ворота
+        ctx.fillStyle = '#8b5a2b';
+        ctx.fillRect(x-20, y-40, 40, 20);
+    }
+
+    function drawPowerPlant(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-45, y-100, 90, 70);
+        // Трубы
+        ctx.fillStyle = '#6b5a3a';
+        for (let i = 0; i < variant.chimneys; i++) {
+            let dx = -15 + i*25;
+            ctx.fillRect(x-8+dx, y-130, 10, 40);
+        }
+        // Дым
+        if (variant.smoke) {
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            for (let i = 0; i < variant.chimneys; i++) {
+                let dx = -15 + i*25;
+                ctx.beginPath();
+                ctx.arc(x-4+dx, y-150, 14, 0, 2*Math.PI);
+                ctx.fill();
+            }
+        }
+        // Окна
+        ctx.fillStyle = '#ffb74d';
+        for (let i = 0; i < variant.windows; i++) {
+            ctx.fillRect(x-25 + i*25, y-70, 10, 12);
+        }
+    }
+
+    // -------------------- Социальная сфера --------------------
+    function drawSchool(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-40, y-75, 80, 55);
+        // Окна
+        for (let i = 0; i < variant.windows; i++) {
             ctx.fillStyle = '#ffffff';
-            ctx.fillRect(x-10+i, y-58, 12, 12);
-            ctx.fillRect(x-10+i, y-34, 12, 12);
+            ctx.fillRect(x-30 + i*20, y-65, 12, 12);
+            ctx.fillRect(x-30 + i*20, y-40, 12, 12);
         }
         // Колокольчик
         if (variant.hasBell) {
             ctx.fillStyle = '#d4af37';
             ctx.beginPath();
-            ctx.arc(x, y-90, 10, 0, 2*Math.PI);
+            ctx.arc(x, y-95, 10, 0, 2*Math.PI);
             ctx.fill();
             ctx.fillStyle = '#b8860b';
-            ctx.fillRect(x-3, y-100, 6, 12);
+            ctx.fillRect(x-4, y-105, 8, 12);
         }
     }
 
     function drawHospital(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-36, y-72, 72, 54);
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.accentColor;
+        ctx.fillRect(x-40, y-80, 80, 60);
         // Красный крест
         ctx.fillStyle = '#ff4d4d';
-        ctx.fillRect(x-10, y-54, 20, 12);
-        ctx.fillRect(x-5, y-62, 10, 24);
+        ctx.fillRect(x-10, y-60, 20, 12);
+        ctx.fillRect(x-5, y-68, 10, 24);
         // Окна
-        for (let i = -20; i <= 20; i+=24) {
+        for (let i = 0; i < variant.windows; i++) {
             ctx.fillStyle = '#b0e0e6';
-            ctx.fillRect(x-14+i, y-52, 12, 12);
-            ctx.fillRect(x-14+i, y-28, 12, 12);
+            ctx.fillRect(x-30 + i*20, y-55, 12, 12);
+            ctx.fillRect(x-30 + i*20, y-30, 12, 12);
         }
     }
 
+    function drawChurch(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.baseColor;
+        ctx.fillRect(x-30, y-75, 60, 50);
+        // Крыша
+        ctx.fillStyle = variant.roofColor;
+        ctx.beginPath();
+        ctx.moveTo(x-40, y-80);
+        ctx.lineTo(x+40, y-80);
+        ctx.lineTo(x, y-120);
+        ctx.closePath();
+        ctx.fill();
+        // Крест
+        if (variant.hasCross) {
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(x-4, y-130, 8, 22);
+            ctx.fillRect(x-12, y-142, 24, 6);
+        }
+    }
+
+    function drawMonument(x, y, variant) {
+        drawBase(x, y, variant.baseColor);
+        ctx.fillStyle = variant.baseColor;
+        ctx.fillRect(x-18, y-80, 36, 50);
+        // Статуя
+        if (variant.hasStatue) {
+            ctx.fillStyle = '#cfd8dc';
+            ctx.beginPath();
+            ctx.arc(x, y-100, 12, 0, 2*Math.PI);
+            ctx.fill();
+        }
+    }
+
+    // -------------------- Декор --------------------
     function drawPark(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
+        drawBase(x, y, variant.baseColor);
         // Деревья
         ctx.fillStyle = '#5f9b6b';
-        for (let i = 0; i < variant.treeCount; i++) {
-            let dx = -25 + i * 15;
+        for (let i = 0; i < variant.trees; i++) {
+            let dx = -30 + i*20;
             ctx.beginPath();
-            ctx.arc(x+dx, y-35 - i*2, 10, 0, 2*Math.PI);
+            ctx.arc(x+dx, y-35 - i*2, 12, 0, 2*Math.PI);
             ctx.fill();
         }
         ctx.fillStyle = '#8b5a2b';
-        for (let i = 0; i < variant.treeCount; i++) {
-            let dx = -25 + i * 15;
-            ctx.fillRect(x-4+dx, y-28, 6, 15);
+        for (let i = 0; i < variant.trees; i++) {
+            let dx = -30 + i*20;
+            ctx.fillRect(x-5+dx, y-25, 6, 15);
         }
         // Фонтан
         if (variant.hasFountain) {
@@ -643,193 +884,82 @@
             ctx.arc(x, y-25, 12, 0, 2*Math.PI);
             ctx.fill();
             ctx.fillStyle = '#fff';
-            ctx.font = '22px sans-serif';
+            ctx.font = '24px sans-serif';
             ctx.fillText('⛲', x-10, y-30);
+        }
+        // Скамейка
+        if (variant.hasBench) {
+            ctx.fillStyle = '#8b5a2b';
+            ctx.fillRect(x-20, y-20, 40, 6);
+            ctx.fillRect(x-10, y-30, 6, 12);
+            ctx.fillRect(x+4, y-30, 6, 12);
         }
     }
 
     function drawRoad(x, y, variant) {
-        drawBase(x, y, variant.colorBase, 2);
+        drawBase(x, y, variant.baseColor, 2);
         // Асфальт
         ctx.fillStyle = '#b0bec5';
-        ctx.fillRect(x-40, y-12, 80, 6);
+        ctx.fillRect(x-45, y-12, 90, 6);
         // Разметка
         if (variant.hasMarkup) {
             ctx.fillStyle = '#f5f5f5';
-            ctx.fillRect(x-35, y-8, 10, 2);
-            ctx.fillRect(x-10, y-8, 10, 2);
-            ctx.fillRect(x+15, y-8, 10, 2);
+            ctx.fillRect(x-40, y-8, 10, 2);
+            ctx.fillRect(x-15, y-8, 10, 2);
+            ctx.fillRect(x+10, y-8, 10, 2);
+            ctx.fillRect(x+35, y-8, 10, 2);
         }
         // Фонари
         if (variant.hasLights) {
             ctx.fillStyle = '#8a9aa8';
-            ctx.fillRect(x-25, y-45, 4, 28);
-            ctx.fillRect(x+21, y-45, 4, 28);
+            ctx.fillRect(x-30, y-50, 4, 30);
+            ctx.fillRect(x+26, y-50, 4, 30);
             ctx.fillStyle = '#ffd966';
             ctx.beginPath();
-            ctx.arc(x-23, y-52, 5, 0, 2*Math.PI);
+            ctx.arc(x-28, y-58, 5, 0, 2*Math.PI);
             ctx.fill();
             ctx.beginPath();
-            ctx.arc(x+23, y-52, 5, 0, 2*Math.PI);
+            ctx.arc(x+28, y-58, 5, 0, 2*Math.PI);
             ctx.fill();
         }
     }
 
-    function drawPowerPlant(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-38, y-90, 76, 60);
-        // Трубы
-        ctx.fillStyle = '#6b5a3a';
-        for (let i = 0; i < variant.chimneys; i++) {
-            let dx = -20 + i * 25;
-            ctx.fillRect(x-8+dx, y-120, 10, 38);
-        }
-        // Дым
-        if (variant.hasSmoke) {
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.beginPath();
-            ctx.arc(x-15, y-140, 14, 0, 2*Math.PI);
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc(x+15, y-150, 12, 0, 2*Math.PI);
-            ctx.fill();
-        }
-        // Окна
-        ctx.fillStyle = '#ffb74d';
-        for (let i = -16; i <= 16; i+=20) {
-            ctx.fillRect(x-8+i, y-60, 8, 10);
-        }
-    }
-
-    function drawFactory(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-34, y-80, 68, 52);
-        // Трубы
-        ctx.fillStyle = '#6b5a3a';
-        for (let i = 0; i < variant.chimneys; i++) {
-            let dx = -15 + i * 25;
-            ctx.fillRect(x-6+dx, y-110, 8, 32);
-        }
-        // Дым
-        if (variant.hasSmoke) {
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.beginPath();
-            ctx.arc(x-12, y-130, 12, 0, 2*Math.PI);
-            ctx.fill();
-        }
-        // Ворота
-        ctx.fillStyle = '#8b5a2b';
-        ctx.fillRect(x-18, y-40, 36, 20);
-    }
-
-    function drawBank(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-40, y-70, 80, 48);
-        // Колонны
-        ctx.fillStyle = '#f5f5f5';
-        for (let i = -28; i <= 28; i+=18) {
-            ctx.fillRect(x-6+i, y-58, 8, 32);
-        }
-        // Статуя
-        if (variant.hasStatue) {
-            ctx.fillStyle = '#b0bec5';
-            ctx.beginPath();
-            ctx.arc(x, y-88, 10, 0, 2*Math.PI);
-            ctx.fill();
-            ctx.fillRect(x-3, y-98, 6, 12);
-        }
-    }
-
-    function drawHotel(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorAccent;
-        ctx.fillRect(x-38, y-90, 76, 62);
-        // Окна
-        for (let i = -24; i <= 24; i+=20) {
-            for (let j = -78; j <= -22; j+=18) {
-                ctx.fillStyle = '#fff2cc';
-                ctx.fillRect(x-12+i, y+j, 14, 12);
-            }
-        }
-        // Бассейн
-        if (variant.hasPool) {
-            ctx.fillStyle = '#7ec8e0';
-            ctx.fillRect(x-20, y-18, 40, 8);
-        }
-    }
-
-    function drawChurch(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorBase;
-        ctx.fillRect(x-28, y-70, 56, 48);
-        // Крыша
-        ctx.fillStyle = variant.colorRoof;
-        ctx.beginPath();
-        ctx.moveTo(x-35, y-74);
-        ctx.lineTo(x+35, y-74);
-        ctx.lineTo(x, y-110);
-        ctx.closePath();
-        ctx.fill();
-        // Крест
-        if (variant.hasCross) {
-            ctx.fillStyle = '#d4af37';
-            ctx.fillRect(x-3, y-118, 6, 22);
-            ctx.fillRect(x-9, y-128, 18, 6);
-        }
-    }
-
-    function drawMonument(x, y, variant) {
-        drawBase(x, y, variant.colorBase);
-        ctx.fillStyle = variant.colorBase;
-        ctx.fillRect(x-16, y-70, 32, 48);
-        // Статуя
-        if (variant.hasStatue) {
-            ctx.fillStyle = '#cfd8dc';
-            ctx.beginPath();
-            ctx.arc(x, y-94, 10, 0, 2*Math.PI);
-            ctx.fill();
-        }
-    }
-
-    // ==================== ОСНОВНАЯ ФУНКЦИЯ ОТРИСОВКИ ГОРОДА ====================
+    // ==================== ОСНОВНАЯ ОТРИСОВКА ====================
     function drawCity() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Небо с глубоким градиентом
+        // Небо с градиентом и облаками
         const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
         skyGrad.addColorStop(0, '#0b4b72');
         skyGrad.addColorStop(1, '#1f7aa3');
         ctx.fillStyle = skyGrad;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Солнце с сиянием
+        // Солнце
         ctx.shadowBlur = 100;
         ctx.shadowColor = '#fff9c4';
         ctx.beginPath();
-        ctx.arc(160, 110, 50, 0, 2*Math.PI);
+        ctx.arc(180, 120, 55, 0, 2*Math.PI);
         ctx.fillStyle = '#fff3b0';
         ctx.fill();
 
         // Облака
-        ctx.shadowBlur = 70;
-        ctx.fillStyle = 'rgba(255,255,255,0.15)';
+        ctx.shadowBlur = 80;
+        ctx.fillStyle = 'rgba(255,255,255,0.2)';
         ctx.beginPath();
-        ctx.ellipse(240, 170, 100, 45, 0, 0, 2*Math.PI);
+        ctx.ellipse(260, 180, 120, 50, 0, 0, 2*Math.PI);
         ctx.fill();
         ctx.beginPath();
-        ctx.ellipse(460, 210, 120, 55, 0, 0, 2*Math.PI);
+        ctx.ellipse(500, 220, 150, 60, 0, 0, 2*Math.PI);
         ctx.fill();
 
         ctx.shadowBlur = 0;
 
-        // Вода (гладкая, без волн)
+        // Вода гладкая
         ctx.fillStyle = '#1f7a9c';
         ctx.shadowColor = '#0c4b66';
-        ctx.shadowBlur = 30;
-        ctx.shadowOffsetY = 12;
+        ctx.shadowBlur = 35;
+        ctx.shadowOffsetY = 15;
         for (let r = 0; r < GRID_SIZE; r++) {
             for (let c = 0; c < GRID_SIZE; c++) {
                 if (!gameState.land[r][c]) {
@@ -852,10 +982,10 @@
                     let p = iso(r, c);
                     let cellType = gameState.grid[r][c];
                     if (cellType === 'empty') {
-                        // Пустая земля с текстурой
+                        // Пустая земля с травой и цветами
                         ctx.fillStyle = '#7cb57c';
-                        ctx.shadowBlur = 30;
-                        ctx.shadowOffsetY = 15;
+                        ctx.shadowBlur = 35;
+                        ctx.shadowOffsetY = 18;
                         ctx.beginPath();
                         ctx.moveTo(p.x, p.y-5);
                         ctx.lineTo(p.x + CELL_W/2, p.y + CELL_H/2-5);
@@ -866,15 +996,22 @@
                         ctx.shadowBlur = 0;
                         // Травинки
                         ctx.fillStyle = '#5f8b5f';
-                        for (let i = -20; i <= 20; i+=15) {
-                            ctx.fillRect(p.x-5+i, p.y-28, 4, 15);
+                        for (let i = -25; i <= 25; i+=15) {
+                            ctx.fillRect(p.x-5+i, p.y-30, 4, 18);
                         }
+                        // Цветы
+                        ctx.fillStyle = '#f4a460';
+                        ctx.beginPath();
+                        ctx.arc(p.x-20, p.y-35, 6, 0, 2*Math.PI);
+                        ctx.fill();
+                        ctx.fillStyle = '#f0e68c';
+                        ctx.beginPath();
+                        ctx.arc(p.x+25, p.y-40, 7, 0, 2*Math.PI);
+                        ctx.fill();
                     } else {
-                        // Здание — ищем вариант
                         let variantKey = r + '_' + c;
                         let variant = buildingVariants[variantKey];
                         if (!variant) {
-                            // Если варианта нет, создаём случайный из пула
                             let buildingDef = BUILDING_DICT[cellType];
                             if (buildingDef) {
                                 let pool = BUILDING_VARIANTS[buildingDef.variantPool];
@@ -885,23 +1022,23 @@
                             }
                         }
                         if (variant) {
-                            // Вызываем нужную функцию отрисовки
                             switch (buildingDef.variantPool) {
-                                case 'house': drawHouse(p.x, p.y, variant); break;
+                                case 'cottage': drawCottage(p.x, p.y, variant); break;
+                                case 'mansion': drawMansion(p.x, p.y, variant); break;
                                 case 'apartment': drawApartment(p.x, p.y, variant); break;
                                 case 'skyscraper': drawSkyscraper(p.x, p.y, variant); break;
                                 case 'shop': drawShop(p.x, p.y, variant); break;
                                 case 'office': drawOffice(p.x, p.y, variant); break;
-                                case 'school': drawSchool(p.x, p.y, variant); break;
-                                case 'hospital': drawHospital(p.x, p.y, variant); break;
-                                case 'park': drawPark(p.x, p.y, variant); break;
-                                case 'road': drawRoad(p.x, p.y, variant); break;
-                                case 'powerplant': drawPowerPlant(p.x, p.y, variant); break;
-                                case 'factory': drawFactory(p.x, p.y, variant); break;
                                 case 'bank': drawBank(p.x, p.y, variant); break;
                                 case 'hotel': drawHotel(p.x, p.y, variant); break;
+                                case 'factory': drawFactory(p.x, p.y, variant); break;
+                                case 'powerplant': drawPowerPlant(p.x, p.y, variant); break;
+                                case 'school': drawSchool(p.x, p.y, variant); break;
+                                case 'hospital': drawHospital(p.x, p.y, variant); break;
                                 case 'church': drawChurch(p.x, p.y, variant); break;
                                 case 'monument': drawMonument(p.x, p.y, variant); break;
+                                case 'park': drawPark(p.x, p.y, variant); break;
+                                case 'road': drawRoad(p.x, p.y, variant); break;
                                 default: break;
                             }
                         }
@@ -914,14 +1051,14 @@
         if (selectedRow !== -1 && selectedCol !== -1 && gameState.land[selectedRow]?.[selectedCol]) {
             let p = iso(selectedRow, selectedCol);
             ctx.shadowColor = '#ffdf7e';
-            ctx.shadowBlur = 60;
+            ctx.shadowBlur = 70;
             ctx.strokeStyle = '#ffdb7e';
-            ctx.lineWidth = 12;
+            ctx.lineWidth = 15;
             ctx.beginPath();
-            ctx.moveTo(p.x, p.y-30);
-            ctx.lineTo(p.x + CELL_W/2, p.y + CELL_H/2-30);
-            ctx.lineTo(p.x, p.y + CELL_H-30);
-            ctx.lineTo(p.x - CELL_W/2, p.y + CELL_H/2-30);
+            ctx.moveTo(p.x, p.y-35);
+            ctx.lineTo(p.x + CELL_W/2, p.y + CELL_H/2-35);
+            ctx.lineTo(p.x, p.y + CELL_H-35);
+            ctx.lineTo(p.x - CELL_W/2, p.y + CELL_H/2-35);
             ctx.closePath();
             ctx.stroke();
             ctx.shadowBlur = 0;
@@ -954,7 +1091,7 @@
         const mouseX = (clientX - rect.left) * scaleX;
         const mouseY = (clientY - rect.top) * scaleY;
 
-        let bestDist = 150;
+        let bestDist = 180;
         for (let r = 0; r < GRID_SIZE; r++) {
             for (let c = 0; c < GRID_SIZE; c++) {
                 let p = iso(r, c);
@@ -990,18 +1127,15 @@
             alert('Клетка уже занята');
             return;
         }
-        // Строим
         gameState.money -= buildingDef.basePrice;
         gameState.grid[row][col] = gameState.selectedBuilding;
         gameState.population += buildingDef.basePop;
-
-        // Генерируем уникальный вариант для этого здания
+        // Генерируем уникальный вариант
         let pool = BUILDING_VARIANTS[buildingDef.variantPool];
         if (pool && pool.length) {
             let variant = pool[Math.floor(Math.random() * pool.length)];
             buildingVariants[row + '_' + col] = variant;
         }
-
         updateUI();
         drawCity();
         saveGame();
@@ -1128,23 +1262,21 @@
             let card = document.createElement('div');
             card.className = 'build-card';
             card.dataset.type = b.id;
-            // Выбираем эмодзи для превью
             let emoji = '🏠';
             if (b.variantPool === 'apartment') emoji = '🏢';
             else if (b.variantPool === 'skyscraper') emoji = '🏙️';
             else if (b.variantPool === 'shop') emoji = '🏪';
             else if (b.variantPool === 'office') emoji = '🏛️';
-            else if (b.variantPool === 'school') emoji = '📚';
-            else if (b.variantPool === 'hospital') emoji = '🏥';
-            else if (b.variantPool === 'park') emoji = '🌳';
-            else if (b.variantPool === 'road') emoji = '🛣️';
-            else if (b.variantPool === 'powerplant') emoji = '⚡';
-            else if (b.variantPool === 'factory') emoji = '🏭';
             else if (b.variantPool === 'bank') emoji = '💰';
             else if (b.variantPool === 'hotel') emoji = '🏨';
+            else if (b.variantPool === 'factory') emoji = '🏭';
+            else if (b.variantPool === 'powerplant') emoji = '⚡';
+            else if (b.variantPool === 'school') emoji = '📚';
+            else if (b.variantPool === 'hospital') emoji = '🏥';
             else if (b.variantPool === 'church') emoji = '⛪';
             else if (b.variantPool === 'monument') emoji = '🗽';
-
+            else if (b.variantPool === 'park') emoji = '🌳';
+            else if (b.variantPool === 'road') emoji = '🛣️';
             card.innerHTML = `
                 <div class="card-icon">${emoji}</div>
                 <div class="card-name">${b.name}</div>
@@ -1171,7 +1303,7 @@
                 variants: buildingVariants
             }));
         }
-        localStorage.setItem('archipelago3D', JSON.stringify({
+        localStorage.setItem('archipelagoUltra', JSON.stringify({
             money: gameState.money,
             grid: gameState.grid,
             land: gameState.land,
@@ -1181,11 +1313,11 @@
     }
 
     function loadGame() {
-        let saved = localStorage.getItem('archipelago3D');
+        let saved = localStorage.getItem('archipelagoUltra');
         if (saved) {
             try {
                 let data = JSON.parse(saved);
-                gameState.money = data.money || 35000;
+                gameState.money = data.money || 50000;
                 gameState.grid = data.grid || gameState.grid;
                 gameState.land = data.land || gameState.land;
                 gameState.population = data.population || 0;
@@ -1221,6 +1353,11 @@
         document.querySelectorAll('.cat-btn').forEach(t => t.classList.remove('active'));
         document.getElementById('catInf').classList.add('active');
         renderBuildings('infrastructure');
+    });
+    document.getElementById('catDec').addEventListener('click', () => {
+        document.querySelectorAll('.cat-btn').forEach(t => t.classList.remove('active'));
+        document.getElementById('catDec').classList.add('active');
+        renderBuildings('decor');
     });
 
     // Кнопки
