@@ -3,70 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🎮 Изометрический город | 2.5D стратегия</title>
+    <title>🏝️ Isometric Town | Райский уголок</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: #0b2b44;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0a1a2a;
+            font-family: 'Segoe UI', 'Helvetica', system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
+            padding: 15px;
+            margin: 0;
+            background-image: radial-gradient(circle at 30% 40%, #2b5a7a 0%, #0a1a2a 80%);
         }
 
-        .game-wrapper {
-            max-width: 1200px;
+        /* Главный контейнер */
+        .game-world {
+            max-width: 1300px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 40px;
-            padding: 20px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border-radius: 48px;
+            padding: 24px;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         /* Верхняя панель */
-        .top-panel {
+        .zen-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 30px;
-            padding: 15px 25px;
-            margin-bottom: 20px;
+            background: rgba(20, 40, 55, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 100px;
+            padding: 12px 28px;
+            margin-bottom: 28px;
             color: white;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 20px -8px rgba(0, 0, 0, 0.4);
         }
 
-        .balance {
-            background: linear-gradient(135deg, #ffd700, #ffa500);
-            padding: 10px 25px;
-            border-radius: 40px;
-            font-weight: bold;
-            font-size: 24px;
-            color: #1a1a1a;
-            box-shadow: 0 5px 0 #b45f06;
+        .resource {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 22px;
+            border-radius: 60px;
+            font-size: 24px;
+            font-weight: 500;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .resource-icon {
+            font-size: 28px;
+            filter: drop-shadow(0 3px 2px rgba(0,0,0,0.3));
         }
 
         .stats {
             display: flex;
-            gap: 20px;
-            background: rgba(255, 255, 255, 0.1);
-            padding: 10px 20px;
-            border-radius: 30px;
+            gap: 28px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 25px;
+            border-radius: 50px;
         }
 
         .stat {
@@ -76,344 +85,422 @@
         .stat-label {
             font-size: 12px;
             opacity: 0.8;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .stat-value {
             font-size: 22px;
             font-weight: bold;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.4);
         }
 
-        /* Игровое поле */
-        .game-container {
+        /* Время суток */
+        .time-indicator {
             display: flex;
-            gap: 20px;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0,0,0,0.3);
+            padding: 6px 18px;
+            border-radius: 40px;
+        }
+
+        .time-emoji {
+            font-size: 24px;
+        }
+
+        .time-slider {
+            width: 80px;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .time-fill {
+            height: 100%;
+            width: 50%;
+            background: linear-gradient(90deg, #ffd966, #ffaa00);
+            border-radius: 10px;
+        }
+
+        /* Основной контент */
+        .content {
+            display: flex;
+            gap: 28px;
             flex-wrap: wrap;
         }
 
-        .isometric-canvas-container {
-            flex: 2;
-            min-width: 600px;
-            background: #1e4d6b;
-            border-radius: 30px;
-            padding: 20px;
+        /* Изометрический холст */
+        .canvas-wrapper {
+            flex: 3;
+            min-width: 650px;
+            background: linear-gradient(145deg, #2a6b8f, #1b4b6e);
+            border-radius: 40px;
+            padding: 25px;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow-x: auto;
-            box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 -10px 30px rgba(0, 0, 0, 0.6), inset 0 10px 20px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        #cityCanvas {
-            background: #2d5f7e;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            cursor: pointer;
+        #gameCanvas {
             width: 100%;
             height: auto;
             max-width: 800px;
-            image-rendering: crisp-edges;
-        }
-
-        /* Панель строительства */
-        .build-panel {
-            flex: 1;
-            min-width: 280px;
-            background: rgba(255, 255, 255, 0.95);
             border-radius: 30px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 25px 40px -10px black;
+            background: #3d7ea3;
+            cursor: pointer;
+            image-rendering: crisp-edges;
+            image-rendering: pixelated;
+            transition: filter 0.5s ease;
         }
 
-        .panel-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            color: #1e4d6b;
+        /* Правая панель */
+        .dream-panel {
+            flex: 1.2;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border-radius: 40px;
+            padding: 28px 20px;
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .panel-header {
+            font-size: 28px;
+            font-weight: 400;
             text-align: center;
-            border-bottom: 2px solid #1e4d6b;
-            padding-bottom: 10px;
+            margin-bottom: 25px;
+            color: #2c4c6b;
+            letter-spacing: 1px;
+            border-bottom: 2px dashed #b0c9da;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .panel-header span {
+            font-size: 32px;
         }
 
         .buildings-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 18px;
+            margin-bottom: 30px;
         }
 
-        .building-card {
-            background: linear-gradient(145deg, #ffffff, #e6e6e6);
-            border-radius: 20px;
-            padding: 15px 10px;
+        .dream-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 30px;
+            padding: 20px 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-            box-shadow: 0 5px 0 #b0b0b0;
+            transition: all 0.25s ease;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 0 #9bb7d4, 0 12px 20px -10px rgba(0, 40, 80, 0.3);
             position: relative;
         }
 
-        .building-card.selected {
-            border-color: #ffd700;
-            transform: translateY(-2px);
-            box-shadow: 0 7px 0 #b8860b;
+        .dream-card.selected {
+            transform: translateY(-4px);
+            border-color: #ffb347;
+            box-shadow: 0 10px 0 #d18d2c, 0 18px 25px -8px #b6731e;
         }
 
-        .building-card:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #b0b0b0;
+        .dream-card:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #9bb7d4;
         }
 
-        .building-emoji {
-            font-size: 40px;
+        .card-emoji {
+            font-size: 48px;
+            margin-bottom: 5px;
+            filter: drop-shadow(2px 8px 8px rgba(0,0,0,0.15));
+        }
+
+        .card-name {
+            font-weight: 600;
+            font-size: 16px;
+            color: #1e3b4f;
             margin-bottom: 5px;
         }
 
-        .building-name {
-            font-weight: bold;
-            font-size: 14px;
+        .card-price {
+            font-size: 15px;
+            background: #f1d5a9;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            color: #5a3e1b;
         }
 
-        .building-price {
-            font-size: 12px;
-            color: #2e7d32;
-            font-weight: bold;
-            margin-top: 5px;
-        }
-
-        .building-income {
-            font-size: 11px;
-            color: #b45f06;
+        .card-income {
+            font-size: 13px;
+            color: #2b7355;
+            margin-top: 8px;
+            font-weight: 500;
         }
 
         .cooldown-badge {
             position: absolute;
-            top: -5px;
+            top: -8px;
             right: -5px;
-            background: #f44336;
+            background: #ff8a7a;
             color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
+            border-radius: 40px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
             font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 4px 0 #b1453a;
             display: none;
         }
 
-        .action-buttons {
+        /* Кнопки */
+        .zen-actions {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 15px;
+            margin: 25px 0 20px;
         }
 
-        .action-btn {
+        .zen-btn {
             border: none;
-            border-radius: 20px;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: bold;
+            border-radius: 60px;
+            padding: 20px;
+            font-size: 20px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.15s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            box-shadow: 0 5px 0 #7b1fa2;
+            gap: 15px;
+            box-shadow: 0 8px 0 #6b4f8c, 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        .action-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0 #7b1fa2;
+        .zen-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0 #6b4f8c;
         }
 
-        .action-btn.primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
+        .zen-btn.primary {
+            background: linear-gradient(145deg, #b7d9e7, #8dc0d4);
+            color: #1d3e5b;
         }
 
-        .action-btn.success {
-            background: linear-gradient(135deg, #43a047, #1b5e20);
-            color: white;
-            box-shadow: 0 5px 0 #0d4d0d;
+        .zen-btn.success {
+            background: linear-gradient(145deg, #c4e3cb, #a1d3b3);
+            color: #1a5e3a;
+            box-shadow: 0 8px 0 #528a66;
         }
 
-        .action-btn.warning {
-            background: linear-gradient(135deg, #fb8c00, #f57c00);
-            color: white;
-            box-shadow: 0 5px 0 #b45f06;
+        .zen-btn.warning {
+            background: linear-gradient(145deg, #ffe1b3, #ffcb8a);
+            color: #7b5800;
+            box-shadow: 0 8px 0 #c6a15b;
         }
 
-        .action-btn.danger {
-            background: linear-gradient(135deg, #e53935, #b71c1c);
-            color: white;
-            box-shadow: 0 5px 0 #8b0000;
-        }
-
-        .action-btn:disabled {
+        .zen-btn:disabled {
             opacity: 0.5;
-            pointer-events: none;
             transform: none;
+            pointer-events: none;
         }
 
-        .info-panel {
-            background: #1e4d6b;
-            color: white;
-            border-radius: 20px;
-            padding: 15px;
+        /* Инфо-панель */
+        .mood-panel {
+            background: #e4f0f9;
+            border-radius: 28px;
+            padding: 20px;
             margin-top: 20px;
-            font-size: 14px;
+            color: #1e415a;
+            border: 1px solid white;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.7);
         }
 
-        .info-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #ffd700;
+        .mood-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mood-text {
+            font-size: 15px;
+            line-height: 1.5;
+            opacity: 0.9;
+        }
+
+        #selectedInfo {
+            color: #1b5270;
+            font-weight: 500;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255,255,240,0.7);
+            border-radius: 20px;
         }
 
         /* Уведомления */
-        .notification {
+        .toast {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.9);
+            bottom: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(15px);
             color: white;
-            padding: 15px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            z-index: 1000;
-            animation: slideIn 0.3s ease-out;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            padding: 18px 30px;
+            border-radius: 60px;
+            font-size: 17px;
+            font-weight: 500;
+            z-index: 2000;
+            animation: slideUp 0.4s ease-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 30px -8px black;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes slideUp {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
         }
 
         /* Адаптация */
-        @media (max-width: 900px) {
-            .isometric-canvas-container {
-                min-width: 100%;
-            }
+        @media (max-width: 950px) {
+            .canvas-wrapper { min-width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="game-wrapper">
+    <div class="game-world">
         <!-- Верхняя панель -->
-        <div class="top-panel">
-            <div class="balance">
-                <span>💰</span>
-                <span id="balanceDisplay">1000</span>
+        <div class="zen-bar">
+            <div class="resource">
+                <span class="resource-icon">🪙</span>
+                <span id="balanceDisplay">850</span>
             </div>
             <div class="stats">
                 <div class="stat">
-                    <div class="stat-label">Население</div>
-                    <div class="stat-value" id="populationDisplay">0</div>
+                    <div class="stat-label">Жители</div>
+                    <div class="stat-value" id="populationDisplay">12</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-label">Доход/мин</div>
-                    <div class="stat-value" id="incomeDisplay">0</div>
+                    <div class="stat-label">Доход/день</div>
+                    <div class="stat-value" id="incomeDisplay">45</div>
                 </div>
                 <div class="stat">
-                    <div class="stat-label">Уровень</div>
-                    <div class="stat-value" id="levelDisplay">1</div>
+                    <div class="stat-label">Гармония</div>
+                    <div class="stat-value" id="harmonyDisplay">☀️</div>
+                </div>
+            </div>
+            <div class="time-indicator">
+                <span class="time-emoji" id="timeEmoji">☀️</span>
+                <div class="time-slider">
+                    <div class="time-fill" id="timeFill" style="width: 70%;"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Основной контент -->
-        <div class="game-container">
-            <!-- Изометрическая карта -->
-            <div class="isometric-canvas-container">
-                <canvas id="cityCanvas" width="800" height="600"></canvas>
+        <!-- Контент -->
+        <div class="content">
+            <!-- Canvas -->
+            <div class="canvas-wrapper">
+                <canvas id="gameCanvas" width="800" height="600"></canvas>
             </div>
 
-            <!-- Панель строительства -->
-            <div class="build-panel">
-                <div class="panel-title">🏗️ Строительство</div>
-                
+            <!-- Правая панель -->
+            <div class="dream-panel">
+                <div class="panel-header">
+                    <span>✨</span> Построй мечту <span>✨</span>
+                </div>
+
+                <!-- Сетка зданий -->
                 <div class="buildings-grid" id="buildingsGrid">
                     <!-- Дом -->
-                    <div class="building-card" data-type="house" onclick="selectBuilding('house')">
-                        <div class="building-emoji">🏠</div>
-                        <div class="building-name">Дом</div>
-                        <div class="building-price">💰 50</div>
-                        <div class="building-income">💵 +5/мин</div>
+                    <div class="dream-card" data-type="house" onclick="selectBuilding('house')">
+                        <div class="card-emoji">🏡</div>
+                        <div class="card-name">Домик</div>
+                        <div class="card-price">35 🪙</div>
+                        <div class="card-income">+5 дохода</div>
                         <div class="cooldown-badge" id="cooldown-house">3</div>
                     </div>
-                    
-                    <!-- Магазин -->
-                    <div class="building-card" data-type="shop" onclick="selectBuilding('shop')">
-                        <div class="building-emoji">🏪</div>
-                        <div class="building-name">Магазин</div>
-                        <div class="building-price">💰 120</div>
-                        <div class="building-income">💵 +15/мин</div>
-                        <div class="cooldown-badge" id="cooldown-shop">5</div>
+                    <!-- Магазинчик -->
+                    <div class="dream-card" data-type="shop" onclick="selectBuilding('shop')">
+                        <div class="card-emoji">🍃</div>
+                        <div class="card-name">Лавка</div>
+                        <div class="card-price">80 🪙</div>
+                        <div class="card-income">+12 дохода</div>
+                        <div class="cooldown-badge" id="cooldown-shop">4</div>
                     </div>
-                    
-                    <!-- Фабрика -->
-                    <div class="building-card" data-type="factory" onclick="selectBuilding('factory')">
-                        <div class="building-emoji">🏭</div>
-                        <div class="building-name">Фабрика</div>
-                        <div class="building-price">💰 300</div>
-                        <div class="building-income">💵 +40/мин</div>
-                        <div class="cooldown-badge" id="cooldown-factory">8</div>
+                    <!-- Деревце -->
+                    <div class="dream-card" data-type="tree" onclick="selectBuilding('tree')">
+                        <div class="card-emoji">🌳</div>
+                        <div class="card-name">Дерево</div>
+                        <div class="card-price">20 🪙</div>
+                        <div class="card-income">+3 дохода</div>
+                        <div class="cooldown-badge" id="cooldown-tree">2</div>
                     </div>
-                    
-                    <!-- Парк -->
-                    <div class="building-card" data-type="park" onclick="selectBuilding('park')">
-                        <div class="building-emoji">🌳</div>
-                        <div class="building-name">Парк</div>
-                        <div class="building-price">💰 80</div>
-                        <div class="building-income">💵 +8/мин</div>
-                        <div class="cooldown-badge" id="cooldown-park">4</div>
+                    <!-- Фонарь -->
+                    <div class="dream-card" data-type="lamp" onclick="selectBuilding('lamp')">
+                        <div class="card-emoji">🏮</div>
+                        <div class="card-name">Фонарь</div>
+                        <div class="card-price">45 🪙</div>
+                        <div class="card-income">+6 дохода</div>
+                        <div class="cooldown-badge" id="cooldown-lamp">3</div>
                     </div>
-                    
-                    <!-- Электростанция -->
-                    <div class="building-card" data-type="power" onclick="selectBuilding('power')">
-                        <div class="building-emoji">⚡</div>
-                        <div class="building-name">Электро</div>
-                        <div class="building-price">💰 500</div>
-                        <div class="building-income">💵 +70/мин</div>
-                        <div class="cooldown-badge" id="cooldown-power">12</div>
+                    <!-- Кафе -->
+                    <div class="dream-card" data-type="cafe" onclick="selectBuilding('cafe')">
+                        <div class="card-emoji">☕</div>
+                        <div class="card-name">Кафе</div>
+                        <div class="card-price">150 🪙</div>
+                        <div class="card-income">+25 дохода</div>
+                        <div class="cooldown-badge" id="cooldown-cafe">6</div>
                     </div>
-                    
-                    <!-- Дорога -->
-                    <div class="building-card" data-type="road" onclick="selectBuilding('road')">
-                        <div class="building-emoji">🛣️</div>
-                        <div class="building-name">Дорога</div>
-                        <div class="building-price">💰 20</div>
-                        <div class="building-income">💵 +2/мин</div>
-                        <div class="cooldown-badge" id="cooldown-road">2</div>
+                    <!-- Цветы -->
+                    <div class="dream-card" data-type="flower" onclick="selectBuilding('flower')">
+                        <div class="card-emoji">🌸</div>
+                        <div class="card-name">Цветы</div>
+                        <div class="card-price">15 🪙</div>
+                        <div class="card-income">+2 дохода</div>
+                        <div class="cooldown-badge" id="cooldown-flower">1</div>
                     </div>
                 </div>
 
                 <!-- Кнопки действий -->
-                <div class="action-buttons">
-                    <button class="action-btn success" onclick="collectTaxes()" id="taxBtn">
-                        <span>💰</span> Собрать налоги
+                <div class="zen-actions">
+                    <button class="zen-btn success" onclick="collectHarmony()" id="harmonyBtn">
+                        <span>🌸</span> Собрать гармонию
                     </button>
-                    <button class="action-btn primary" onclick="cancelSelection()">
-                        <span>❌</span> Отменить выбор
+                    <button class="zen-btn primary" onclick="cancelSelection()">
+                        <span>🔄</span> Сброс выбора
                     </button>
-                    <button class="action-btn danger" onclick="resetGame()">
-                        <span>🔄</span> Новая игра
+                    <button class="zen-btn warning" onclick="resetWorld()">
+                        <span>🌱</span> Новый мир
                     </button>
                 </div>
 
-                <!-- Информационная панель -->
-                <div class="info-panel">
-                    <div class="info-title">📌 Как играть:</div>
-                    <div>1. Выбери здание в панели</div>
-                    <div>2. Нажми на клетку карты</div>
-                    <div>3. Собирай налоги раз в минуту</div>
-                    <div>4. Дороги увеличивают доход соседей</div>
-                    <div id="selectedInfo" style="margin-top: 10px; color: #ffd700;"></div>
+                <!-- Инфо-панель -->
+                <div class="mood-panel">
+                    <div class="mood-title">
+                        <span>🧘</span> Твой уголок
+                    </div>
+                    <div class="mood-text" id="moodText">
+                        Нажми на клетку или выбери постройку...
+                    </div>
+                    <div id="selectedInfo"></div>
                 </div>
             </div>
         </div>
@@ -423,46 +510,53 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
     <script>
-        // ========== ИНИЦИАЛИЗАЦИЯ ==========
+        // ========== ИНИЦИАЛИЗАЦИЯ TELEGRAM ==========
         let tg = null;
         try {
             if (window.Telegram && Telegram.WebApp) {
                 tg = Telegram.WebApp;
                 tg.expand();
                 tg.ready();
-                console.log('Telegram WebApp инициализирован');
+                tg.setHeaderColor('#0a1a2a');
+                tg.setBackgroundColor('#0a1a2a');
+                console.log('Telegram WebApp подключен');
             }
         } catch (e) {
-            console.log('Режим разработки (без Telegram)');
+            console.log('Режим разработки');
         }
 
-        // ========== КОНСТАНТЫ ==========
-        const GRID_SIZE = 8; // 8x8 сетка
-        const CELL_SIZE = 60; // Размер клетки в пикселях
+        // ========== ПАРАМЕТРЫ МИРА ==========
+        const GRID_SIZE = 7; // 7x7 для уюта
+        const CELL_W = 80;    // ширина клетки
+        const CELL_H = 60;    // высота клетки
+        const ISO_OFFSET_X = 400; // смещение для центрирования
+        const ISO_OFFSET_Y = 100;
 
-        // Типы зданий
+        // Типы построек с улучшенными характеристиками
         const BUILDINGS = {
-            empty: { name: 'Пусто', emoji: '⬜', color: '#3a6d8c', price: 0, income: 0 },
-            house: { name: 'Дом', emoji: '🏠', color: '#ffb74d', price: 50, income: 5, cooldown: 3 },
-            shop: { name: 'Магазин', emoji: '🏪', color: '#ff8a65', price: 120, income: 15, cooldown: 5 },
-            factory: { name: 'Фабрика', emoji: '🏭', color: '#b0bec5', price: 300, income: 40, cooldown: 8 },
-            park: { name: 'Парк', emoji: '🌳', color: '#81c784', price: 80, income: 8, cooldown: 4 },
-            power: { name: 'Электро', emoji: '⚡', color: '#ffb74d', price: 500, income: 70, cooldown: 12 },
-            road: { name: 'Дорога', emoji: '🛣️', color: '#90a4ae', price: 20, income: 2, cooldown: 2 }
+            empty: { name: 'Пусто', emoji: '🌿', color: '#5f9b6b', price: 0, income: 0, level: 0, nightEmoji: '🌙' },
+            house: { name: 'Домик', emoji: '🏡', color: '#f7d6aa', price: 35, income: 5, level: 1, nightEmoji: '🏡✨' },
+            shop: { name: 'Лавка', emoji: '🍃', color: '#c4a5d1', price: 80, income: 12, level: 1, nightEmoji: '🍃✨' },
+            tree: { name: 'Дерево', emoji: '🌳', color: '#6b8e4c', price: 20, income: 3, level: 1, nightEmoji: '🌙🌳' },
+            lamp: { name: 'Фонарь', emoji: '🏮', color: '#f3d573', price: 45, income: 6, level: 1, nightEmoji: '🏮✨' },
+            cafe: { name: 'Кафе', emoji: '☕', color: '#d9b38c', price: 150, income: 25, level: 1, nightEmoji: '☕🌟' },
+            flower: { name: 'Цветы', emoji: '🌸', color: '#f9a8d4', price: 15, income: 2, level: 1, nightEmoji: '🌸🌙' }
         };
 
-        // ========== СОСТОЯНИЕ ИГРЫ ==========
+        // Состояние игры
         let gameState = {
-            balance: 1000,
+            balance: 850,
             grid: [],
             selectedBuilding: null,
-            lastTaxTime: Date.now(),
-            taxCooldown: 60000, // 60 секунд
-            taxBtnDisabled: false,
+            lastHarvestTime: Date.now(),
+            harvestCooldown: 45000, // 45 секунд (расслабленный режим)
+            harmonyBtnDisabled: false,
             buildingsCount: {},
             cooldowns: {},
-            level: 1,
-            population: 0
+            timeOfDay: 0.7, // 0 = ночь, 1 = день
+            population: 12,
+            harmony: '☀️',
+            particles: []
         };
 
         // Инициализация сетки
@@ -473,52 +567,204 @@
             }
         }
 
-        // ========== CANVAS ОТРИСОВКА ==========
-        const canvas = document.getElementById('cityCanvas');
+        // Несколько начальных построек для красоты
+        gameState.grid[2][3] = 'house';
+        gameState.grid[3][2] = 'tree';
+        gameState.grid[3][4] = 'flower';
+        gameState.grid[4][3] = 'lamp';
+
+        // ========== CANVAS С ИЗОМЕТРИЕЙ ==========
+        const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
-        function drawCity() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Рисуем сетку
-            for (let row = 0; row < GRID_SIZE; row++) {
-                for (let col = 0; col < GRID_SIZE; col++) {
-                    const x = col * CELL_SIZE;
-                    const y = row * CELL_SIZE;
-                    
-                    const buildingType = gameState.grid[row][col];
-                    const building = BUILDINGS[buildingType] || BUILDINGS.empty;
-                    
-                    // Фундамент
-                    ctx.fillStyle = building.color;
-                    ctx.fillRect(x, y, CELL_SIZE - 2, CELL_SIZE - 2);
-                    
-                    // Обводка
-                    ctx.strokeStyle = '#ffffff';
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x, y, CELL_SIZE - 2, CELL_SIZE - 2);
-                    
-                    // Эмоджи (текст)
-                    ctx.font = '30px Arial';
-                    ctx.fillStyle = '#000000';
-                    ctx.fillText(building.emoji, x + 15, y + 45);
-                    
-                    // Подсветка выбранной клетки
-                    if (gameState.selectedBuilding && row === selectedRow && col === selectedCol) {
-                        ctx.strokeStyle = '#ffd700';
-                        ctx.lineWidth = 4;
-                        ctx.strokeRect(x, y, CELL_SIZE - 2, CELL_SIZE - 2);
-                    }
-                }
-            }
-            
-            // Рисуем координаты (для отладки)
-            ctx.font = '12px Arial';
-            ctx.fillStyle = '#ffffff';
-            ctx.fillText('⬆️ Север', 10, 20);
+        // Преобразование сетки в изометрические координаты
+        function gridToIso(row, col) {
+            const x = (col - row) * CELL_W / 2 + ISO_OFFSET_X;
+            const y = (col + row) * CELL_H / 2 + ISO_OFFSET_Y;
+            return { x, y };
         }
 
-        // ========== ВЫБОР КЛЕТКИ ==========
+        // Отрисовка города
+        function drawCity() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Небо (зависит от времени суток)
+            const skyR = Math.floor(135 + 60 * gameState.timeOfDay);
+            const skyG = Math.floor(165 + 60 * gameState.timeOfDay);
+            const skyB = Math.floor(200 + 55 * gameState.timeOfDay);
+            ctx.fillStyle = `rgb(${skyR}, ${skyG}, ${skyB})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Облака/звезды
+            drawAtmosphere();
+
+            // Рисуем тайлы снизу вверх
+            for (let row = 0; row < GRID_SIZE; row++) {
+                for (let col = 0; col < GRID_SIZE; col++) {
+                    const iso = gridToIso(row, col);
+                    const type = gameState.grid[row][col];
+                    const building = BUILDINGS[type] || BUILDINGS.empty;
+                    
+                    // Основной тайл (земля)
+                    ctx.beginPath();
+                    ctx.moveTo(iso.x, iso.y);
+                    ctx.lineTo(iso.x + CELL_W/2, iso.y + CELL_H/2);
+                    ctx.lineTo(iso.x, iso.y + CELL_H);
+                    ctx.lineTo(iso.x - CELL_W/2, iso.y + CELL_H/2);
+                    ctx.closePath();
+                    
+                    // Градиент для земли
+                    const gradient = ctx.createLinearGradient(iso.x - 20, iso.y, iso.x + 20, iso.y + CELL_H);
+                    if (type === 'empty') {
+                        gradient.addColorStop(0, '#6f9e7a');
+                        gradient.addColorStop(1, '#4f7a5a');
+                    } else {
+                        gradient.addColorStop(0, building.color);
+                        gradient.addColorStop(1, shadeColor(building.color, -30));
+                    }
+                    ctx.fillStyle = gradient;
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+
+                    // Постройка (эмодзи)
+                    ctx.font = '42px "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    
+                    let emoji = building.emoji;
+                    if (gameState.timeOfDay < 0.3 && building.nightEmoji) {
+                        emoji = building.nightEmoji; // Ночная версия
+                    }
+                    
+                    // Тень для эмодзи
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
+                    ctx.shadowBlur = 10;
+                    ctx.shadowOffsetY = 3;
+                    ctx.fillStyle = '#000';
+                    ctx.fillText(emoji, iso.x, iso.y - 10);
+                    
+                    // Сам эмодзи
+                    ctx.shadowBlur = 15;
+                    ctx.shadowColor = 'rgba(255, 255, 200, 0.3)';
+                    ctx.fillStyle = '#fff';
+                    ctx.fillText(emoji, iso.x, iso.y - 12);
+                    
+                    ctx.shadowBlur = 0;
+                    ctx.shadowOffsetY = 0;
+                }
+            }
+
+            // Подсветка выбранной клетки
+            if (selectedRow !== -1 && selectedCol !== -1) {
+                const iso = gridToIso(selectedRow, selectedCol);
+                ctx.beginPath();
+                ctx.moveTo(iso.x, iso.y - 10);
+                ctx.lineTo(iso.x + CELL_W/2, iso.y + CELL_H/2 - 10);
+                ctx.lineTo(iso.x, iso.y + CELL_H - 10);
+                ctx.lineTo(iso.x - CELL_W/2, iso.y + CELL_H/2 - 10);
+                ctx.closePath();
+                ctx.strokeStyle = '#ffdf7e';
+                ctx.lineWidth = 4;
+                ctx.shadowColor = '#ffb347';
+                ctx.shadowBlur = 15;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+            }
+
+            // Рисуем частицы (листья, звезды)
+            drawParticles();
+        }
+
+        // Затемнение цвета
+        function shadeColor(color, percent) {
+            let R = parseInt(color.substring(1,3), 16);
+            let G = parseInt(color.substring(3,5), 16);
+            let B = parseInt(color.substring(5,7), 16);
+            R = Math.min(255, Math.max(0, R + percent));
+            G = Math.min(255, Math.max(0, G + percent));
+            B = Math.min(255, Math.max(0, B + percent));
+            return `#${((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1)}`;
+        }
+
+        // Атмосферные эффекты
+        function drawAtmosphere() {
+            if (gameState.timeOfDay > 0.6) {
+                // Солнце
+                ctx.beginPath();
+                ctx.arc(100, 80, 40, 0, Math.PI * 2);
+                ctx.fillStyle = '#fff9bf';
+                ctx.shadowColor = '#ffeb73';
+                ctx.shadowBlur = 40;
+                ctx.fill();
+                // Облака
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+                ctx.shadowBlur = 30;
+                ctx.beginPath();
+                ctx.arc(200, 120, 40, 0, Math.PI*2);
+                ctx.arc(250, 100, 35, 0, Math.PI*2);
+                ctx.arc(280, 130, 30, 0, Math.PI*2);
+                ctx.fill();
+            } else {
+                // Луна и звезды
+                ctx.beginPath();
+                ctx.arc(750, 80, 30, 0, Math.PI * 2);
+                ctx.fillStyle = '#f8f3e0';
+                ctx.shadowColor = '#e6ddaa';
+                ctx.shadowBlur = 30;
+                ctx.fill();
+                
+                // Звезды
+                for (let i = 0; i < 30; i++) {
+                    if (i % 3 === 0) continue;
+                    ctx.fillStyle = `rgba(255, 255, 200, ${Math.random()*0.5 + 0.3})`;
+                    ctx.shadowBlur = 10;
+                    ctx.beginPath();
+                    ctx.arc(50 + i * 25, 40 + (i % 5) * 15, 2 + Math.random()*3, 0, Math.PI*2);
+                    ctx.fill();
+                }
+            }
+            ctx.shadowBlur = 0;
+        }
+
+        // Частицы (листья, искры)
+        function drawParticles() {
+            for (let p of gameState.particles) {
+                ctx.globalAlpha = p.life;
+                ctx.font = `${p.size}px "Segoe UI Emoji"`;
+                ctx.fillStyle = '#fff';
+                ctx.shadowBlur = 8;
+                ctx.shadowColor = p.color;
+                ctx.fillText(p.emoji, p.x, p.y);
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life -= 0.005;
+                if (p.vy < 2) p.vy += 0.05;
+            }
+            gameState.particles = gameState.particles.filter(p => p.life > 0);
+            ctx.globalAlpha = 1;
+            ctx.shadowBlur = 0;
+        }
+
+        // Добавить частицы
+        function addParticles(x, y, emoji, count = 5) {
+            for (let i = 0; i < count; i++) {
+                gameState.particles.push({
+                    x: x - 20 + Math.random()*40,
+                    y: y - 20 + Math.random()*40,
+                    vx: (Math.random() - 0.5) * 1.5,
+                    vy: -Math.random() * 2,
+                    emoji: emoji,
+                    size: 20 + Math.floor(Math.random()*15),
+                    life: 0.8 + Math.random()*0.3,
+                    color: ['#ffd966', '#f9a8d4', '#b7d9e7'][Math.floor(Math.random()*3)]
+                });
+            }
+        }
+
+        // ========== ВЗАИМОДЕЙСТВИЕ ==========
         let selectedRow = -1, selectedCol = -1;
 
         canvas.addEventListener('click', (e) => {
@@ -528,367 +774,286 @@
             
             const mouseX = (e.clientX - rect.left) * scaleX;
             const mouseY = (e.clientY - rect.top) * scaleY;
-            
-            selectedCol = Math.floor(mouseX / CELL_SIZE);
-            selectedRow = Math.floor(mouseY / CELL_SIZE);
-            
-            if (selectedRow >= 0 && selectedRow < GRID_SIZE && 
-                selectedCol >= 0 && selectedCol < GRID_SIZE) {
-                
+
+            // Поиск ближайшей клетки
+            let minDist = Infinity;
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    const iso = gridToIso(r, c);
+                    const dx = mouseX - iso.x;
+                    const dy = mouseY - iso.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < minDist && dist < 50) {
+                        minDist = dist;
+                        selectedRow = r;
+                        selectedCol = c;
+                    }
+                }
+            }
+
+            if (selectedRow !== -1 && selectedCol !== -1) {
                 if (gameState.selectedBuilding) {
-                    // Режим строительства
                     buildAt(selectedRow, selectedCol);
                 } else {
-                    // Режим информации
                     showCellInfo(selectedRow, selectedCol);
                 }
                 drawCity();
             }
         });
 
-        // ========== СТРОИТЕЛЬСТВО ==========
+        // Строительство
         function buildAt(row, col) {
             if (!gameState.selectedBuilding) return;
             
             const building = BUILDINGS[gameState.selectedBuilding];
             const currentCell = gameState.grid[row][col];
             
-            // Проверка: клетка пуста?
             if (currentCell !== 'empty') {
-                showNotification('❌ Эта клетка уже занята!', 'error');
+                showToast('❌ Здесь уже что-то есть', '#ff8a7a');
                 return;
             }
             
-            // Проверка: хватает денег?
             if (gameState.balance < building.price) {
-                showNotification('❌ Недостаточно средств!', 'error');
+                showToast('💫 Нужно больше монет...', '#ffb347');
                 return;
             }
             
-            // Проверка кулдауна (анти-спам)
+            // Анти-спам кулдаун
             const now = Date.now();
             const lastBuild = gameState.cooldowns[gameState.selectedBuilding] || 0;
-            const buildingCooldown = building.cooldown * 1000; // в миллисекундах
+            const cooldownMs = (building.price > 80 ? 4000 : 2500); // 2.5-4 сек
             
-            if (now - lastBuild < buildingCooldown) {
-                const secondsLeft = Math.ceil((buildingCooldown - (now - lastBuild)) / 1000);
-                showNotification(`⏳ Подожди ${secondsLeft} сек.`, 'warning');
+            if (now - lastBuild < cooldownMs) {
+                const secs = Math.ceil((cooldownMs - (now - lastBuild)) / 1000);
+                showToast(`⏳ Подожди ${secs} сек...`, '#b0b0b0');
                 return;
             }
             
-            // Строим!
+            // Строим
             gameState.grid[row][col] = gameState.selectedBuilding;
             gameState.balance -= building.price;
             
-            // Обновляем статистику
             gameState.buildingsCount[gameState.selectedBuilding] = 
                 (gameState.buildingsCount[gameState.selectedBuilding] || 0) + 1;
             
-            // Обновляем население (дома дают +10 населения)
-            if (gameState.selectedBuilding === 'house') {
-                gameState.population += 10;
-            } else if (gameState.selectedBuilding === 'shop') {
-                gameState.population += 5;
-            } else if (gameState.selectedBuilding === 'factory') {
-                gameState.population += 15;
-            }
+            if (gameState.selectedBuilding === 'house') gameState.population += 3;
+            if (gameState.selectedBuilding === 'cafe') gameState.population += 2;
+            if (gameState.selectedBuilding === 'tree') gameState.population += 1;
             
-            // Ставим кулдаун
             gameState.cooldowns[gameState.selectedBuilding] = now;
             
-            // Показываем кулдаун на кнопке
-            updateCooldownUI(gameState.selectedBuilding, building.cooldown);
+            // Визуальный кулдаун
+            const badge = document.getElementById(`cooldown-${gameState.selectedBuilding}`);
+            if (badge) {
+                badge.style.display = 'flex';
+                badge.textContent = Math.ceil(cooldownMs/1000);
+                setTimeout(() => { badge.style.display = 'none'; }, cooldownMs);
+            }
             
-            // Сохраняем в Telegram
+            // Частицы
+            const iso = gridToIso(row, col);
+            addParticles(iso.x, iso.y, '✨', 8);
+            
             saveToTelegram();
-            
-            // Обновляем интерфейс
             updateUI();
             drawCity();
             
-            showNotification(`✅ ${building.name} построен!`, 'success');
+            showToast(`✨ ${building.name} построен!`, '#9bcd9b');
+            
+            if (tg) tg.HapticFeedback.impactOccurred('light');
         }
 
-        // ========== СБОР НАЛОГОВ (С АНТИ-СПАМОМ) ==========
-        function collectTaxes() {
-            const taxBtn = document.getElementById('taxBtn');
-            
-            // Проверка кулдауна
+        // Сбор гармонии (налогов)
+        function collectHarmony() {
+            const btn = document.getElementById('harmonyBtn');
             const now = Date.now();
-            const timeSinceLastTax = now - gameState.lastTaxTime;
+            const timeSince = now - gameState.lastHarvestTime;
             
-            if (timeSinceLastTax < gameState.taxCooldown) {
-                const secondsLeft = Math.ceil((gameState.taxCooldown - timeSinceLastTax) / 1000);
-                showNotification(`⏳ Налоги можно собрать через ${secondsLeft} сек.`, 'warning');
-                
-                // Блокируем кнопку визуально
-                taxBtn.disabled = true;
-                setTimeout(() => {
-                    taxBtn.disabled = false;
-                }, gameState.taxCooldown - timeSinceLastTax);
+            if (timeSince < gameState.harvestCooldown) {
+                const secs = Math.ceil((gameState.harvestCooldown - timeSince) / 1000);
+                showToast(`🌸 Еще ${secs} сек до гармонии`, '#b0b0b0');
                 return;
             }
             
-            // Считаем налоги
-            let totalTax = 0;
-            let incomeDetails = {};
-            
-            for (let row = 0; row < GRID_SIZE; row++) {
-                for (let col = 0; col < GRID_SIZE; col++) {
-                    const buildingType = gameState.grid[row][col];
-                    if (buildingType !== 'empty') {
-                        const income = BUILDINGS[buildingType].income;
-                        totalTax += income;
-                        incomeDetails[buildingType] = (incomeDetails[buildingType] || 0) + income;
+            let total = 0;
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    const type = gameState.grid[r][c];
+                    if (type !== 'empty') {
+                        total += BUILDINGS[type].income;
+                        // Бонус за соседство с цветами
+                        if (type === 'flower') total += 3;
                     }
                 }
             }
             
-            // Бонусы от дорог
-            for (let row = 0; row < GRID_SIZE; row++) {
-                for (let col = 0; col < GRID_SIZE; col++) {
-                    if (gameState.grid[row][col] === 'road') {
-                        // Дорога дает бонус соседям
-                        const neighbors = getNeighbors(row, col);
-                        neighbors.forEach(n => {
-                            if (gameState.grid[n.row][n.col] !== 'empty' && 
-                                gameState.grid[n.row][n.col] !== 'road') {
-                                totalTax += 2; // Бонус за дорогу
-                            }
-                        });
-                    }
-                }
-            }
+            // Бонус за гармонию
+            total = Math.floor(total * (0.9 + gameState.timeOfDay * 0.3));
             
-            // Применяем налоги
-            gameState.balance += totalTax;
-            gameState.lastTaxTime = now;
+            gameState.balance += total;
+            gameState.lastHarvestTime = now;
             
-            // Блокируем кнопку на 60 секунд
-            taxBtn.disabled = true;
-            gameState.taxBtnDisabled = true;
+            btn.disabled = true;
+            gameState.harmonyBtnDisabled = true;
             
             setTimeout(() => {
-                taxBtn.disabled = false;
-                gameState.taxBtnDisabled = false;
+                btn.disabled = false;
+                gameState.harmonyBtnDisabled = false;
                 updateUI();
-            }, gameState.taxCooldown);
+            }, gameState.harvestCooldown);
             
-            // Сохраняем
+            // Частицы радости
+            addParticles(400, 300, '🌸', 15);
+            
             saveToTelegram();
-            
-            // Показываем детальный отчет
-            let detailsText = Object.entries(incomeDetails)
-                .map(([type, amount]) => `${BUILDINGS[type].emoji} +${amount}`)
-                .join(' ');
-            
-            showNotification(`💰 Собрано налогов: ${totalTax} монет! ${detailsText}`, 'success');
             updateUI();
             
-            // Тактильная отдача в Telegram
-            if (tg) {
-                tg.HapticFeedback.notificationOccurred('success');
-            }
+            showToast(`🌸 +${total} гармонии!`, '#a5d6a5');
+            if (tg) tg.HapticFeedback.notificationOccurred('success');
         }
 
-        // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
-        function getNeighbors(row, col) {
-            const neighbors = [];
-            if (row > 0) neighbors.push({ row: row-1, col });
-            if (row < GRID_SIZE-1) neighbors.push({ row: row+1, col });
-            if (col > 0) neighbors.push({ row, col: col-1 });
-            if (col < GRID_SIZE-1) neighbors.push({ row, col: col+1 });
-            return neighbors;
-        }
-
+        // Информация о клетке
         function showCellInfo(row, col) {
-            const buildingType = gameState.grid[row][col];
-            const building = BUILDINGS[buildingType];
-            
-            if (buildingType === 'empty') {
-                showNotification(`📍 Пустой участок`, 'info');
+            const type = gameState.grid[row][col];
+            if (type === 'empty') {
+                document.getElementById('moodText').innerHTML = '🌱 Пустая земля. Посади что-нибудь...';
             } else {
-                showNotification(
-                    `${building.emoji} ${building.name}\n` +
-                    `💰 Доход: ${building.income}/мин\n` +
-                    `🏷️ Цена: ${building.price}`,
-                    'info'
-                );
+                const b = BUILDINGS[type];
+                document.getElementById('moodText').innerHTML = 
+                    `${b.emoji} ${b.name}<br>💰 Доход: ${b.income} за сбор<br>${b.emoji === '🌳' ? '🌬️ Шелестит листьями...' : '✨ Приносит уют'}`;
             }
         }
 
+        // Выбор постройки
         function selectBuilding(type) {
             gameState.selectedBuilding = type;
-            
-            // Подсветка выбранной карточки
-            document.querySelectorAll('.building-card').forEach(card => {
-                card.classList.remove('selected');
-            });
+            document.querySelectorAll('.dream-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-type="${type}"]`).classList.add('selected');
-            
             document.getElementById('selectedInfo').innerHTML = 
-                `Выбрано: ${BUILDINGS[type].emoji} ${BUILDINGS[type].name}`;
+                `✨ Выбрано: ${BUILDINGS[type].emoji} ${BUILDINGS[type].name}`;
         }
 
         function cancelSelection() {
             gameState.selectedBuilding = null;
-            document.querySelectorAll('.building-card').forEach(card => {
-                card.classList.remove('selected');
-            });
+            document.querySelectorAll('.dream-card').forEach(c => c.classList.remove('selected'));
             document.getElementById('selectedInfo').innerHTML = '';
+            selectedRow = selectedCol = -1;
+            drawCity();
         }
 
-        function updateCooldownUI(type, seconds) {
-            const badge = document.getElementById(`cooldown-${type}`);
-            if (badge) {
-                badge.style.display = 'flex';
-                badge.textContent = seconds;
-                
-                let timeLeft = seconds;
-                const interval = setInterval(() => {
-                    timeLeft--;
-                    if (timeLeft <= 0) {
-                        badge.style.display = 'none';
-                        clearInterval(interval);
-                    } else {
-                        badge.textContent = timeLeft;
-                    }
-                }, 1000);
-            }
-        }
-
-        // ========== УВЕДОМЛЕНИЯ ==========
-        function showNotification(message, type = 'info') {
-            const notification = document.createElement('div');
-            notification.className = 'notification';
-            
-            let bgColor = '#333';
-            if (type === 'success') bgColor = '#43a047';
-            if (type === 'error') bgColor = '#e53935';
-            if (type === 'warning') bgColor = '#fb8c00';
-            
-            notification.style.backgroundColor = bgColor;
-            notification.textContent = message;
-            
-            document.body.appendChild(notification);
-            
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // ========== ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ==========
+        // Обновление UI
         function updateUI() {
             document.getElementById('balanceDisplay').textContent = gameState.balance;
-            
-            // Считаем общий доход
-            let totalIncome = 0;
-            for (let row = 0; row < GRID_SIZE; row++) {
-                for (let col = 0; col < GRID_SIZE; col++) {
-                    const type = gameState.grid[row][col];
-                    if (type !== 'empty') {
-                        totalIncome += BUILDINGS[type].income;
-                    }
-                }
-            }
-            
-            document.getElementById('incomeDisplay').textContent = totalIncome;
             document.getElementById('populationDisplay').textContent = gameState.population;
             
-            // Уровень города
-            gameState.level = Math.floor(gameState.population / 20) + 1;
-            document.getElementById('levelDisplay').textContent = gameState.level;
-            
-            // Кнопка налогов
-            const taxBtn = document.getElementById('taxBtn');
-            if (gameState.taxBtnDisabled) {
-                taxBtn.disabled = true;
-            }
-        }
-
-        // ========== СОХРАНЕНИЕ В TELEGRAM ==========
-        function saveToTelegram() {
-            if (tg) {
-                try {
-                    tg.sendData(JSON.stringify({
-                        balance: gameState.balance,
-                        grid: gameState.grid,
-                        population: gameState.population,
-                        timestamp: Date.now()
-                    }));
-                } catch (e) {
-                    console.log('Ошибка отправки в Telegram');
+            let totalIncome = 0;
+            for (let r = 0; r < GRID_SIZE; r++) {
+                for (let c = 0; c < GRID_SIZE; c++) {
+                    const type = gameState.grid[r][c];
+                    if (type !== 'empty') totalIncome += BUILDINGS[type].income;
                 }
             }
+            document.getElementById('incomeDisplay').textContent = totalIncome;
             
-            // Также сохраняем локально
-            localStorage.setItem('cityGame', JSON.stringify(gameState));
+            // Гармония
+            if (gameState.population > 30) gameState.harmony = '🌈';
+            else if (gameState.population > 15) gameState.harmony = '☀️';
+            else gameState.harmony = '🌱';
+            document.getElementById('harmonyDisplay').textContent = gameState.harmony;
+            
+            // Время суток (медленно меняется)
+            gameState.timeOfDay += 0.001;
+            if (gameState.timeOfDay > 1) gameState.timeOfDay = 0;
+            document.getElementById('timeFill').style.width = `${gameState.timeOfDay * 100}%`;
+            document.getElementById('timeEmoji').textContent = 
+                gameState.timeOfDay > 0.6 ? '☀️' : (gameState.timeOfDay > 0.3 ? '⛅' : '🌙');
         }
 
-        // ========== ЗАГРУЗКА ИГРЫ ==========
+        // Уведомления
+        function showToast(msg, color = '#333') {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.style.background = color;
+            toast.style.boxShadow = `0 10px 20px -5px ${color}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2800);
+        }
+
+        // Сохранение
+        function saveToTelegram() {
+            if (tg) {
+                tg.sendData(JSON.stringify({
+                    balance: gameState.balance,
+                    grid: gameState.grid,
+                    population: gameState.population,
+                    time: Date.now()
+                }));
+            }
+            localStorage.setItem('zenCity', JSON.stringify(gameState));
+        }
+
+        // Загрузка
         function loadGame() {
-            const saved = localStorage.getItem('cityGame');
+            const saved = localStorage.getItem('zenCity');
             if (saved) {
                 try {
                     const data = JSON.parse(saved);
                     gameState = { ...gameState, ...data };
-                } catch (e) {
-                    console.log('Ошибка загрузки');
-                }
+                } catch (e) {}
             }
-            
             updateUI();
             drawCity();
         }
 
-        // ========== НОВАЯ ИГРА ==========
-        function resetGame() {
-            if (confirm('Начать новую игру? Весь прогресс будет потерян!')) {
+        // Сброс
+        function resetWorld() {
+            if (confirm('Начать заново? Весь прогресс исчезнет.')) {
                 gameState = {
-                    balance: 1000,
+                    balance: 850,
                     grid: [],
                     selectedBuilding: null,
-                    lastTaxTime: Date.now(),
-                    taxCooldown: 60000,
-                    taxBtnDisabled: false,
+                    lastHarvestTime: Date.now(),
+                    harvestCooldown: 45000,
+                    harmonyBtnDisabled: false,
                     buildingsCount: {},
                     cooldowns: {},
-                    level: 1,
-                    population: 0
+                    timeOfDay: 0.7,
+                    population: 12,
+                    harmony: '☀️',
+                    particles: []
                 };
-                
                 for (let i = 0; i < GRID_SIZE; i++) {
                     gameState.grid[i] = [];
                     for (let j = 0; j < GRID_SIZE; j++) {
                         gameState.grid[i][j] = 'empty';
                     }
                 }
+                gameState.grid[2][3] = 'house';
+                gameState.grid[3][2] = 'tree';
+                gameState.grid[3][4] = 'flower';
+                gameState.grid[4][3] = 'lamp';
                 
-                document.getElementById('taxBtn').disabled = false;
+                document.getElementById('harmonyBtn').disabled = false;
                 cancelSelection();
                 updateUI();
                 drawCity();
+                showToast('🌱 Новый мир создан...', '#a5d6a5');
                 saveToTelegram();
-                showNotification('🔄 Новая игра начата!', 'success');
             }
         }
 
-        // ========== АВТОМАТИЧЕСКИЙ СБОР НАЛОГОВ (опционально) ==========
-        // Можно включить, если хочешь, чтобы налоги капали автоматически
-        // setInterval(() => {
-        //     if (!gameState.taxBtnDisabled) {
-        //         collectTaxes();
-        //     }
-        // }, 60000);
+        // Анимация
+        function animate() {
+            updateUI();
+            drawCity();
+            requestAnimationFrame(animate);
+        }
 
-        // ========== ЗАПУСК ==========
+        // Запуск
         document.addEventListener('DOMContentLoaded', () => {
             loadGame();
-            
-            // Обработка данных от бота
-            if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-                console.log('Игрок:', tg.initDataUnsafe.user.username);
-            }
+            animate();
         });
     </script>
 </body>
