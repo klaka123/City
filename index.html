@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MEGA CITY 3000 - ИДЕАЛЬНАЯ ВЕРСИЯ</title>
+    <title>3D MEGA CITY - РЕАЛИСТИЧНАЯ ГРАФИКА</title>
     <style>
-        /* ========== ПОЛНОСТЬЮ ВОССТАНОВЛЕННЫЙ ДИЗАЙН ========== */
         * {
             margin: 0;
             padding: 0;
@@ -15,7 +14,7 @@
         }
 
         body {
-            background: #0a1f30;
+            background: #0a0f1a;
             overflow: hidden;
             touch-action: none;
         }
@@ -25,7 +24,7 @@
             width: 100vw;
             height: 100vh;
             overflow: hidden;
-            background: radial-gradient(circle at 30% 50%, #1e5a7a, #0b2a3f);
+            background: #0a1a2a;
         }
 
         #gameCanvas {
@@ -36,19 +35,23 @@
             touch-action: none;
         }
 
-        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
+        #gameCanvas:active {
+            cursor: grabbing;
+        }
+
+        /* Интерфейс поверх 3D */
         .ui-panel {
             position: fixed;
             bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(20, 40, 55, 0.85);
+            background: rgba(20, 30, 40, 0.85);
             backdrop-filter: blur(15px);
             border-radius: 70px;
             padding: 20px 40px;
             display: flex;
             gap: 40px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255,255,255,0.2);
             box-shadow: 0 20px 40px rgba(0,0,0,0.7);
             z-index: 100;
             border-bottom: 4px solid #4a9ec0;
@@ -72,15 +75,14 @@
             filter: drop-shadow(0 4px 6px black);
         }
 
-        /* ===== ЛЕВОЕ МЕНЮ (КАТАЛОГ) ===== */
         .build-menu {
             position: fixed;
             top: 50%;
             left: 25px;
             transform: translateY(-50%);
-            width: 380px;
-            max-height: 80vh;
-            background: rgba(15, 35, 50, 0.95);
+            width: 400px;
+            max-height: 85vh;
+            background: rgba(15, 25, 35, 0.95);
             backdrop-filter: blur(15px);
             border-radius: 40px;
             padding: 20px;
@@ -201,13 +203,12 @@
             margin-top: 4px;
         }
 
-        /* ===== ПРАВОЕ МЕНЮ ===== */
         .control-menu {
             position: fixed;
             top: 50%;
             right: 25px;
             transform: translateY(-50%);
-            background: rgba(15, 35, 50, 0.95);
+            background: rgba(15, 25, 35, 0.95);
             backdrop-filter: blur(15px);
             border-radius: 40px;
             padding: 25px;
@@ -251,13 +252,12 @@
             border-color: #f44336;
         }
 
-        /* ===== ВЕРХНЯЯ ПАНЕЛЬ ===== */
         .info-panel {
             position: fixed;
             top: 25px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(15, 35, 50, 0.95);
+            background: rgba(15, 25, 35, 0.95);
             backdrop-filter: blur(15px);
             border-radius: 50px;
             padding: 15px 40px;
@@ -266,11 +266,10 @@
             border: 2px solid rgba(255,255,255,0.2);
             z-index: 100;
             text-align: center;
-            min-width: 450px;
+            min-width: 500px;
             border-top: 4px solid #4a9ec0;
         }
 
-        /* ===== УВЕДОМЛЕНИЯ ===== */
         .notification {
             position: fixed;
             top: 100px;
@@ -296,49 +295,51 @@
 <div class="game-container">
     <canvas id="gameCanvas"></canvas>
 
-    <!-- Нижняя панель -->
+    <!-- Интерфейс -->
     <div class="ui-panel">
-        <div class="stat-item"><span class="stat-icon">💰</span><span id="moneyDisplay">1,000,000</span></div>
+        <div class="stat-item"><span class="stat-icon">💰</span><span id="moneyDisplay">5,000,000</span></div>
         <div class="stat-item"><span class="stat-icon">🏗️</span><span id="buildingsCount">0</span></div>
         <div class="stat-item"><span class="stat-icon">📊</span><span id="incomeDisplay">0</span></div>
         <div class="stat-item"><span class="stat-icon">⭐</span><span id="levelDisplay">1</span></div>
     </div>
 
-    <!-- Левое меню -->
     <div class="build-menu">
-        <div class="menu-header">🏗️ КАТАЛОГ (2240 ЗДАНИЙ)</div>
+        <div class="menu-header">🏗️ 3D КАТАЛОГ (2240 ЗДАНИЙ)</div>
         <div class="category-tabs" id="categoryTabs"></div>
         <div class="buildings-list" id="buildingsList"></div>
     </div>
 
-    <!-- Правое меню -->
     <div class="control-menu">
         <button class="control-btn collect" id="collectBtn"><span>💰</span> СБОР</button>
-        <button class="control-btn" id="weatherBtn"><span>🌦️</span> ПОГОДА</button>
-        <button class="control-btn" id="timeBtn"><span>⏰</span> ВРЕМЯ</button>
+        <button class="control-btn" id="rotateBtn"><span>🔄</span> ПОВОРОТ</button>
+        <button class="control-btn" id="lightBtn"><span>💡</span> СВЕТ</button>
         <button class="control-btn cancel" id="cancelBtn"><span>❌</span> ОТМЕНА</button>
         <button class="control-btn" id="resetBtn"><span>🔄</span> НОВЫЙ ГОРОД</button>
     </div>
 
-    <!-- Верхняя панель -->
     <div class="info-panel" id="infoPanel">👆 ВЫБЕРИТЕ ЗДАНИЕ И НАЖМИТЕ НА КАРТУ</div>
 </div>
 
 <script>
-// ==================== ПРОСТАЯ РАБОЧАЯ ЛОГИКА ====================
 (function() {
-    // Настройки
-    const GRID_SIZE = 15; // 15x15 клеток
-    const CELL_SIZE = 60;
-
+    // ==================== 3D НАСТРОЙКИ ====================
+    const GRID_SIZE = 10; // 10x10 для производительности
+    const CELL_SIZE = 80;
+    const GROUND_HEIGHT = 0;
+    
+    // Угол обзора (3D)
+    let cameraAngle = 0.3;
+    let cameraElevation = 0.4;
+    let cameraDistance = 600;
+    
     // Состояние игры
-    let gameState = {
-        money: 1000000,
+    const gameState = {
+        money: 5000000,
         grid: [],
         selectedBuilding: null,
-        weather: 'clear',
-        timeOfDay: 0.6,
         buildingsCount: 0,
+        lastTaxTime: Date.now(),
+        lightIntensity: 1.0,
     };
 
     // Создаем сетку
@@ -349,145 +350,345 @@
         }
     }
 
-    // ==================== ГЕНЕРАЦИЯ 2240 ЗДАНИЙ ====================
+    // ==================== ГЕНЕРАЦИЯ 2240 УНИКАЛЬНЫХ 3D ЗДАНИЙ ====================
     const buildingTypes = [];
-    const categories = [
-        { emoji: '🏠', name: 'Дом', basePrice: 1000, baseIncome: 50 },
-        { emoji: '🏢', name: 'Офис', basePrice: 2000, baseIncome: 100 },
-        { emoji: '🏪', name: 'Магазин', basePrice: 1500, baseIncome: 75 },
-        { emoji: '🏭', name: 'Завод', basePrice: 3000, baseIncome: 150 },
-        { emoji: '🏥', name: 'Больница', basePrice: 2500, baseIncome: 80 },
-        { emoji: '🏫', name: 'Школа', basePrice: 1800, baseIncome: 60 },
-        { emoji: '🏛️', name: 'Банк', basePrice: 4000, baseIncome: 200 },
-        { emoji: '🏰', name: 'Замок', basePrice: 5000, baseIncome: 250 },
+    
+    const buildingStyles = [
+        { baseColor: '#e3b27c', roofColor: '#b54c4c', windows: 2, height: 40 }, // Дом
+        { baseColor: '#cf9f6b', roofColor: '#8b5a2b', windows: 3, height: 50 }, // Коттедж
+        { baseColor: '#b0bec5', roofColor: '#607d8b', windows: 4, height: 70 }, // Офис
+        { baseColor: '#ffb74d', roofColor: '#ff9800', windows: 2, height: 45 }, // Магазин
+        { baseColor: '#ef9a9a', roofColor: '#e57373', windows: 3, height: 60 }, // Больница
+        { baseColor: '#81c784', roofColor: '#4caf50', windows: 2, height: 35 }, // Парк
+        { baseColor: '#ba68c8', roofColor: '#9c27b0', windows: 3, height: 55 }, // Школа
+        { baseColor: '#ff8a65', roofColor: '#ff5722', windows: 2, height: 40 }, // Ресторан
     ];
 
-    // Создаем 280 вариаций для каждой категории (8*280 = 2240)
-    categories.forEach((cat, catIndex) => {
-        for (let i = 1; i <= 280; i++) {
+    const prefixes = [
+        'Уютный', 'Большой', 'Огромный', 'Гигантский', 'Миниатюрный',
+        'Старинный', 'Современный', 'Классический', 'Элитный', 'Бюджетный',
+        'Северный', 'Южный', 'Западный', 'Восточный', 'Центральный',
+        'Стеклянный', 'Каменный', 'Кирпичный', 'Деревянный', 'Металлический'
+    ];
+
+    const suffixes = [
+        'Дом', 'Коттедж', 'Особняк', 'Резиденция', 'Вилла',
+        'Офис', 'Центр', 'Комплекс', 'Башня', 'Дворец',
+        'Магазин', 'Бутик', 'ТЦ', 'Рынок', 'Супермаркет',
+        'Завод', 'Фабрика', 'Цех', 'Комбинат', 'Склад'
+    ];
+
+    // Генерируем здания
+    for (let style = 0; style < buildingStyles.length; style++) {
+        for (let i = 0; i < 280; i++) {
+            const prefix = prefixes[i % prefixes.length];
+            const suffix = suffixes[i % suffixes.length];
+            const styleData = buildingStyles[style];
+            
+            const name = `${prefix} ${suffix}`;
+            const price = 1000 + (style * 500) + (i * 20);
+            const income = 50 + Math.floor(price * 0.03);
+
             buildingTypes.push({
                 id: buildingTypes.length,
-                emoji: cat.emoji,
-                name: `${cat.name} ${i}`,
-                price: Math.floor(cat.basePrice * (1 + i * 0.02)),
-                income: Math.floor(cat.baseIncome * (1 + i * 0.02)),
-                category: catIndex,
+                name: name,
+                price: price,
+                income: income,
+                style: style,
+                baseColor: styleData.baseColor,
+                roofColor: styleData.roofColor,
+                windows: styleData.windows,
+                height: styleData.height,
+                emoji: ['🏠','🏢','🏪','🏥','🏫','🏛️','🏭','🏰'][style % 8]
             });
         }
-    });
+    }
 
-    // ==================== CANVAS ====================
+    console.log(`✅ Создано 3D зданий: ${buildingTypes.length}`);
+
+    // ==================== 3D РЕНДЕРИНГ ====================
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
 
     function resizeCanvas() {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        drawCity();
+        draw3DCity();
     }
 
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    // Преобразование координат
-    function getCellXY(row, col) {
-        const x = col * CELL_SIZE + (canvas.width - GRID_SIZE * CELL_SIZE) / 2;
-        const y = row * CELL_SIZE + (canvas.height - GRID_SIZE * CELL_SIZE) / 2;
-        return { x, y };
+    // 3D проекция (изометрическая с перспективой)
+    function project3D(x, y, z) {
+        const scale = 1;
+        const rotX = x * Math.cos(cameraAngle) - z * Math.sin(cameraAngle);
+        const rotZ = x * Math.sin(cameraAngle) + z * Math.cos(cameraAngle);
+        
+        const screenX = canvas.width / 2 + rotX * scale;
+        const screenY = canvas.height / 3 + y * scale - rotZ * Math.sin(cameraElevation) * scale;
+        
+        return { x: screenX, y: screenY, z: rotZ };
     }
 
-    function getCellFromClick(mouseX, mouseY) {
-        const startX = (canvas.width - GRID_SIZE * CELL_SIZE) / 2;
-        const startY = (canvas.height - GRID_SIZE * CELL_SIZE) / 2;
+    // Рисуем куб с текстурами
+    function draw3DCube(x, y, z, width, height, depth, color, roofColor, windows) {
+        const w = width / 2;
+        const h = height;
+        const d = depth / 2;
         
-        if (mouseX < startX || mouseX > startX + GRID_SIZE * CELL_SIZE ||
-            mouseY < startY || mouseY > startY + GRID_SIZE * CELL_SIZE) {
-            return { row: -1, col: -1 };
-        }
+        // Тени
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 15;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
+        // Передняя грань
+        const p1 = project3D(x - w, y, z + d);
+        const p2 = project3D(x + w, y, z + d);
+        const p3 = project3D(x + w, y - h, z + d);
+        const p4 = project3D(x - w, y - h, z + d);
         
-        const col = Math.floor((mouseX - startX) / CELL_SIZE);
-        const row = Math.floor((mouseY - startY) / CELL_SIZE);
-        return { row, col };
-    }
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.closePath();
+        
+        // Градиент для объема
+        const grad = ctx.createLinearGradient(p1.x, p1.y, p3.x, p3.y);
+        grad.addColorStop(0, color);
+        grad.addColorStop(1, shadeColor(color, -40));
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+        ctx.stroke();
 
-    // ==================== ОТРИСОВКА ====================
-    function drawCity() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Небо
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        if (gameState.weather === 'clear') {
-            skyGrad.addColorStop(0, '#0b4b72');
-            skyGrad.addColorStop(1, '#1f7aa3');
-        } else if (gameState.weather === 'rain') {
-            skyGrad.addColorStop(0, '#2c4f6e');
-            skyGrad.addColorStop(1, '#4f7a9e');
-        } else {
-            skyGrad.addColorStop(0, '#1e3a50');
-            skyGrad.addColorStop(1, '#345e82');
-        }
-        ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Рисуем сетку
-        const startX = (canvas.width - GRID_SIZE * CELL_SIZE) / 2;
-        const startY = (canvas.height - GRID_SIZE * CELL_SIZE) / 2;
-
-        for (let row = 0; row < GRID_SIZE; row++) {
-            for (let col = 0; col < GRID_SIZE; col++) {
-                const x = startX + col * CELL_SIZE;
-                const y = startY + row * CELL_SIZE;
-
-                // Земля
-                ctx.fillStyle = '#7cb57c';
-                ctx.shadowColor = '#2b4d2b';
-                ctx.shadowBlur = 10;
-                ctx.shadowOffsetY = 5;
-                ctx.fillRect(x, y, CELL_SIZE - 2, CELL_SIZE - 2);
-                ctx.shadowBlur = 0;
-
-                // Здание
-                const building = gameState.grid[row][col];
-                if (building !== null) {
-                    const type = buildingTypes[building.type];
-                    ctx.fillStyle = `hsl(${building.type * 10 % 360}, 70%, 60%)`;
-                    ctx.fillRect(x + 2, y + 2, CELL_SIZE - 6, CELL_SIZE - 6);
-                    
-                    ctx.font = '30px "Segoe UI Emoji"';
-                    ctx.fillStyle = 'white';
-                    ctx.textAlign = 'center';
-                    ctx.textBaseline = 'middle';
-                    ctx.fillText(type.emoji, x + CELL_SIZE/2, y + CELL_SIZE/2);
-                }
-
-                // Номер клетки (для отладки)
-                ctx.font = '12px Arial';
-                ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                ctx.fillText(`${row},${col}`, x + 5, y + 15);
+        // Окна
+        if (windows > 0) {
+            ctx.fillStyle = '#f9e076';
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#ffd700';
+            for (let i = 0; i < windows; i++) {
+                const wx = x - w/2 + (i * w/windows);
+                const wy = y - h/2;
+                const wp1 = project3D(wx, wy, z + d + 1);
+                ctx.fillRect(wp1.x - 5, wp1.y - 10, 10, 15);
             }
         }
 
-        // Рамка
-        ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 4;
-        ctx.strokeRect(startX, startY, GRID_SIZE * CELL_SIZE, GRID_SIZE * CELL_SIZE);
+        // Крыша (пирамида)
+        const roofTop = project3D(x, y - h - 15, z + d/2);
+        ctx.beginPath();
+        ctx.moveTo(p2.x, p2.y);
+        ctx.lineTo(p3.x, p3.y);
+        ctx.lineTo(roofTop.x, roofTop.y);
+        ctx.closePath();
+        ctx.fillStyle = roofColor;
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.moveTo(p3.x, p3.y);
+        ctx.lineTo(p4.x, p4.y);
+        ctx.lineTo(roofTop.x, roofTop.y);
+        ctx.closePath();
+        ctx.fill();
+
+        // Правая грань
+        const pr1 = project3D(x + w, y, z - d);
+        const pr2 = project3D(x + w, y, z + d);
+        const pr3 = project3D(x + w, y - h, z + d);
+        const pr4 = project3D(x + w, y - h, z - d);
+        
+        ctx.beginPath();
+        ctx.moveTo(pr1.x, pr1.y);
+        ctx.lineTo(pr2.x, pr2.y);
+        ctx.lineTo(pr3.x, pr3.y);
+        ctx.lineTo(pr4.x, pr4.y);
+        ctx.closePath();
+        
+        const grad2 = ctx.createLinearGradient(pr1.x, pr1.y, pr4.x, pr4.y);
+        grad2.addColorStop(0, shadeColor(color, -20));
+        grad2.addColorStop(1, shadeColor(color, -60));
+        ctx.fillStyle = grad2;
+        ctx.fill();
+        ctx.stroke();
+
+        // Тень на земле
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = 'rgba(0,0,0,0.4)';
+        ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        ctx.beginPath();
+        ctx.ellipse(x, z, width/2, depth/4, 0, 0, Math.PI*2);
+        ctx.fill();
+        
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
     }
 
-    // ==================== КЛИК ПО КАНВАСУ ====================
+    function shadeColor(color, percent) {
+        let R = parseInt(color.substring(1,3), 16);
+        let G = parseInt(color.substring(3,5), 16);
+        let B = parseInt(color.substring(5,7), 16);
+        R = Math.min(255, Math.max(0, R + percent));
+        G = Math.min(255, Math.max(0, G + percent));
+        B = Math.min(255, Math.max(0, B + percent));
+        return `#${((1 << 24) + (R << 16) + (G << 8) + B).toString(16).slice(1)}`;
+    }
+
+    // Рисуем землю (сетка)
+    function drawGround() {
+        const groundColor = '#5f8b5f';
+        const lineColor = '#3a6b3a';
+        
+        for (let i = -1; i <= GRID_SIZE; i++) {
+            for (let j = -1; j <= GRID_SIZE; j++) {
+                const x = (j - GRID_SIZE/2) * CELL_SIZE;
+                const z = (i - GRID_SIZE/2) * CELL_SIZE;
+                
+                const p1 = project3D(x, GROUND_HEIGHT, z);
+                const p2 = project3D(x + CELL_SIZE, GROUND_HEIGHT, z);
+                const p3 = project3D(x + CELL_SIZE, GROUND_HEIGHT, z + CELL_SIZE);
+                const p4 = project3D(x, GROUND_HEIGHT, z + CELL_SIZE);
+                
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.lineTo(p3.x, p3.y);
+                ctx.lineTo(p4.x, p4.y);
+                ctx.closePath();
+                
+                const grad = ctx.createLinearGradient(p1.x, p1.y, p3.x, p3.y);
+                grad.addColorStop(0, groundColor);
+                grad.addColorStop(1, shadeColor(groundColor, -30));
+                ctx.fillStyle = grad;
+                ctx.fill();
+                
+                ctx.strokeStyle = lineColor;
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Номер клетки
+                const center = project3D(x + CELL_SIZE/2, GROUND_HEIGHT + 5, z + CELL_SIZE/2);
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowColor = '#000000';
+                ctx.shadowBlur = 5;
+                ctx.fillText(`${i},${j}`, center.x - 15, center.y - 5);
+                ctx.shadowBlur = 0;
+            }
+        }
+    }
+
+    // ==================== ОСНОВНАЯ ОТРИСОВКА ====================
+    function draw3DCity() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Небо с градиентом
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+        skyGrad.addColorStop(0, '#1a3344');
+        skyGrad.addColorStop(1, '#4a7a9c');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Солнце
+        ctx.shadowBlur = 50;
+        ctx.shadowColor = '#fff9c4';
+        ctx.beginPath();
+        ctx.arc(150, 100, 50, 0, Math.PI*2);
+        ctx.fillStyle = '#fff3b0';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Рисуем землю
+        drawGround();
+
+        // Рисуем здания
+        for (let row = 0; row < GRID_SIZE; row++) {
+            for (let col = 0; col < GRID_SIZE; col++) {
+                const building = gameState.grid[row][col];
+                if (building !== null) {
+                    const type = buildingTypes[building.type];
+                    const x = (col - GRID_SIZE/2) * CELL_SIZE;
+                    const z = (row - GRID_SIZE/2) * CELL_SIZE;
+                    
+                    draw3DCube(
+                        x, GROUND_HEIGHT, z,
+                        CELL_SIZE * 0.7,
+                        type.height,
+                        CELL_SIZE * 0.7,
+                        type.baseColor,
+                        type.roofColor,
+                        type.windows
+                    );
+                }
+            }
+        }
+
+        // Подсветка выбранной клетки
+        if (selectedRow !== -1 && selectedCol !== -1) {
+            const x = (selectedCol - GRID_SIZE/2) * CELL_SIZE;
+            const z = (selectedRow - GRID_SIZE/2) * CELL_SIZE;
+            
+            for (let i = 0; i < 4; i++) {
+                const corner1 = project3D(x + (i%2)*CELL_SIZE, GROUND_HEIGHT + 2, z + (i<2?0:CELL_SIZE));
+                const corner2 = project3D(x + ((i+1)%2)*CELL_SIZE, GROUND_HEIGHT + 2, z + ((i+1)<2?0:CELL_SIZE));
+                
+                ctx.beginPath();
+                ctx.moveTo(corner1.x, corner1.y);
+                ctx.lineTo(corner2.x, corner2.y);
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 3;
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = '#ffd700';
+                ctx.stroke();
+            }
+        }
+    }
+
+    // ==================== ВЗАИМОДЕЙСТВИЕ ====================
+    let selectedRow = -1, selectedCol = -1;
+
+    function getGridFromClick(mouseX, mouseY) {
+        let bestDist = Infinity;
+        let bestRow = -1, bestCol = -1;
+        
+        for (let row = 0; row < GRID_SIZE; row++) {
+            for (let col = 0; col < GRID_SIZE; col++) {
+                const x = (col - GRID_SIZE/2) * CELL_SIZE;
+                const z = (row - GRID_SIZE/2) * CELL_SIZE;
+                const center = project3D(x + CELL_SIZE/2, GROUND_HEIGHT + 10, z + CELL_SIZE/2);
+                
+                const dist = Math.hypot(mouseX - center.x, mouseY - center.y);
+                if (dist < bestDist && dist < 50) {
+                    bestDist = dist;
+                    bestRow = row;
+                    bestCol = col;
+                }
+            }
+        }
+        return { row: bestRow, col: bestCol };
+    }
+
     canvas.addEventListener('click', (e) => {
         const rect = canvas.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
         
-        const { row, col } = getCellFromClick(mouseX, mouseY);
+        const { row, col } = getGridFromClick(mouseX, mouseY);
         
         if (row !== -1 && col !== -1) {
+            selectedRow = row;
+            selectedCol = col;
+            
             if (gameState.selectedBuilding !== null) {
                 // Строим
                 const type = buildingTypes[gameState.selectedBuilding];
                 
                 if (gameState.money < type.price) {
-                    showNotification(`❌ Нужно ${type.price} монет!`, 'error');
+                    showNotification(`❌ Нужно ${type.price.toLocaleString()}💰`, 'error');
                     return;
                 }
                 
@@ -501,17 +702,45 @@
                 gameState.buildingsCount++;
                 
                 updateUI();
-                drawCity();
+                draw3DCity();
                 showNotification(`✅ Построено: ${type.name}`, 'success');
             } else {
-                // Показываем информацию
+                // Информация
                 const building = gameState.grid[row][col];
                 if (building) {
                     const type = buildingTypes[building.type];
-                    showNotification(`${type.emoji} ${type.name} | Доход: ${type.income}`, 'info');
+                    showNotification(`${type.emoji} ${type.name} | Доход: ${type.income}💰`, 'info');
                 }
             }
         }
+    });
+
+    // ==================== УПРАВЛЕНИЕ КАМЕРОЙ ====================
+    let isDragging = false;
+    let lastMouseX = 0;
+
+    canvas.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        lastMouseX = e.clientX;
+    });
+
+    canvas.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            const deltaX = e.clientX - lastMouseX;
+            cameraAngle += deltaX * 0.01;
+            lastMouseX = e.clientX;
+            draw3DCity();
+        }
+    });
+
+    canvas.addEventListener('mouseup', () => {
+        isDragging = false;
+    });
+
+    canvas.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        cameraDistance = Math.max(300, Math.min(1000, cameraDistance + e.deltaY * 0.5));
+        draw3DCity();
     });
 
     // ==================== ОБНОВЛЕНИЕ UI ====================
@@ -531,18 +760,15 @@
         document.getElementById('levelDisplay').innerText = Math.floor(gameState.buildingsCount / 5) + 1;
     }
 
-    // ==================== УВЕДОМЛЕНИЯ ====================
     function showNotification(msg, type) {
         const notif = document.createElement('div');
         notif.className = 'notification';
         notif.textContent = msg;
-        if (type === 'success') notif.style.borderColor = '#4caf50';
-        if (type === 'error') notif.style.borderColor = '#f44336';
         document.body.appendChild(notif);
         setTimeout(() => notif.remove(), 3000);
     }
 
-    // ==================== ПОСТРОЕНИЕ МЕНЮ ====================
+    // ==================== МЕНЮ ====================
     function buildMenu() {
         const tabs = document.getElementById('categoryTabs');
         const list = document.getElementById('buildingsList');
@@ -550,32 +776,34 @@
         // Кнопка "Все"
         const allBtn = document.createElement('button');
         allBtn.className = 'cat-tab active';
+        allBtn.dataset.cat = 'all';
         allBtn.textContent = '🏁 ВСЕ';
         tabs.appendChild(allBtn);
 
-        categories.forEach((cat, index) => {
+        // Категории по стилям
+        for (let i = 0; i < buildingStyles.length; i++) {
             const btn = document.createElement('button');
             btn.className = 'cat-tab';
-            btn.textContent = `${cat.emoji} ${cat.name}`;
-            btn.dataset.cat = index;
+            btn.dataset.cat = i;
+            btn.textContent = `🏗️ Стиль ${i+1}`;
             tabs.appendChild(btn);
-        });
+        }
 
         function showCategory(catId) {
             list.innerHTML = '';
             let filtered = buildingTypes;
-            if (catId !== undefined) {
-                filtered = buildingTypes.filter(b => b.category == catId);
+            if (catId !== 'all') {
+                filtered = buildingTypes.filter(b => b.style == catId);
             }
             
-            filtered.slice(0, 100).forEach(b => { // Показываем по 100 зданий
+            filtered.forEach(b => {
                 const item = document.createElement('div');
                 item.className = 'build-item';
                 item.innerHTML = `
                     <div class="item-icon">${b.emoji}</div>
                     <div class="item-info">
                         <div class="item-name">${b.name}</div>
-                        <div class="item-price">💰 ${b.price}</div>
+                        <div class="item-price">💰 ${b.price.toLocaleString()}</div>
                     </div>
                 `;
                 item.onclick = () => {
@@ -596,11 +824,17 @@
             };
         });
 
-        showCategory();
+        showCategory('all');
     }
 
     // ==================== КНОПКИ ====================
     document.getElementById('collectBtn').onclick = () => {
+        const now = Date.now();
+        if (now - gameState.lastTaxTime < 5000) {
+            showNotification('⏳ Подождите 5 секунд!', 'warning');
+            return;
+        }
+        
         let total = 0;
         for (let row = 0; row < GRID_SIZE; row++) {
             for (let col = 0; col < GRID_SIZE; col++) {
@@ -610,23 +844,21 @@
             }
         }
         gameState.money += total;
+        gameState.lastTaxTime = now;
         updateUI();
-        drawCity();
         showNotification(`💰 Собрано ${total} монет!`, 'success');
     };
 
-    document.getElementById('weatherBtn').onclick = () => {
-        const weathers = ['clear', 'rain', 'snow'];
-        const current = weathers.indexOf(gameState.weather);
-        gameState.weather = weathers[(current + 1) % weathers.length];
-        drawCity();
-        showNotification(`🌦️ Погода: ${gameState.weather}`, 'info');
+    document.getElementById('rotateBtn').onclick = () => {
+        cameraAngle += 0.5;
+        draw3DCity();
+        showNotification('🔄 Вид изменён', 'info');
     };
 
-    document.getElementById('timeBtn').onclick = () => {
-        gameState.timeOfDay = (gameState.timeOfDay + 0.3) % 1;
-        drawCity();
-        showNotification(`⏰ Время изменено`, 'info');
+    document.getElementById('lightBtn').onclick = () => {
+        gameState.lightIntensity = gameState.lightIntensity === 1.0 ? 0.5 : 1.0;
+        draw3DCity();
+        showNotification(`💡 Свет: ${gameState.lightIntensity === 1.0 ? 'Ярко' : 'Тускло'}`, 'info');
     };
 
     document.getElementById('cancelBtn').onclick = () => {
@@ -637,8 +869,8 @@
     };
 
     document.getElementById('resetBtn').onclick = () => {
-        if (confirm('Новый город?')) {
-            gameState.money = 1000000;
+        if (confirm('Начать новый город?')) {
+            gameState.money = 5000000;
             gameState.buildingsCount = 0;
             gameState.selectedBuilding = null;
             for (let i = 0; i < GRID_SIZE; i++) {
@@ -647,15 +879,16 @@
                 }
             }
             updateUI();
-            drawCity();
-            showNotification('🔄 Новый город создан', 'info');
+            draw3DCity();
+            showNotification('🔄 Новый город создан', 'success');
         }
     };
 
     // ==================== ЗАПУСК ====================
     buildMenu();
     updateUI();
-    drawCity();
+    draw3DCity();
+    setInterval(draw3DCity, 50); // Анимация
 })();
 </script>
 </body>
