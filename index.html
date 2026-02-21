@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мой городок</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: sans-serif;
+            background-color: #a0d0ff; /* Небо */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+        #game-area {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 800px;
+            background-color: #8cb27c; /* Трава */
+            padding: 30px;
+            border-radius: 30px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
+            min-height: 400px;
+        }
+        .building {
+            width: 80px;
+            height: 80px;
+            background-color: #e0c4a0;
+            border: 3px solid #b08e5a;
+            border-radius: 15px 15px 5px 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content flex-end;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 5px 0 #8b6b42;
+            color: #4a3b28;
+            font-weight: bold;
+            position: relative;
+        }
+        .building:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 0 #8b6b42;
+        }
+        .building span {
+            background: rgba(255,255,255,0.7);
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 0 0 10px 10px;
+            padding: 4px 0;
+        }
+        #controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        button {
+            padding: 15px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 15px;
+            background-color: #ffd966;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 0 #b68b40;
+            transition: 0.1s;
+        }
+        button:active {
+            transform: translateY(4px);
+            box-shadow: none;
+        }
+        #balance {
+            font-size: 24px;
+            background: white;
+            padding: 10px 30px;
+            border-radius: 40px;
+            margin-bottom: 20px;
+            border: 3px solid gold;
+        }
+    </style>
+</head>
+<body>
+    <div id="balance">💰 Монет: <span id="balance-value">100</span></div>
+    <div id="game-area" data-user-id="">
+        <!-- Здесь появятся домики -->
+    </div>
+    <div id="controls">
+        <button onclick="addBuilding('house')">🏠 Построить дом (10💰)</button>
+        <button onclick="addBuilding('shop')">🏪 Построить магазин (25💰)</button>
+        <button onclick="collectTax()">💰 Собрать налог</button>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        let tg = window.Telegram.WebApp;
+        tg.expand(); // Растянуть на весь экран
+        
+        let balance = 100;
+        let buildings = [];
+
+        // Элементы
+        const balanceSpan = document.getElementById('balance-value');
+        const gameArea = document.getElementById('game-area');
+
+        // Функция обновления баланса на экране
+        function updateBalanceDisplay() {
+            balanceSpan.textContent = balance;
+        }
+
+        // Функция отрисовки города
+        function renderCity() {
+            gameArea.innerHTML = ''; // Очистить поле
+            buildings.forEach((building, index) => {
+                const div = document.createElement('div');
+                div.className = 'building';
+                div.setAttribute('data-id', index);
+                div.innerHTML = `${building.emoji}<span>${building.name}</span>`;
+                // Можно добавить обработчик для сноса или улучшения позже
+                gameArea.appendChild(div);
+            });
+        }
+
+        // Функция постройки здания
+        window.addBuilding = function(type) {
+            let cost = 0;
+            let emoji = '';
+            let name = '';
+
+            if (type === 'house') {
+                cost = 10;
+                emoji = '🏠';
+                name = 'Дом';
+            } else if (type === 'shop') {
+                cost = 25;
+                emoji = '🏪';
+                name = 'Магазин';
+            }
+
+            if (balance >= cost) {
+                balance -= cost;
+                buildings.push({ type: type, emoji: emoji, name: name });
+                updateBalanceDisplay();
+                renderCity();
+
+                // Отправляем данные боту (чтобы он сохранил прогресс)
+                tg.sendData(JSON.stringify({
+                    action: 'build',
+                    type: type,
+                    balance: balance,
+                    buildingsCount: buildings.length
+                }));
+            } else {
+                tg.showAlert('Недостаточно монет!');
+            }
+        };
+
+        // Функция сбора налога
+        window.collectTax = function() {
+            let tax = 0;
+            buildings.forEach(b => {
+                if (b.type === 'house') tax += 5;
+                if (b.type === 'shop') tax += 15;
+            });
+            
+            if (tax > 0) {
+                balance += tax;
+                updateBalanceDisplay();
+                tg.showAlert(`Вы собрали налог: ${tax}💰`);
+                
+                // Сообщаем боту о сборе налога
+                tg.sendData(JSON.stringify({
+                    action: 'tax',
+                    tax: tax,
+                    balance: balance
+                }));
+            } else {
+                tg.showAlert('Нет зданий — нет налогов!');
+            }
+        };
+
+        // Загружаем данные, если бот их прислал (при старте)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Если есть данные из Telegram (например, при открытии с кнопки)
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                gameArea.dataset.userId = tg.initDataUnsafe.user.id;
+                console.log('Игрок:', tg.initDataUnsafe.user.username);
+            }
+            
+            // Здесь можно было бы запросить у бота сохранение через HTTP, но для простоты начнем с нуля.
+            // В реальности нужно делать fetch запрос к серверу бота.
+        });
+
+        // Инициализация
+        renderCity();
+        updateBalanceDisplay();
+        
+        // Сообщаем боту, что приложение загружено (опционально)
+        tg.ready();
+    </script>
+</body>
+</html>
