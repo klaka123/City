@@ -1,22 +1,57 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini City</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>MegaCity — 3D Townscaper-style</title>
+  <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <div id="ui"></div>
-  <canvas id="game"></canvas>
+  <div id="app">
+    <div id="hud">
+      <div id="topRow">
+        <div id="money">💰 0</div>
+        <div id="population">👥 0</div>
+        <div id="income">📈 0</div>
+      </div>
 
-  <!-- Telegram -->
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+      <div id="controls">
+        <button id="buildBtn" class="mode active">🏗 Строить</button>
+        <button id="roadBtn" class="mode">🛣 Дорога</button>
+        <button id="deleteBtn" class="mode">❌ Удалить</button>
+        <button id="upgradeBtn">⬆️ Улучшить</button>
+        <button id="waterBtn">🌊 Вода/Мост</button>
+        <button id="saveBtn">💾 Сохранить</button>
+        <button id="loadBtn">📂 Загрузить</button>
+        <button id="leaderBtn">🏆 Рейтинг</button>
+        <button id="resetBtn">🔄 Новый город</button>
+      </div>
+    </div>
 
-  <!-- Three.js -->
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+    <div id="canvasContainer"></div>
 
-  <script type="module" src="main.js"></script>
+    <div id="panel">
+      <h3>Каталог зданий</h3>
+      <div id="buildingList"></div>
+      <hr/>
+      <div id="infoBox">Выбери клетку, чтобы строить. Tap/click для действий.</div>
+      <div id="leaderboard" class="hidden"><h4>Рейтинг</h4><ol id="leaders"></ol></div>
+    </div>
+  </div>
+
+  <!-- three + orbitcontrols as modules -->
+  <script type="module">
+    import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+    window.THREE = THREE; // make available to modules that expect global THREE
+  </script>
+
+  <!-- modules (ESM) -->
+  <script type="module" src="./buildings.js"></script>
+  <script type="module" src="./world.js"></script>
+  <script type="module" src="./citizens.js"></script>
+  <script type="module" src="./cars.js"></script>
+  <script type="module" src="./save.js"></script>
+  <script type="module" src="./ui.js"></script>
+  <script type="module" src="./main.js"></script>
 </body>
 </html>
