@@ -1,360 +1,249 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MEGA CITY 5120</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Mini City 3D</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Segoe UI, Roboto, sans-serif;
-    user-select:none;
+html,body{
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  background:#0b0e14;
+  font-family:Arial,Helvetica,sans-serif;
 }
-body{
-    background:#081823;
-    overflow:hidden;
+#ui{
+  position:fixed;
+  top:10px;
+  left:10px;
+  z-index:10;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
 }
-.game{
-    width:100vw;
-    height:100vh;
-    position:relative;
+button{
+  padding:10px 14px;
+  border:none;
+  border-radius:10px;
+  background:#1f2433;
+  color:#fff;
+  font-size:14px;
+  cursor:pointer;
 }
-canvas{
-    width:100%;
-    height:100%;
-    display:block;
-    touch-action:none;
-    cursor:grab;
-}
-canvas:active{cursor:grabbing}
-
-.ui{
-    position:fixed;
-    bottom:15px;
-    left:50%;
-    transform:translateX(-50%);
-    display:flex;
-    gap:15px;
-    background:rgba(15,35,50,.95);
-    padding:12px 25px;
-    border-radius:40px;
-    color:#fff;
-    font-size:18px;
-    z-index:10;
-}
-.ui div{
-    background:rgba(0,0,0,.3);
-    padding:6px 14px;
-    border-radius:30px;
-}
-
-.menu-left{
-    position:fixed;
-    top:50%;
-    left:15px;
-    transform:translateY(-50%);
-    width:320px;
-    height:80vh;
-    background:rgba(10,28,40,.95);
-    border-radius:25px;
-    padding:15px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    z-index:10;
-}
-.menu-left h2{
-    color:#fff;
-    text-align:center;
-}
-.categories{
-    display:flex;
-    flex-wrap:wrap;
-    gap:5px;
-}
-.categories button{
-    flex:1;
-    padding:6px;
-    border-radius:20px;
-    border:none;
-    cursor:pointer;
-}
-.list{
-    flex:1;
-    overflow:auto;
-}
-.item{
-    background:rgba(255,255,255,.08);
-    margin-bottom:6px;
-    padding:8px;
-    border-radius:18px;
-    color:#fff;
-    cursor:pointer;
-}
-.item.selected{
-    outline:2px solid #ffb84d;
-}
-
-.menu-right{
-    position:fixed;
-    top:50%;
-    right:15px;
-    transform:translateY(-50%);
-    background:rgba(10,28,40,.95);
-    border-radius:25px;
-    padding:15px;
-    display:flex;
-    flex-direction:column;
-    gap:10px;
-    z-index:10;
-}
-.menu-right button{
-    padding:12px;
-    font-size:16px;
-    border-radius:25px;
-    border:none;
-    cursor:pointer;
-}
-
-.info{
-    position:fixed;
-    top:15px;
-    left:50%;
-    transform:translateX(-50%);
-    background:rgba(10,28,40,.95);
-    padding:12px 25px;
-    border-radius:30px;
-    color:#fff;
-    z-index:10;
+button.active{background:#4c7cff}
+#hint{
+  position:fixed;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  color:#aaa;
+  font-size:12px;
 }
 </style>
 </head>
 
 <body>
-<div class="game">
-<canvas id="c"></canvas>
-
-<div class="info" id="info">Выберите здание</div>
-
-<div class="ui">
-    <div>💰 <span id="money">50000000</span></div>
-    <div>👥 <span id="pop">0</span></div>
-    <div>📈 <span id="inc">0</span></div>
-    <div>🏗️ <span id="cnt">0/3600</span></div>
+<div id="ui">
+  <button id="buildBtn" class="active">🏗 Строить</button>
+  <button id="deleteBtn">❌ Удалить</button>
+  <button id="dayBtn">🌗 День / Ночь</button>
+  <button id="resetBtn">🔄 Новый город</button>
 </div>
+<div id="hint">Тап / клик — действие • Зум — колесо / pinch</div>
 
-<div class="menu-left">
-<h2>🏗️ ЗДАНИЯ</h2>
-<div class="categories" id="cats"></div>
-<div class="list" id="list"></div>
-</div>
-
-<div class="menu-right">
-<button onclick="collect()">💰 СБОР</button>
-<button onclick="weather()">🌦️ ПОГОДА</button>
-<button onclick="timeDay()">⏰ ВРЕМЯ</button>
-<button onclick="cancel()">❌ ОТМЕНА</button>
-<button onclick="resetGame()">🔄 НОВЫЙ ГОРОД</button>
-</div>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
-const tg = window.Telegram?.WebApp;
-tg?.expand(); tg?.ready();
+/* ---------------- BASIC SETUP ---------------- */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x87a8ff);
 
-const GRID=60, CELL=70;
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d');
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 1000);
+camera.position.set(20,25,20);
 
-let cam={x:0,y:0,z:1};
-let drag=false, lx=0, ly=0;
-let selRow=-1, selCol=-1;
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+document.body.appendChild(renderer.domElement);
 
-let game={
-money:50000000,
-pop:0,
-cnt:0,
-weather:0,
-time:0.6,
-grid:[]
-};
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.maxPolarAngle = Math.PI/2.2;
 
-for(let r=0;r<GRID;r++){
-game.grid[r]=[];
-for(let c=0;c<GRID;c++)game.grid[r][c]=null;
+/* ---------------- LIGHTING ---------------- */
+let isNight = false;
+
+const sun = new THREE.DirectionalLight(0xffffff, 1);
+sun.position.set(30,50,20);
+sun.castShadow = true;
+scene.add(sun);
+
+const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambient);
+
+/* ---------------- GROUND & GRID ---------------- */
+const gridSize = 20;
+const cellSize = 2;
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(gridSize*cellSize, gridSize*cellSize),
+  new THREE.MeshStandardMaterial({color:0x3a8f5a})
+);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+const grid = new THREE.GridHelper(gridSize*cellSize, gridSize, 0x444444, 0x444444);
+scene.add(grid);
+
+/* ---------------- DATA ---------------- */
+const buildings = {};
+const roads = [];
+const citizens = [];
+const cars = [];
+
+/* ---------------- HELPERS ---------------- */
+function rand(a,b){return a+Math.random()*(b-a)}
+
+function key(x,z){return x+"_"+z}
+
+/* ---------------- BUILDINGS ---------------- */
+function createBuilding(x,z){
+  const h = rand(1.5,6);
+  const geo = new THREE.BoxGeometry(1.8,h,1.8);
+
+  const mat = new THREE.MeshStandardMaterial({
+    color:new THREE.Color().setHSL(Math.random(),0.5,0.6)
+  });
+
+  const m = new THREE.Mesh(geo,mat);
+  m.position.set(x,h/2,z);
+  m.castShadow = true;
+  m.userData.type="building";
+  scene.add(m);
+  buildings[key(x,z)] = m;
 }
 
-const cats=[
-{id:'res',n:'Жилые',e:'🏠',p:1000},
-{id:'com',n:'Торг',e:'🏪',p:2000},
-{id:'ind',n:'Заводы',e:'🏭',p:3000},
-{id:'fun',n:'Развлеч',e:'🎡',p:4000},
-{id:'gov',n:'Гос',e:'🏛️',p:6000},
-];
-
-const buildings={};
-let id=0;
-cats.forEach((c,ci)=>{
-for(let i=0;i<1024;i++){
-const price=c.p*(i+1)*(ci+1);
-buildings['b'+id]={
-id:'b'+id,
-cat:c.id,
-name:c.n+' '+(i+1),
-price,
-inc:Math.floor(price*0.12),
-pop:Math.floor(price/200),
-lvl:1,
-e:c.e,
-col:`hsl(${(ci*50+i)%360},70%,60%)`
-};
-id++;
-}});
-const all=Object.values(buildings);
-
-function resize(){
-canvas.width=innerWidth;
-canvas.height=innerHeight;
-draw();
-}
-addEventListener('resize',resize);
-resize();
-
-function iso(r,c){
-return{
-x:(c-r)*CELL/2*cam.z+cam.x+canvas.width/2,
-y:(c+r)*CELL/4*cam.z+cam.y+canvas.height/3
-};
+/* ---------------- ROADS ---------------- */
+function createRoad(x,z){
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(2,0.1,2),
+    new THREE.MeshStandardMaterial({color:0x2b2b2b})
+  );
+  m.position.set(x,0.05,z);
+  m.receiveShadow = true;
+  m.userData.type="road";
+  scene.add(m);
+  roads.push(m);
 }
 
-function draw(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-ctx.fillStyle='#7cb57c';
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const p=iso(r,c);
-ctx.beginPath();
-ctx.moveTo(p.x,p.y);
-ctx.lineTo(p.x+CELL/2*cam.z,p.y+CELL/4*cam.z);
-ctx.lineTo(p.x,p.y+CELL/2*cam.z);
-ctx.lineTo(p.x-CELL/2*cam.z,p.y+CELL/4*cam.z);
-ctx.closePath();
-ctx.fill();
-
-const id=game.grid[r][c];
-if(id){
-const b=buildings[id];
-ctx.fillStyle=b.col;
-ctx.fill();
-ctx.fillStyle='#fff';
-ctx.textAlign='center';
-ctx.fillText(b.e,p.x,p.y);
-}
-}
+/* ---------------- PEOPLE ---------------- */
+function spawnCitizen(){
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(0.4,0.8,0.4),
+    new THREE.MeshStandardMaterial({color:0xffcc88})
+  );
+  m.position.set(rand(-10,10),0.4,rand(-10,10));
+  m.userData.dir = Math.random()*Math.PI*2;
+  scene.add(m);
+  citizens.push(m);
 }
 
-canvas.onmousedown=e=>{drag=true;lx=e.clientX;ly=e.clientY}
-canvas.onmouseup=_=>drag=false;
-canvas.onmousemove=e=>{
-if(!drag)return;
-cam.x+=e.clientX-lx;
-cam.y+=e.clientY-ly;
-lx=e.clientX;ly=e.clientY;
-draw();
-}
-canvas.onwheel=e=>{
-cam.z=Math.min(3,Math.max(.4,cam.z+(e.deltaY<0?.1:-.1)));
-draw();
+/* ---------------- CARS ---------------- */
+function spawnCar(){
+  const m = new THREE.Mesh(
+    new THREE.BoxGeometry(0.8,0.4,1.4),
+    new THREE.MeshStandardMaterial({color:0xff4444})
+  );
+  m.position.set(-20,0.25,rand(-10,10));
+  m.userData.speed = rand(0.03,0.06);
+  scene.add(m);
+  cars.push(m);
 }
 
-canvas.onclick=e=>{
-const rect=canvas.getBoundingClientRect();
-let mx=e.clientX-rect.left,my=e.clientY-rect.top;
-let best=null,br=-1,bc=-1;
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const p=iso(r,c);
-const d=Math.hypot(mx-p.x,my-p.y);
-if(d<40 && (!best||d<best)){best=d;br=r;bc=c;}
-}
-if(br!=-1){
-selRow=br;selCol=bc;
-if(selected)build(br,bc);
-}
-}
+/* ---------------- INTERACTION ---------------- */
+let mode="build";
 
-let selected=null;
+buildBtn.onclick=()=>{mode="build";buildBtn.classList.add("active");deleteBtn.classList.remove("active")}
+deleteBtn.onclick=()=>{mode="delete";deleteBtn.classList.add("active");buildBtn.classList.remove("active")}
 
-function build(r,c){
-const b=buildings[selected];
-if(game.money<b.price||game.grid[r][c])return;
-game.money-=b.price;
-game.grid[r][c]=b.id;
-game.pop+=b.pop;
-game.cnt++;
-update();
-draw();
+dayBtn.onclick=()=>{
+  isNight=!isNight;
+  if(isNight){
+    sun.intensity=0.2;
+    ambient.intensity=0.2;
+    scene.background=new THREE.Color(0x05080f);
+  }else{
+    sun.intensity=1;
+    ambient.intensity=0.4;
+    scene.background=new THREE.Color(0x87a8ff);
+  }
 }
 
-function collect(){
-let t=0;
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const id=game.grid[r][c];
-if(id)t+=buildings[id].inc;
+resetBtn.onclick=()=>location.reload();
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+function onClick(e){
+  mouse.x = (e.clientX/innerWidth)*2-1;
+  mouse.y = -(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse,camera);
+  const hits = raycaster.intersectObjects(scene.children,true);
+  if(!hits.length) return;
+
+  const p = hits[0].point;
+  const gx = Math.round(p.x/2)*2;
+  const gz = Math.round(p.z/2)*2;
+  const k = key(gx,gz);
+
+  if(mode==="build"){
+    if(!buildings[k]){
+      createRoad(gx,gz);
+      createBuilding(gx,gz);
+    }
+  }else{
+    if(buildings[k]){
+      scene.remove(buildings[k]);
+      delete buildings[k];
+    }
+  }
 }
-game.money+=t;
-update();
+
+window.addEventListener("pointerdown",onClick);
+
+/* ---------------- SPAWN LIFE ---------------- */
+for(let i=0;i<15;i++) spawnCitizen();
+for(let i=0;i<6;i++) spawnCar();
+
+/* ---------------- ANIMATION ---------------- */
+function animate(){
+  requestAnimationFrame(animate);
+  controls.update();
+
+  citizens.forEach(c=>{
+    c.position.x+=Math.cos(c.userData.dir)*0.02;
+    c.position.z+=Math.sin(c.userData.dir)*0.02;
+    if(Math.random()<0.01) c.userData.dir=Math.random()*Math.PI*2;
+  });
+
+  cars.forEach(car=>{
+    car.position.x+=car.userData.speed;
+    if(car.position.x>20) car.position.x=-20;
+  });
+
+  renderer.render(scene,camera);
 }
+animate();
 
-function weather(){game.weather=(game.weather+1)%3;draw();}
-function timeDay(){game.time=(game.time+.3)%1;draw();}
-function cancel(){selected=null;info.innerText='Выбор сброшен'}
-function resetGame(){location.reload()}
-
-function update(){
-money.innerText=game.money.toLocaleString();
-pop.innerText=game.pop.toLocaleString();
-cnt.innerText=game.cnt+'/3600';
-let inc=0;
-for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
-const id=game.grid[r][c];
-if(id)inc+=buildings[id].inc;
+window.onresize=()=>{
+  camera.aspect=innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth,innerHeight);
 }
-incSpan.innerText=inc.toLocaleString();
-}
-
-const catsDiv=document.getElementById('cats');
-const list=document.getElementById('list');
-const info=document.getElementById('info');
-const money=document.getElementById('money');
-const pop=document.getElementById('pop');
-const incSpan=document.getElementById('inc');
-const cnt=document.getElementById('cnt');
-
-cats.forEach(c=>{
-const btn=document.createElement('button');
-btn.textContent=c.e+' '+c.n;
-btn.onclick=_=>{
-list.innerHTML='';
-all.filter(b=>b.cat===c.id).slice(0,200).forEach(b=>{
-const d=document.createElement('div');
-d.className='item';
-d.innerText=b.e+' '+b.name+' 💰'+b.price;
-d.onclick=_=>{
-document.querySelectorAll('.item').forEach(i=>i.classList.remove('selected'));
-d.classList.add('selected');
-selected=b.id;
-info.innerText='Выбрано: '+b.name;
-};
-list.appendChild(d);
-});
-};
-catsDiv.appendChild(btn);
-});
-
-draw();
-update();
 </script>
 </body>
 </html>
