@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>MEGA CITY 5120 - ДЕТАЛЬНЫЕ 3D МОДЕЛИ</title>
+<title>MEGA CITY 5120</title>
+
 <style>
 *{
     margin:0;
@@ -139,14 +140,14 @@ canvas:active{cursor:grabbing}
 <div class="info" id="info">Выберите здание</div>
 
 <div class="ui">
-    <div>💰 <span id="money">50,000,000</span></div>
+    <div>💰 <span id="money">50000000</span></div>
     <div>👥 <span id="pop">0</span></div>
     <div>📈 <span id="inc">0</span></div>
     <div>🏗️ <span id="cnt">0/3600</span></div>
 </div>
 
 <div class="menu-left">
-<h2>🏗️ 3D ЗДАНИЯ</h2>
+<h2>🏗️ ЗДАНИЯ</h2>
 <div class="categories" id="cats"></div>
 <div class="list" id="list"></div>
 </div>
@@ -186,784 +187,170 @@ game.grid[r]=[];
 for(let c=0;c<GRID;c++)game.grid[r][c]=null;
 }
 
-// ==================== ДЕТАЛЬНЫЕ 3D МОДЕЛИ ЗДАНИЙ ====================
-const buildingStyles = [
-    // Жилые дома
-    { 
-        type: 'house1', 
-        name: '🏠 Уютный домик',
-        baseColor: '#e3b27c', 
-        roofColor: '#b54c4c', 
-        doorColor: '#8b5a2b', 
-        windowColor: '#f9e076',
-        height: 50,
-        hasChimney: true,
-        hasShutters: true,
-        hasFlowers: true,
-        windows: 2
-    },
-    { 
-        type: 'house2', 
-        name: '🏡 Коттедж',
-        baseColor: '#cf9f6b', 
-        roofColor: '#8b5a2b', 
-        doorColor: '#a57248', 
-        windowColor: '#f9e076',
-        height: 65,
-        hasChimney: true,
-        hasShutters: true,
-        hasBalcony: true,
-        windows: 3
-    },
-    { 
-        type: 'house3', 
-        name: '🏘️ Особняк',
-        baseColor: '#d9b382', 
-        roofColor: '#b34b4b', 
-        doorColor: '#8b5a2b', 
-        windowColor: '#fff2cc',
-        height: 80,
-        hasChimney: true,
-        hasColumns: true,
-        hasGarage: true,
-        windows: 4
-    },
-    { 
-        type: 'house4', 
-        name: '🏰 Замок',
-        baseColor: '#b0a57c', 
-        roofColor: '#6b5a3a', 
-        doorColor: '#5a3e24', 
-        windowColor: '#ffe68f',
-        height: 100,
-        hasTower: true,
-        hasFlag: true,
-        windows: 5
-    },
-
-    // Многоквартирные
-    { 
-        type: 'apt1', 
-        name: '🏢 Многоэтажка',
-        baseColor: '#b0bec5', 
-        accentColor: '#8a9aa8', 
-        windowColor: '#cfd8dc',
-        height: 120,
-        floors: 5,
-        hasBalconies: true,
-        windows: 4
-    },
-    { 
-        type: 'apt2', 
-        name: '🏬 Жилой комплекс',
-        baseColor: '#9e9e9e', 
-        accentColor: '#757575', 
-        windowColor: '#cfd8dc',
-        height: 140,
-        floors: 7,
-        hasBalconies: true,
-        windows: 5
-    },
-
-    // Магазины
-    { 
-        type: 'shop1', 
-        name: '🏪 Магазин',
-        baseColor: '#ffb74d', 
-        roofColor: '#ff9800', 
-        doorColor: '#8b5a2b',
-        windowColor: '#fff2cc',
-        height: 45,
-        hasSign: true,
-        hasAwning: true,
-        windows: 2
-    },
-    { 
-        type: 'shop2', 
-        name: '🏬 Супермаркет',
-        baseColor: '#ff8a65', 
-        roofColor: '#f57c00', 
-        doorColor: '#8b5a2b',
-        windowColor: '#fff2cc',
-        height: 55,
-        hasSign: true,
-        hasAwning: false,
-        windows: 3
-    },
-    { 
-        type: 'shop3', 
-        name: '🛍️ Торговый центр',
-        baseColor: '#7986cb', 
-        roofColor: '#3f51b5', 
-        doorColor: '#303f9f',
-        windowColor: '#fff2cc',
-        height: 90,
-        floors: 3,
-        windows: 6
-    },
-
-    // Офисы
-    { 
-        type: 'office1', 
-        name: '🏢 Офис',
-        baseColor: '#9e9e9e', 
-        accentColor: '#757575', 
-        windowColor: '#cfd8dc',
-        height: 85,
-        floors: 4,
-        hasLogo: true,
-        windows: 4
-    },
-    { 
-        type: 'office2', 
-        name: '🏛️ Бизнес-центр',
-        baseColor: '#607d8b', 
-        accentColor: '#455a64', 
-        windowColor: '#b0bec5',
-        height: 110,
-        floors: 6,
-        hasLogo: true,
-        windows: 5
-    },
-
-    // Рестораны и кафе
-    { 
-        type: 'cafe1', 
-        name: '☕ Кафе',
-        baseColor: '#ffcc80', 
-        roofColor: '#ffb74d', 
-        doorColor: '#8b5a2b',
-        windowColor: '#fff2cc',
-        height: 40,
-        hasTerrace: true,
-        hasSign: true,
-        windows: 2
-    },
-    { 
-        type: 'restaurant1', 
-        name: '🍽️ Ресторан',
-        baseColor: '#ef9a9a', 
-        roofColor: '#e57373', 
-        doorColor: '#c62828',
-        windowColor: '#fff2cc',
-        height: 50,
-        hasTerrace: true,
-        hasSign: true,
-        windows: 3
-    },
-
-    // Промышленность
-    { 
-        type: 'factory1', 
-        name: '🏭 Завод',
-        baseColor: '#b0bec5', 
-        accentColor: '#8a9aa8', 
-        doorColor: '#5d4037',
-        height: 70,
-        chimney: true,
-        smoke: true,
-        windows: 3
-    },
-    { 
-        type: 'factory2', 
-        name: '⚡ Электростанция',
-        baseColor: '#b0a57c', 
-        accentColor: '#8b7a5a', 
-        doorColor: '#5a3e24',
-        height: 100,
-        chimneys: 2,
-        smoke: true,
-        windows: 2
-    },
-    { 
-        type: 'factory3', 
-        name: '📦 Склад',
-        baseColor: '#8d6e63', 
-        accentColor: '#6d4c41', 
-        doorColor: '#4e342e',
-        height: 55,
-        doors: 2,
-        windows: 1
-    },
-
-    // Социальные
-    { 
-        type: 'hospital1', 
-        name: '🏥 Больница',
-        baseColor: '#ef9a9a', 
-        accentColor: '#e57373', 
-        doorColor: '#c62828',
-        height: 75,
-        hasCross: true,
-        windows: 4
-    },
-    { 
-        type: 'school1', 
-        name: '📚 Школа',
-        baseColor: '#ff8a80', 
-        accentColor: '#f06292', 
-        doorColor: '#ad1457',
-        height: 65,
-        hasBell: true,
-        windows: 5
-    },
-    { 
-        type: 'university1', 
-        name: '🎓 Университет',
-        baseColor: '#c5e1a5', 
-        accentColor: '#9ccc65', 
-        doorColor: '#33691e',
-        height: 90,
-        hasColumns: true,
-        windows: 6
-    },
-
-    // Культура
-    { 
-        type: 'church1', 
-        name: '⛪ Церковь',
-        baseColor: '#f5f5f5', 
-        roofColor: '#b71c1c', 
-        doorColor: '#8b5a2b',
-        height: 120,
-        hasSpire: true,
-        hasCross: true,
-        windows: 4
-    },
-    { 
-        type: 'theater1', 
-        name: '🎭 Театр',
-        baseColor: '#ffe082', 
-        accentColor: '#ffd54f', 
-        doorColor: '#ff8f00',
-        height: 80,
-        hasColumns: true,
-        hasStatue: true,
-        windows: 4
-    },
-    { 
-        type: 'museum1', 
-        name: '🏛️ Музей',
-        baseColor: '#cfd8dc', 
-        accentColor: '#b0bec5', 
-        doorColor: '#37474f',
-        height: 70,
-        hasColumns: true,
-        windows: 5
-    },
-
-    // Спорт
-    { 
-        type: 'stadium1', 
-        name: '🏟️ Стадион',
-        baseColor: '#81c784', 
-        accentColor: '#4caf50', 
-        doorColor: '#1b5e20',
-        height: 60,
-        hasField: true,
-        seats: true,
-        windows: 8
-    },
-    { 
-        type: 'pool1', 
-        name: '🏊 Бассейн',
-        baseColor: '#4fc3f7', 
-        accentColor: '#039be5', 
-        doorColor: '#01579b',
-        height: 30,
-        hasWater: true,
-        windows: 3
-    },
-
-    // Транспорт
-    { 
-        type: 'station1', 
-        name: '🚉 Вокзал',
-        baseColor: '#b0bec5', 
-        accentColor: '#8a9aa8', 
-        doorColor: '#37474f',
-        height: 60,
-        hasClock: true,
-        windows: 5
-    },
-    { 
-        type: 'airport1', 
-        name: '✈️ Аэропорт',
-        baseColor: '#cfd8dc', 
-        accentColor: '#b0bec5', 
-        doorColor: '#263238',
-        height: 50,
-        hasTower: true,
-        windows: 8
-    },
-
-    // Парки
-    { 
-        type: 'park1', 
-        name: '🌳 Парк',
-        baseColor: '#81c784', 
-        treeColor: '#2e7d32',
-        height: 20,
-        trees: 4,
-        hasFountain: true,
-        hasBench: true
-    },
-    { 
-        type: 'park2', 
-        name: '🌲 Лесопарк',
-        baseColor: '#66bb6a', 
-        treeColor: '#1b5e20',
-        height: 25,
-        trees: 6,
-        hasFountain: false,
-        hasBench: true
-    },
-
-    // Дороги
-    { 
-        type: 'road1', 
-        name: '🛣️ Дорога',
-        baseColor: '#b0bec5', 
-        lineColor: '#f5f5f5',
-        height: 5,
-        hasMarkup: true,
-        hasLights: true
-    }
+const cats=[
+{id:'res',n:'Жилые',e:'🏠',p:1000},
+{id:'com',n:'Торг',e:'🏪',p:2000},
+{id:'ind',n:'Заводы',e:'🏭',p:3000},
+{id:'fun',n:'Развлеч',e:'🎡',p:4000},
+{id:'gov',n:'Гос',e:'🏛️',p:6000},
 ];
 
-// ==================== ФУНКЦИИ ДЛЯ РИСОВАНИЯ 3D ====================
-function drawBase(x, y, color, heightOffset = 0) {
-    ctx.fillStyle = color;
-    ctx.shadowColor = '#2b4d2b';
-    ctx.shadowBlur = 20 * cam.z;
-    ctx.shadowOffsetY = 5 * cam.z;
-    ctx.beginPath();
-    ctx.moveTo(x, y - 5 * cam.z - heightOffset);
-    ctx.lineTo(x + CELL/2 * cam.z, y + CELL/4 * cam.z - 5 * cam.z - heightOffset);
-    ctx.lineTo(x, y + CELL/2 * cam.z - 5 * cam.z - heightOffset);
-    ctx.lineTo(x - CELL/2 * cam.z, y + CELL/4 * cam.z - 5 * cam.z - heightOffset);
-    ctx.closePath();
-    ctx.fill();
-}
+const buildings={};
+let id=0;
+cats.forEach((c,ci)=>{
+for(let i=0;i<1024;i++){
+const price=c.p*(i+1)*(ci+1);
+buildings['b'+id]={
+id:'b'+id,
+cat:c.id,
+name:c.n+' '+(i+1),
+price,
+inc:Math.floor(price*0.12),
+pop:Math.floor(price/200),
+lvl:1,
+e:c.e,
+col:`hsl(${(ci*50+i)%360},70%,60%)`
+};
+id++;
+}});
+const all=Object.values(buildings);
 
-function drawHouse(x, y, style) {
-    const h = style.height * cam.z;
-    const w = CELL * 0.7 * cam.z;
-    
-    // Тень
-    ctx.shadowColor = '#2b4d2b';
-    ctx.shadowBlur = 25 * cam.z;
-    ctx.shadowOffsetY = 10 * cam.z;
-    
-    // Фундамент
-    drawBase(x, y, style.baseColor);
-    
-    // Стены (прямоугольник)
-    ctx.fillStyle = style.baseColor;
-    ctx.fillRect(x - w/2, y - h, w, h);
-    
-    // Детали стен (текстура)
-    ctx.fillStyle = '#8b5a2b';
-    ctx.globalAlpha = 0.3;
-    for (let i = 0; i < 3; i++) {
-        ctx.fillRect(x - w/2 + 5 * cam.z, y - h + i * 20 * cam.z, w - 10 * cam.z, 2 * cam.z);
-    }
-    ctx.globalAlpha = 1;
-    
-    // Крыша
-    ctx.fillStyle = style.roofColor;
-    ctx.beginPath();
-    ctx.moveTo(x - w/2 - 10 * cam.z, y - h);
-    ctx.lineTo(x + w/2 + 10 * cam.z, y - h);
-    ctx.lineTo(x, y - h - 30 * cam.z);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Труба
-    if (style.hasChimney) {
-        ctx.fillStyle = '#8b5a2b';
-        ctx.fillRect(x + w/4, y - h - 15 * cam.z, 10 * cam.z, 25 * cam.z);
-    }
-    
-    // Окна
-    ctx.fillStyle = style.windowColor;
-    ctx.shadowColor = '#ffd700';
-    ctx.shadowBlur = 10 * cam.z;
-    
-    if (style.windows === 2) {
-        ctx.fillRect(x - w/3, y - h/2, 12 * cam.z, 16 * cam.z);
-        ctx.fillRect(x + w/6, y - h/2, 12 * cam.z, 16 * cam.z);
-    } else if (style.windows === 3) {
-        ctx.fillRect(x - w/2.5, y - h/2, 12 * cam.z, 16 * cam.z);
-        ctx.fillRect(x - w/12, y - h/2, 12 * cam.z, 16 * cam.z);
-        ctx.fillRect(x + w/4, y - h/2, 12 * cam.z, 16 * cam.z);
-    } else if (style.windows === 4) {
-        ctx.fillRect(x - w/2.5, y - h/1.5, 12 * cam.z, 16 * cam.z);
-        ctx.fillRect(x - w/12, y - h/1.5, 12 * cam.z, 16 * cam.z);
-        ctx.fillRect(x - w/2.5, y - h/3, 12 * cam.z, 16 * cam.z);
-        ctx.fillRect(x - w/12, y - h/3, 12 * cam.z, 16 * cam.z);
-    }
-    
-    // Дверь
-    ctx.fillStyle = style.doorColor || '#8b5a2b';
-    ctx.shadowBlur = 0;
-    ctx.fillRect(x - 8 * cam.z, y - h/3, 16 * cam.z, 25 * cam.z);
-    
-    // Балкон
-    if (style.hasBalcony) {
-        ctx.fillStyle = '#a57248';
-        ctx.fillRect(x - w/3, y - h + 20 * cam.z, w/1.5, 6 * cam.z);
-    }
-    
-    ctx.shadowBlur = 0;
-}
-
-function drawOffice(x, y, style) {
-    const h = style.height * cam.z;
-    const w = CELL * 0.7 * cam.z;
-    
-    drawBase(x, y, style.baseColor);
-    
-    ctx.fillStyle = style.accentColor;
-    ctx.fillRect(x - w/2, y - h, w, h);
-    
-    // Окна
-    ctx.fillStyle = '#cfd8dc';
-    for (let f = 0; f < style.floors; f++) {
-        for (let i = 0; i < style.windows; i++) {
-            ctx.fillRect(
-                x - w/2 + 15 * cam.z + i * 15 * cam.z,
-                y - h + 15 * cam.z + f * 20 * cam.z,
-                10 * cam.z,
-                12 * cam.z
-            );
-        }
-    }
-    
-    // Логотип
-    if (style.hasLogo) {
-        ctx.fillStyle = '#ffb74d';
-        ctx.beginPath();
-        ctx.arc(x, y - h - 5 * cam.z, 8 * cam.z, 0, Math.PI*2);
-        ctx.fill();
-    }
-}
-
-function drawFactory(x, y, style) {
-    const h = style.height * cam.z;
-    const w = CELL * 0.8 * cam.z;
-    
-    drawBase(x, y, style.baseColor);
-    
-    ctx.fillStyle = style.accentColor;
-    ctx.fillRect(x - w/2, y - h, w, h);
-    
-    // Трубы
-    if (style.chimney) {
-        ctx.fillStyle = '#6b5a3a';
-        ctx.fillRect(x - w/4, y - h - 20 * cam.z, 8 * cam.z, 25 * cam.z);
-        if (style.smoke) {
-            ctx.fillStyle = '#ffffff60';
-            ctx.beginPath();
-            ctx.arc(x - w/4 + 4 * cam.z, y - h - 35 * cam.z, 10 * cam.z, 0, Math.PI*2);
-            ctx.fill();
-        }
-    }
-    
-    // Окна
-    ctx.fillStyle = '#ffb74d';
-    for (let i = 0; i < style.windows; i++) {
-        ctx.fillRect(x - w/2 + 20 * cam.z + i * 20 * cam.z, y - h/2, 10 * cam.z, 12 * cam.z);
-    }
-}
-
-function drawPark(x, y, style) {
-    drawBase(x, y, style.baseColor);
-    
-    // Деревья
-    for (let i = 0; i < style.trees; i++) {
-        const tx = x - 30 * cam.z + i * 20 * cam.z;
-        const ty = y - 30 * cam.z;
-        
-        // Ствол
-        ctx.fillStyle = '#8b5a2b';
-        ctx.fillRect(tx - 3 * cam.z, ty, 6 * cam.z, 20 * cam.z);
-        
-        // Крона
-        ctx.fillStyle = style.treeColor;
-        ctx.beginPath();
-        ctx.arc(tx, ty - 5 * cam.z, 10 * cam.z, 0, Math.PI*2);
-        ctx.fill();
-    }
-    
-    // Фонтан
-    if (style.hasFountain) {
-        ctx.fillStyle = '#b0e0e6';
-        ctx.beginPath();
-        ctx.arc(x, y - 25 * cam.z, 12 * cam.z, 0, Math.PI*2);
-        ctx.fill();
-    }
-}
-
-function drawRoad(x, y, style) {
-    drawBase(x, y, style.baseColor, 2 * cam.z);
-    
-    // Разметка
-    ctx.fillStyle = style.lineColor;
-    ctx.fillRect(x - 30 * cam.z, y - 10 * cam.z, 60 * cam.z, 4 * cam.z);
-    ctx.fillRect(x - 10 * cam.z, y - 25 * cam.z, 4 * cam.z, 20 * cam.z);
-    
-    // Фонари
-    if (style.hasLights) {
-        ctx.fillStyle = '#8a9aa8';
-        ctx.fillRect(x - 25 * cam.z, y - 40 * cam.z, 4 * cam.z, 20 * cam.z);
-        ctx.fillRect(x + 21 * cam.z, y - 40 * cam.z, 4 * cam.z, 20 * cam.z);
-        
-        ctx.fillStyle = '#ffd966';
-        ctx.beginPath();
-        ctx.arc(x - 23 * cam.z, y - 45 * cam.z, 4 * cam.z, 0, Math.PI*2);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x + 23 * cam.z, y - 45 * cam.z, 4 * cam.z, 0, Math.PI*2);
-        ctx.fill();
-    }
-}
-
-// ==================== КАТАЛОГ ЗДАНИЙ ====================
-const buildings = {};
-let buildingId = 0;
-
-buildingStyles.forEach((style, index) => {
-    for (let i = 0; i < 320; i++) {
-        const price = 1000 + (index * 800) + (i * 40);
-        const income = Math.floor(price * 0.08) + 5;
-        const population = style.type.includes('house') ? 3 + Math.floor(i/10) : 
-                          style.type.includes('apt') ? 10 + Math.floor(i/5) : 1;
-        
-        buildings['b'+buildingId] = {
-            id: 'b'+buildingId,
-            name: style.name + ' ' + (i+1),
-            price: price,
-            income: income,
-            population: population,
-            style: style,
-            category: Math.floor(index / 4)
-        };
-        buildingId++;
-    }
-});
-
-console.log('Создано зданий:', buildingId);
-
-// ==================== ФУНКЦИИ КАМЕРЫ ====================
 function resize(){
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    draw();
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+draw();
 }
-window.addEventListener('resize', resize);
+addEventListener('resize',resize);
 resize();
 
 function iso(r,c){
-    return {
-        x: (c - r) * CELL/2 * cam.z + cam.x + canvas.width/2,
-        y: (c + r) * CELL/4 * cam.z + cam.y + canvas.height/3
-    };
+return{
+x:(c-r)*CELL/2*cam.z+cam.x+canvas.width/2,
+y:(c+r)*CELL/4*cam.z+cam.y+canvas.height/3
+};
 }
 
 function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    
-    // Небо
-    ctx.fillStyle = '#0b4b72';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    
-    // Рисуем все клетки
-    for(let r=0; r<GRID; r++){
-        for(let c=0; c<GRID; c++){
-            const p = iso(r,c);
-            
-            // Земля
-            ctx.fillStyle = '#7cb57c';
-            ctx.shadowColor = '#2b4d2b';
-            ctx.shadowBlur = 15 * cam.z;
-            ctx.shadowOffsetY = 5 * cam.z;
-            
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p.x + CELL/2*cam.z, p.y + CELL/4*cam.z);
-            ctx.lineTo(p.x, p.y + CELL/2*cam.z);
-            ctx.lineTo(p.x - CELL/2*cam.z, p.y + CELL/4*cam.z);
-            ctx.closePath();
-            ctx.fill();
-            
-            // Здание
-            const id = game.grid[r][c];
-            if(id){
-                const b = buildings[id];
-                if(b){
-                    ctx.shadowBlur = 20 * cam.z;
-                    
-                    // Выбор функции отрисовки по типу
-                    if(b.style.type.includes('house') || b.style.type.includes('cottage') || b.style.type.includes('mansion')) {
-                        drawHouse(p.x, p.y, b.style);
-                    } else if(b.style.type.includes('office') || b.style.type.includes('apt')) {
-                        drawOffice(p.x, p.y, b.style);
-                    } else if(b.style.type.includes('factory')) {
-                        drawFactory(p.x, p.y, b.style);
-                    } else if(b.style.type.includes('park')) {
-                        drawPark(p.x, p.y, b.style);
-                    } else if(b.style.type.includes('road')) {
-                        drawRoad(p.x, p.y, b.style);
-                    } else {
-                        drawHouse(p.x, p.y, b.style);
-                    }
-                }
-            }
-        }
-    }
-    
-    // Подсветка выбранной клетки
-    if(selRow != -1 && selCol != -1){
-        const p = iso(selRow, selCol);
-        ctx.shadowColor = '#ffd700';
-        ctx.shadowBlur = 30 * cam.z;
-        ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 5 * cam.z;
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y - 10*cam.z);
-        ctx.lineTo(p.x + CELL/2*cam.z, p.y + CELL/4*cam.z - 10*cam.z);
-        ctx.lineTo(p.x, p.y + CELL/2*cam.z - 10*cam.z);
-        ctx.lineTo(p.x - CELL/2*cam.z, p.y + CELL/4*cam.z - 10*cam.z);
-        ctx.closePath();
-        ctx.stroke();
-    }
-    
-    ctx.shadowBlur = 0;
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle='#7cb57c';
+for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
+const p=iso(r,c);
+ctx.beginPath();
+ctx.moveTo(p.x,p.y);
+ctx.lineTo(p.x+CELL/2*cam.z,p.y+CELL/4*cam.z);
+ctx.lineTo(p.x,p.y+CELL/2*cam.z);
+ctx.lineTo(p.x-CELL/2*cam.z,p.y+CELL/4*cam.z);
+ctx.closePath();
+ctx.fill();
+
+const id=game.grid[r][c];
+if(id){
+const b=buildings[id];
+ctx.fillStyle=b.col;
+ctx.fill();
+ctx.fillStyle='#fff';
+ctx.textAlign='center';
+ctx.fillText(b.e,p.x,p.y);
+}
+}
 }
 
-// ==================== УПРАВЛЕНИЕ ====================
-canvas.onmousedown = e => { drag = true; lx = e.clientX; ly = e.clientY; };
-canvas.onmouseup = _ => drag = false;
-canvas.onmousemove = e => {
-    if(!drag) return;
-    cam.x += e.clientX - lx;
-    cam.y += e.clientY - ly;
-    lx = e.clientX; ly = e.clientY;
-    draw();
-};
-canvas.onwheel = e => {
-    cam.z = Math.min(3, Math.max(.4, cam.z + (e.deltaY < 0 ? .1 : -.1)));
-    draw();
-};
+canvas.onmousedown=e=>{drag=true;lx=e.clientX;ly=e.clientY}
+canvas.onmouseup=_=>drag=false;
+canvas.onmousemove=e=>{
+if(!drag)return;
+cam.x+=e.clientX-lx;
+cam.y+=e.clientY-ly;
+lx=e.clientX;ly=e.clientY;
+draw();
+}
+canvas.onwheel=e=>{
+cam.z=Math.min(3,Math.max(.4,cam.z+(e.deltaY<0?.1:-.1)));
+draw();
+}
 
-canvas.onclick = e => {
-    const rect = canvas.getBoundingClientRect();
-    let mx = e.clientX - rect.left, my = e.clientY - rect.top;
-    let best = null, br = -1, bc = -1;
-    
-    for(let r=0; r<GRID; r++){
-        for(let c=0; c<GRID; c++){
-            const p = iso(r,c);
-            const d = Math.hypot(mx - p.x, my - p.y);
-            if(d < 40 && (!best || d < best)){ best = d; br = r; bc = c; }
-        }
-    }
-    
-    if(br != -1){
-        selRow = br; selCol = bc;
-        if(selected) build(br,bc);
-    }
-    draw();
-};
+canvas.onclick=e=>{
+const rect=canvas.getBoundingClientRect();
+let mx=e.clientX-rect.left,my=e.clientY-rect.top;
+let best=null,br=-1,bc=-1;
+for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
+const p=iso(r,c);
+const d=Math.hypot(mx-p.x,my-p.y);
+if(d<40 && (!best||d<best)){best=d;br=r;bc=c;}
+}
+if(br!=-1){
+selRow=br;selCol=bc;
+if(selected)build(br,bc);
+}
+}
 
-let selected = null;
+let selected=null;
 
 function build(r,c){
-    const b = buildings[selected];
-    if(!b) return;
-    if(game.money < b.price || game.grid[r][c]) return;
-    
-    game.money -= b.price;
-    game.grid[r][c] = b.id;
-    game.pop += b.population;
-    game.cnt++;
-    update();
-    draw();
-    info.innerText = '✅ Построено: ' + b.name;
+const b=buildings[selected];
+if(game.money<b.price||game.grid[r][c])return;
+game.money-=b.price;
+game.grid[r][c]=b.id;
+game.pop+=b.pop;
+game.cnt++;
+update();
+draw();
 }
 
 function collect(){
-    let t = 0;
-    for(let r=0; r<GRID; r++) for(let c=0; c<GRID; c++){
-        const id = game.grid[r][c];
-        if(id && buildings[id]) t += buildings[id].income;
-    }
-    game.money += t;
-    update();
-    info.innerText = '💰 Собрано: ' + t.toLocaleString();
+let t=0;
+for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
+const id=game.grid[r][c];
+if(id)t+=buildings[id].inc;
+}
+game.money+=t;
+update();
 }
 
-function weather(){ game.weather = (game.weather + 1) % 3; draw(); }
-function timeDay(){ game.time = (game.time + .3) % 1; draw(); }
-function cancel(){ selected = null; info.innerText = 'Выбор сброшен'; }
-function resetGame(){ location.reload(); }
+function weather(){game.weather=(game.weather+1)%3;draw();}
+function timeDay(){game.time=(game.time+.3)%1;draw();}
+function cancel(){selected=null;info.innerText='Выбор сброшен'}
+function resetGame(){location.reload()}
 
 function update(){
-    money.innerText = game.money.toLocaleString();
-    pop.innerText = game.pop.toLocaleString();
-    cnt.innerText = game.cnt + '/3600';
-    let inc = 0;
-    for(let r=0; r<GRID; r++) for(let c=0; c<GRID; c++){
-        const id = game.grid[r][c];
-        if(id && buildings[id]) inc += buildings[id].income;
-    }
-    incSpan.innerText = inc.toLocaleString();
+money.innerText=game.money.toLocaleString();
+pop.innerText=game.pop.toLocaleString();
+cnt.innerText=game.cnt+'/3600';
+let inc=0;
+for(let r=0;r<GRID;r++)for(let c=0;c<GRID;c++){
+const id=game.grid[r][c];
+if(id)inc+=buildings[id].inc;
+}
+incSpan.innerText=inc.toLocaleString();
 }
 
-// ==================== ИНТЕРФЕЙС ====================
-const catsDiv = document.getElementById('cats');
-const list = document.getElementById('list');
-const info = document.getElementById('info');
-const money = document.getElementById('money');
-const pop = document.getElementById('pop');
-const incSpan = document.getElementById('inc');
-const cnt = document.getElementById('cnt');
+const catsDiv=document.getElementById('cats');
+const list=document.getElementById('list');
+const info=document.getElementById('info');
+const money=document.getElementById('money');
+const pop=document.getElementById('pop');
+const incSpan=document.getElementById('inc');
+const cnt=document.getElementById('cnt');
 
-// Кнопки категорий
-for(let i = 0; i < 8; i++){
-    const btn = document.createElement('button');
-    btn.textContent = '🏗️ Кат ' + (i+1);
-    btn.onclick = () => {
-        list.innerHTML = '';
-        Object.values(buildings).filter(b => b.category === i).slice(0,200).forEach(b => {
-            const d = document.createElement('div');
-            d.className = 'item';
-            d.innerText = b.name + ' 💰' + b.price;
-            d.onclick = () => {
-                document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
-                d.classList.add('selected');
-                selected = b.id;
-                info.innerText = 'Выбрано: ' + b.name;
-            };
-            list.appendChild(d);
-        });
-    };
-    catsDiv.appendChild(btn);
-}
-
-// Показываем все здания по умолчанию
-Object.values(buildings).slice(0,200).forEach(b => {
-    const d = document.createElement('div');
-    d.className = 'item';
-    d.innerText = b.name + ' 💰' + b.price;
-    d.onclick = () => {
-        document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
-        d.classList.add('selected');
-        selected = b.id;
-        info.innerText = 'Выбрано: ' + b.name;
-    };
-    list.appendChild(d);
+cats.forEach(c=>{
+const btn=document.createElement('button');
+btn.textContent=c.e+' '+c.n;
+btn.onclick=_=>{
+list.innerHTML='';
+all.filter(b=>b.cat===c.id).slice(0,200).forEach(b=>{
+const d=document.createElement('div');
+d.className='item';
+d.innerText=b.e+' '+b.name+' 💰'+b.price;
+d.onclick=_=>{
+document.querySelectorAll('.item').forEach(i=>i.classList.remove('selected'));
+d.classList.add('selected');
+selected=b.id;
+info.innerText='Выбрано: '+b.name;
+};
+list.appendChild(d);
+});
+};
+catsDiv.appendChild(btn);
 });
 
 draw();
