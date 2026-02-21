@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MEGA CITY 5120 - 3D PREMIUM</title>
+    <title>MEGA CITY 5120 - REAL 3D</title>
     <style>
         * {
             margin: 0;
@@ -14,22 +14,20 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0a1928 0%, #1a2f3f 100%);
             overflow: hidden;
+            background: #000;
         }
 
-        .game {
+        #canvas-container {
             width: 100vw;
             height: 100vh;
-            position: relative;
+            position: fixed;
+            top: 0;
+            left: 0;
         }
 
         canvas {
-            width: 100%;
-            height: 100%;
             display: block;
-            touch-action: none;
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
         }
 
         .ui {
@@ -39,32 +37,27 @@
             transform: translateX(-50%);
             display: flex;
             gap: 20px;
-            background: rgba(10, 20, 30, 0.9);
-            backdrop-filter: blur(20px);
-            padding: 20px 40px;
-            border-radius: 70px;
+            background: rgba(10, 20, 30, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px 35px;
+            border-radius: 60px;
             color: #fff;
-            font-size: 22px;
-            z-index: 30;
-            border: 1px solid rgba(255, 215, 0, 0.5);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+            font-size: 20px;
+            z-index: 100;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            pointer-events: none;
         }
 
         .ui div {
-            background: rgba(0, 0, 0, 0.4);
-            padding: 12px 28px;
-            border-radius: 50px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 22px;
+            border-radius: 40px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .ui div:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: translateY(-3px);
-            border-color: #ffd700;
+            gap: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            pointer-events: auto;
         }
 
         .menu-left {
@@ -72,113 +65,97 @@
             top: 50%;
             left: 30px;
             transform: translateY(-50%);
-            width: 420px;
-            height: 85vh;
-            background: rgba(10, 20, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
-            padding: 30px;
+            width: 380px;
+            height: 80vh;
+            background: rgba(10, 20, 30, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            z-index: 20;
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.9);
-            animation: slideInLeft 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateY(-50%) translateX(-100px); }
-            to { opacity: 1; transform: translateY(-50%) translateX(0); }
+            gap: 15px;
+            z-index: 100;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            pointer-events: auto;
         }
 
         .menu-left h2 {
             color: #ffd700;
             text-align: center;
-            font-size: 32px;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-            letter-spacing: 4px;
-            margin-bottom: 10px;
+            font-size: 28px;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+            letter-spacing: 2px;
         }
 
         .categories {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 8px;
             justify-content: center;
         }
 
         .categories button {
             flex: 1;
             min-width: 100px;
-            padding: 15px;
-            border-radius: 40px;
+            padding: 12px;
+            border-radius: 30px;
             border: none;
             cursor: pointer;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            background: rgba(255,255,255,0.1);
             color: #fff;
             font-weight: bold;
-            font-size: 18px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
 
         .categories button:hover {
-            background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0.2) 100%);
+            background: rgba(255,215,0,0.2);
             border-color: #ffd700;
-            transform: scale(1.08);
-            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+            transform: scale(1.03);
         }
 
         .list {
             flex: 1;
             overflow-y: auto;
-            padding-right: 15px;
+            padding-right: 5px;
         }
 
         .list::-webkit-scrollbar {
-            width: 10px;
+            width: 6px;
         }
 
         .list::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.1);
             border-radius: 10px;
         }
 
         .list::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            background: #ffd700;
             border-radius: 10px;
-            border: 2px solid rgba(0,0,0,0.3);
         }
 
         .item {
-            background: rgba(255, 255, 255, 0.08);
-            margin-bottom: 15px;
-            padding: 18px;
-            border-radius: 35px;
+            background: rgba(255,255,255,0.08);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 25px;
             color: #fff;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            border: 1px solid transparent;
         }
 
         .item:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: translateX(10px) scale(1.02);
-            border-color: rgba(255, 215, 0, 0.6);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            background: rgba(255,215,0,0.15);
+            transform: translateX(5px);
+            border-color: rgba(255,215,0,0.5);
         }
 
         .item.selected {
             border-color: #ffd700;
-            background: rgba(255, 215, 0, 0.25);
-            box-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
-            transform: scale(1.03);
+            background: rgba(255,215,0,0.2);
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
         }
 
         .menu-right {
@@ -186,43 +163,36 @@
             top: 50%;
             right: 30px;
             transform: translateY(-50%);
-            background: rgba(10, 20, 30, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 50px;
-            padding: 30px;
+            background: rgba(10, 20, 30, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 40px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            z-index: 20;
-            border: 1px solid rgba(255, 215, 0, 0.4);
-            animation: slideInRight 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateY(-50%) translateX(100px); }
-            to { opacity: 1; transform: translateY(-50%) translateX(0); }
+            gap: 15px;
+            z-index: 100;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            pointer-events: auto;
         }
 
         .menu-right button {
-            padding: 18px 32px;
-            font-size: 20px;
-            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 40px;
             border: none;
             cursor: pointer;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+            background: rgba(255,255,255,0.1);
             color: #fff;
             font-weight: bold;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            min-width: 200px;
-            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            border: 1px solid transparent;
+            min-width: 160px;
         }
 
         .menu-right button:hover {
-            background: linear-gradient(135deg, rgba(255,215,0,0.3) 0%, rgba(255,215,0,0.2) 100%);
+            background: rgba(255,215,0,0.2);
             border-color: #ffd700;
-            transform: scale(1.08) translateY(-3px);
-            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.4);
+            transform: scale(1.03);
         }
 
         .info {
@@ -230,69 +200,30 @@
             top: 30px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(10, 20, 30, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 20px 60px;
-            border-radius: 70px;
-            color: #ffd700;
-            font-size: 22px;
-            font-weight: bold;
-            z-index: 30;
-            border: 1px solid rgba(255, 215, 0, 0.5);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
-            letter-spacing: 2px;
-            animation: fadeInDown 0.6s ease;
-        }
-
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
-            to { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-
-        .time-indicator {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            background: rgba(10, 20, 30, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 15px 30px;
+            background: rgba(10, 20, 30, 0.9);
+            backdrop-filter: blur(15px);
+            padding: 15px 40px;
             border-radius: 50px;
-            color: #fff;
-            z-index: 30;
-            border: 1px solid rgba(255, 215, 0, 0.5);
+            color: #ffd700;
             font-size: 20px;
-            animation: fadeInRight 0.6s ease;
-        }
-
-        @keyframes fadeInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        .building-preview {
-            width: 60px;
-            height: 60px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
+            font-weight: bold;
+            z-index: 100;
+            border: 1px solid rgba(255,215,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
-<div class="game">
-    <canvas id="c"></canvas>
+    <div id="canvas-container"></div>
     
-    <div class="info" id="info">🏗️ MEGA CITY 5120 - 3D PREMIUM</div>
-    <div class="time-indicator" id="timeIndicator">☀️ ПОЛДЕНЬ</div>
+    <div class="info" id="info">🏗️ REAL 3D CITY BUILDER</div>
     
     <div class="ui">
-        <div><span style="color:#ffd700">💰</span> <span id="money">50 000 000</span></div>
-        <div><span style="color:#4CAF50">👥</span> <span id="pop">0</span></div>
-        <div><span style="color:#FF9800">⚡</span> <span id="inc">0</span></div>
-        <div><span style="color:#2196F3">🏗️</span> <span id="cnt">0/1600</span></div>
+        <div>💰 <span id="money">50,000,000</span></div>
+        <div>👥 <span id="pop">0</span></div>
+        <div>⚡ <span id="inc">0</span></div>
+        <div>🏗️ <span id="cnt">0/1600</span></div>
     </div>
     
     <div class="menu-left">
@@ -302,724 +233,560 @@
     </div>
     
     <div class="menu-right">
-        <button onclick="collect()"><span style="color:#ffd700">💰</span> СБОР ДОХОДА</button>
-        <button onclick="weather()"><span style="color:#87CEEB">🌦️</span> ПОГОДА</button>
-        <button onclick="timeDay()"><span style="color:#ffd700">⏰</span> ВРЕМЯ</button>
-        <button onclick="cancel()"><span style="color:#ff6b6b">❌</span> ОТМЕНА</button>
-        <button onclick="resetGame()"><span style="color:#4CAF50">🔄</span> НОВЫЙ ГОРОД</button>
+        <button onclick="collect()">💰 СБОР</button>
+        <button onclick="weather()">🌦️ ПОГОДА</button>
+        <button onclick="timeDay()">⏰ ВРЕМЯ</button>
+        <button onclick="cancel()">❌ ОТМЕНА</button>
+        <button onclick="resetGame()">🔄 НОВЫЙ ГОРОД</button>
     </div>
-</div>
 
-<script>
-const tg = window.Telegram?.WebApp;
-tg?.expand();
-tg?.ready();
-
-const GRID = 40;
-const CELL = 100;
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-
-// Плавная камера с физикой премиум-класса
-class Camera {
-    constructor() {
-        this.x = 0;
-        this.y = 0;
-        this.z = 1;
-        this.targetX = 0;
-        this.targetY = 0;
-        this.targetZ = 1;
-        this.velocityX = 0;
-        this.velocityY = 0;
-        this.damping = 0.92;
-        this.elasticity = 0.1;
-        this.minZoom = 0.7;
-        this.maxZoom = 2.2;
-    }
-    
-    update() {
-        // Супер плавное движение с физикой
-        this.velocityX += (this.targetX - this.x) * this.elasticity;
-        this.velocityY += (this.targetY - this.y) * this.elasticity;
-        
-        this.velocityX *= this.damping;
-        this.velocityY *= this.damping;
-        
-        this.x += this.velocityX;
-        this.y += this.velocityY;
-        
-        // Плавный зум
-        const zoomDiff = this.targetZ - this.z;
-        this.z += zoomDiff * 0.1;
-    }
-    
-    move(dx, dy) {
-        this.targetX += dx;
-        this.targetY += dy;
-        this.velocityX += dx * 0.5;
-        this.velocityY += dy * 0.5;
-    }
-    
-    zoom(delta) {
-        this.targetZ = Math.min(this.maxZoom, Math.max(this.minZoom, this.targetZ + delta));
-    }
-}
-
-const camera = new Camera();
-
-let drag = false;
-let lx = 0, ly = 0;
-let lastMouseX = 0, lastMouseY = 0;
-
-let hoverRow = -1, hoverCol = -1;
-let selected = null;
-
-let particles = [];
-
-// Класс для 3D-моделей зданий
-class Building3D {
-    constructor(type, level, color, accent) {
-        this.type = type;
-        this.level = level;
-        this.color = color;
-        this.accent = accent;
-        this.details = [];
-        this.generateDetails();
-    }
-    
-    generateDetails() {
-        const level = this.level;
-        
-        // Генерируем архитектурные детали в зависимости от типа и уровня
-        switch(this.type) {
-            case 'res': // Жилые комплексы
-                this.details = {
-                    balconies: Math.floor(level * 1.5),
-                    windows: 6 + level * 2,
-                    floors: 3 + level,
-                    roofStyle: 'flat',
-                    hasChimney: level > 2,
-                    hasAntenna: level > 3
-                };
-                break;
-                
-            case 'com': // Торговые центры
-                this.details = {
-                    entrances: 2 + Math.floor(level / 2),
-                    windows: 8 + level * 3,
-                    signs: level,
-                    roofStyle: 'curved',
-                    hasLights: true,
-                    hasBillboard: level > 2
-                };
-                break;
-                
-            case 'ind': // Промышленные
-                this.details = {
-                    chimneys: 1 + Math.floor(level / 2),
-                    pipes: level,
-                    windows: 4 + level,
-                    roofStyle: 'pointed',
-                    hasSmoke: true,
-                    hasTanks: level > 2
-                };
-                break;
-                
-            case 'fun': // Развлекательные
-                this.details = {
-                    towers: 2 + Math.floor(level / 2),
-                    lights: 10 + level * 2,
-                    flags: level,
-                    roofStyle: 'dome',
-                    hasSpires: true,
-                    hasNeon: true
-                };
-                break;
-                
-            case 'gov': // Государственные
-                this.details = {
-                    columns: 4 + Math.floor(level / 2),
-                    dome: level > 1,
-                    windows: 10 + level * 2,
-                    roofStyle: 'grand',
-                    hasStatues: level > 2,
-                    hasClock: level > 3
-                };
-                break;
-        }
-    }
-}
-
-// Хранилище 3D-моделей
-const buildingModels = {};
-
-let game = {
-    money: 50000000,
-    pop: 0,
-    cnt: 0,
-    weather: 0,
-    time: 0.6,
-    grid: []
-};
-
-for (let r = 0; r < GRID; r++) {
-    game.grid[r] = [];
-    for (let c = 0; c < GRID; c++) {
-        game.grid[r][c] = null;
-    }
-}
-
-// Категории с уникальными цветами
-const cats = [
-    { id: 'res', n: 'ЖИЛЫЕ', e: '🏘️', color: '#4CAF50', accent: '#81C784', dark: '#2E7D32' },
-    { id: 'com', n: 'ТОРГОВЫЕ', e: '🏬', color: '#FF9800', accent: '#FFB74D', dark: '#F57C00' },
-    { id: 'ind', n: 'ПРОМЫШЛЕННЫЕ', e: '🏭', color: '#F44336', accent: '#E57373', dark: '#C62828' },
-    { id: 'fun', n: 'РАЗВЛЕЧЕНИЯ', e: '🎪', color: '#9C27B0', accent: '#BA68C8', dark: '#6A1B9A' },
-    { id: 'gov', n: 'ГОСУДАРСТВЕННЫЕ', e: '🏛️', color: '#2196F3', accent: '#64B5F6', dark: '#1565C0' }
-];
-
-// Генерация зданий с 3D-моделями
-const buildings = {};
-let id = 0;
-cats.forEach((c, ci) => {
-    for (let i = 0; i < 15; i++) {
-        const level = i + 1;
-        const basePrice = c.p * level * 1000;
-        
-        const buildingId = 'b' + id;
-        
-        // Создаем 3D-модель для здания
-        buildingModels[buildingId] = new Building3D(c.id, level, c.color, c.accent);
-        
-        buildings[buildingId] = {
-            id: buildingId,
-            cat: c.id,
-            name: `${c.n} ${getRomanNumeral(level)}`,
-            price: Math.floor(basePrice),
-            inc: Math.floor(basePrice * 0.12),
-            pop: Math.floor(basePrice * 0.008),
-            level: level,
-            emoji: c.e,
-            color: c.color,
-            accent: c.accent,
-            dark: c.dark,
-            height: 40 + level * 12,
-            width: 45 + level * 6,
-            depth: 45 + level * 6
-        };
-        id++;
-    }
-});
-
-function getRomanNumeral(num) {
-    const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII', 'XIII', 'XIV', 'XV'];
-    return roman[num - 1] || num;
-}
-
-const all = Object.values(buildings);
-
-function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-}
-
-window.addEventListener('resize', resize);
-resize();
-
-function iso(r, c) {
-    return {
-        x: (c - r) * CELL / 2 * camera.z + camera.x + canvas.width / 2,
-        y: (c + r) * CELL / 4 * camera.z + camera.y + canvas.height / 3
-    };
-}
-
-// Отрисовка здания с высоким уровнем детализации
-function drawBuilding3D(r, c, building, model, isHover) {
-    const p = iso(r, c);
-    const h = building.height * camera.z;
-    const w = building.width * camera.z;
-    const d = building.depth * camera.z;
-    
-    const x1 = p.x - w/2;
-    const x2 = p.x + w/2;
-    const yBase = p.y;
-    const yTop = yBase - h;
-    
-    ctx.save();
-    
-    // Тени для объема
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.6)';
-    ctx.shadowBlur = 25 * camera.z;
-    ctx.shadowOffsetX = 8 * camera.z;
-    ctx.shadowOffsetY = 8 * camera.z;
-    
-    // ОСНОВНОЙ КОРПУС (фасад)
-    ctx.fillStyle = building.color;
-    ctx.beginPath();
-    ctx.moveTo(x1, yBase);
-    ctx.lineTo(x2, yBase);
-    ctx.lineTo(x2 - 20 * camera.z, yBase + 20 * camera.z);
-    ctx.lineTo(x1 - 20 * camera.z, yBase + 20 * camera.z);
-    ctx.closePath();
-    ctx.fill();
-    
-    // БОКОВАЯ СТЕНА (правая)
-    ctx.fillStyle = building.dark;
-    ctx.beginPath();
-    ctx.moveTo(x2, yBase);
-    ctx.lineTo(x2 + 20 * camera.z, yBase + 15 * camera.z);
-    ctx.lineTo(x2 + 20 * camera.z, yTop + 15 * camera.z);
-    ctx.lineTo(x2, yTop);
-    ctx.closePath();
-    ctx.fill();
-    
-    // БОКОВАЯ СТЕНА (левая)
-    ctx.fillStyle = adjustColor(building.dark, 10);
-    ctx.beginPath();
-    ctx.moveTo(x1, yBase);
-    ctx.lineTo(x1 - 20 * camera.z, yBase + 15 * camera.z);
-    ctx.lineTo(x1 - 20 * camera.z, yTop + 15 * camera.z);
-    ctx.lineTo(x1, yTop);
-    ctx.closePath();
-    ctx.fill();
-    
-    // КРЫША (основная)
-    ctx.fillStyle = building.accent;
-    ctx.shadowBlur = 30 * camera.z;
-    ctx.beginPath();
-    ctx.moveTo(x1 - 10 * camera.z, yTop + 5 * camera.z);
-    ctx.lineTo(x2 - 10 * camera.z, yTop + 5 * camera.z);
-    ctx.lineTo(x2 + 10 * camera.z, yTop - 20 * camera.z);
-    ctx.lineTo(x1 + 10 * camera.z, yTop - 20 * camera.z);
-    ctx.closePath();
-    ctx.fill();
-    
-    // АРХИТЕКТУРНЫЕ ДЕТАЛИ в зависимости от типа здания
-    ctx.shadowBlur = 15 * camera.z;
-    
-    // ОКНА (детализированные)
-    for (let floor = 0; floor < Math.min(4, building.level); floor++) {
-        for (let win = 0; win < 4; win++) {
-            const winX = x1 + 25 * camera.z + win * 20 * camera.z;
-            const winY = yBase - 30 * camera.z - floor * 25 * camera.z;
-            
-            // Рама окна
-            ctx.fillStyle = '#8B4513';
-            ctx.fillRect(winX - 3 * camera.z, winY - 8 * camera.z, 14 * camera.z, 20 * camera.z);
-            
-            // Стекло с отражением
-            ctx.fillStyle = `rgba(255, 255, 220, ${0.7 + Math.sin(game.time * Math.PI) * 0.2})`;
-            ctx.fillRect(winX, winY - 5 * camera.z, 8 * camera.z, 14 * camera.z);
-            
-            // Блик
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.fillRect(winX + 2 * camera.z, winY - 8 * camera.z, 2 * camera.z, 3 * camera.z);
-        }
-    }
-    
-    // ДВЕРИ (разные для каждого типа)
-    ctx.fillStyle = '#5D4037';
-    ctx.fillRect(x1 + w/2 - 8 * camera.z, yBase - 25 * camera.z, 16 * camera.z, 25 * camera.z);
-    
-    // Ручка
-    ctx.fillStyle = '#ffd700';
-    ctx.beginPath();
-    ctx.arc(x1 + w/2 + 5 * camera.z, yBase - 15 * camera.z, 2 * camera.z, 0, Math.PI * 2);
-    ctx.fill();
-    
-    // УНИКАЛЬНЫЕ ЭЛЕМЕНТЫ для каждого типа
-    switch(building.cat) {
-        case 'res': // Балконы
-            ctx.fillStyle = '#A1887F';
-            for (let i = 0; i < 3; i++) {
-                ctx.fillRect(x1 + 15 * camera.z + i * 25 * camera.z, yBase - 40 * camera.z, 15 * camera.z, 5 * camera.z);
+    <!-- Three.js библиотека -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.128.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.128.0/examples/jsm/"
             }
-            break;
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+        const tg = window.Telegram?.WebApp;
+        tg?.expand();
+        tg?.ready();
+
+        // Инициализация сцены Three.js
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x0a1a2a);
+        scene.fog = new THREE.Fog(0x0a1a2a, 100, 300);
+
+        // Камера
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(50, 50, 100);
+        camera.lookAt(0, 0, 0);
+
+        // Рендереры
+        const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
+
+        // CSS2D рендерер для эмодзи
+        const labelRenderer = new CSS2DRenderer();
+        labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        labelRenderer.domElement.style.position = 'absolute';
+        labelRenderer.domElement.style.top = '0px';
+        labelRenderer.domElement.style.left = '0px';
+        labelRenderer.domElement.style.pointerEvents = 'none';
+        container.appendChild(labelRenderer.domElement);
+
+        // Управление
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.screenSpacePanning = true;
+        controls.maxPolarAngle = Math.PI / 3;
+        controls.minDistance = 30;
+        controls.maxDistance = 200;
+        controls.enableZoom = true;
+        controls.rotateSpeed = 0.8;
+        controls.panSpeed = 0.8;
+
+        // Освещение
+        // Основной свет
+        const ambientLight = new THREE.AmbientLight(0x404060);
+        scene.add(ambientLight);
+
+        // Солнце
+        const sunLight = new THREE.DirectionalLight(0xfff5e6, 1.2);
+        sunLight.position.set(50, 100, 50);
+        sunLight.castShadow = true;
+        sunLight.receiveShadow = true;
+        sunLight.shadow.mapSize.width = 1024;
+        sunLight.shadow.mapSize.height = 1024;
+        const d = 150;
+        sunLight.shadow.camera.left = -d;
+        sunLight.shadow.camera.right = d;
+        sunLight.shadow.camera.top = d;
+        sunLight.shadow.camera.bottom = -d;
+        sunLight.shadow.camera.near = 1;
+        sunLight.shadow.camera.far = 200;
+        scene.add(sunLight);
+
+        // Заполняющий свет
+        const fillLight = new THREE.DirectionalLight(0x446688, 0.5);
+        fillLight.position.set(-50, 50, -50);
+        scene.add(fillLight);
+
+        // Подсветка снизу
+        const bottomLight = new THREE.PointLight(0x335577, 0.3);
+        bottomLight.position.set(0, -10, 0);
+        scene.add(bottomLight);
+
+        // Сетка земли
+        const gridSize = 100;
+        const gridDivisions = 40;
+        
+        // Основа земли
+        const groundGeometry = new THREE.PlaneGeometry(gridSize, gridSize);
+        const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x2a5a2a, roughness: 0.8, metalness: 0.1 });
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = 0;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // Декоративная сетка
+        const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x88aa88, 0x446644);
+        gridHelper.position.y = 0.01;
+        scene.add(gridHelper);
+
+        // Контейнер для зданий
+        const buildings = {};
+        let buildingId = 0;
+
+        // Функция создания 3D модели здания
+        function createBuilding3D(type, level, color, accent) {
+            const group = new THREE.Group();
             
-        case 'com': // Вывески
-            ctx.fillStyle = '#ffd700';
-            ctx.font = `bold ${16 * camera.z}px Arial`;
-            ctx.fillText('🛍️', x1 + w/2, yBase - 50 * camera.z);
-            break;
+            const width = 2.5 + level * 0.3;
+            const depth = 2.5 + level * 0.3;
+            const height = 1.5 + level * 0.6;
             
-        case 'ind': // Трубы
-            ctx.fillStyle = '#795548';
-            ctx.fillRect(x2 - 15 * camera.z, yTop - 30 * camera.z, 8 * camera.z, 30 * camera.z);
-            break;
+            // Основной корпус
+            const bodyGeo = new THREE.BoxGeometry(width, height, depth);
+            const bodyMat = new THREE.MeshStandardMaterial({ 
+                color: color,
+                roughness: 0.4,
+                metalness: 0.1,
+                emissive: new THREE.Color(0x000000)
+            });
+            const body = new THREE.Mesh(bodyGeo, bodyMat);
+            body.castShadow = true;
+            body.receiveShadow = true;
+            body.position.y = height / 2;
+            group.add(body);
             
-        case 'fun': // Огни
-            ctx.fillStyle = '#ffd700';
+            // Крыша
+            const roofGeo = new THREE.ConeGeometry(width * 0.8, height * 0.4, 4);
+            const roofMat = new THREE.MeshStandardMaterial({ 
+                color: accent,
+                roughness: 0.3,
+                metalness: 0.3,
+                emissive: new THREE.Color(0x221100)
+            });
+            const roof = new THREE.Mesh(roofGeo, roofMat);
+            roof.castShadow = true;
+            roof.receiveShadow = true;
+            roof.position.y = height + height * 0.2;
+            roof.rotation.y = Math.PI / 4;
+            group.add(roof);
+            
+            // Окна (маленькие кубики)
+            const windowMat = new THREE.MeshStandardMaterial({ 
+                color: 0xffdd88,
+                emissive: new THREE.Color(0x442200),
+                transparent: true,
+                opacity: 0.9
+            });
+            
             for (let i = 0; i < 4; i++) {
-                ctx.beginPath();
-                ctx.arc(x1 + 10 * camera.z + i * 25 * camera.z, yTop - 25 * camera.z, 3 * camera.z, 0, Math.PI * 2);
-                ctx.fill();
+                for (let j = 0; j < 2; j++) {
+                    const windowGeo = new THREE.BoxGeometry(0.3, 0.4, 0.1);
+                    const windowMesh = new THREE.Mesh(windowGeo, windowMat);
+                    windowMesh.castShadow = true;
+                    windowMesh.receiveShadow = true;
+                    
+                    // Распределяем окна по сторонам
+                    if (i < 2) {
+                        windowMesh.position.set(
+                            (i === 0 ? -width/2 + 0.6 : width/2 - 0.6),
+                            height * 0.5 + j * 0.5,
+                            0
+                        );
+                    } else {
+                        windowMesh.position.set(
+                            0,
+                            height * 0.5 + j * 0.5,
+                            (i === 2 ? -depth/2 + 0.6 : depth/2 - 0.6)
+                        );
+                    }
+                    group.add(windowMesh);
+                }
             }
-            break;
             
-        case 'gov': // Колонны
-            ctx.fillStyle = '#9E9E9E';
-            for (let i = 0; i < 2; i++) {
-                ctx.fillRect(x1 + 10 * camera.z + i * 40 * camera.z, yBase - 40 * camera.z, 8 * camera.z, 40 * camera.z);
-            }
-            break;
-    }
-    
-    // ЭМОДЗИ (парит над зданием)
-    ctx.restore();
-    ctx.save();
-    ctx.shadowColor = 'rgba(0,0,0,0.8)';
-    ctx.shadowBlur = 25;
-    ctx.font = `bold ${32 * camera.z}px 'Segoe UI Emoji'`;
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(building.emoji, p.x, p.y - h - 20 * camera.z);
-    ctx.restore();
-    
-    // ПОДСВЕТКА ПРИ НАВЕДЕНИИ
-    if (isHover) {
-        ctx.save();
-        ctx.strokeStyle = '#ffd700';
-        ctx.lineWidth = 5 * camera.z;
-        ctx.shadowColor = '#ffd700';
-        ctx.shadowBlur = 40;
-        
-        // Контур здания
-        ctx.beginPath();
-        ctx.moveTo(x1, yBase);
-        ctx.lineTo(x2, yBase);
-        ctx.lineTo(x2 + 20 * camera.z, yBase + 20 * camera.z);
-        ctx.lineTo(x2 + 20 * camera.z, yTop + 20 * camera.z);
-        ctx.lineTo(x2, yTop);
-        ctx.lineTo(x1, yTop);
-        ctx.lineTo(x1 - 20 * camera.z, yTop - 20 * camera.z);
-        ctx.lineTo(x1 - 20 * camera.z, yBase - 20 * camera.z);
-        ctx.closePath();
-        ctx.stroke();
-        ctx.restore();
-    }
-}
-
-function adjustColor(color, percent) {
-    const num = parseInt(color.replace('#', ''), 16);
-    const r = Math.min(255, Math.max(0, (num >> 16) + percent));
-    const g = Math.min(255, Math.max(0, ((num >> 8) & 0x00FF) + percent));
-    const b = Math.min(255, Math.max(0, (num & 0x0000FF) + percent));
-    return '#' + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
-}
-
-function drawCell(r, c) {
-    const p = iso(r, c);
-    
-    // Текстура земли с градиентом
-    let baseColor = '#7cb57c';
-    if (game.weather === 1) baseColor = '#5a8f5a';
-    if (game.weather === 2) baseColor = '#d8e8f0';
-    
-    ctx.save();
-    
-    // Градиент для объема
-    const gradient = ctx.createLinearGradient(p.x - 20, p.y - 10, p.x + 20, p.y + 10);
-    gradient.addColorStop(0, adjustColor(baseColor, 20));
-    gradient.addColorStop(1, adjustColor(baseColor, -20));
-    
-    ctx.fillStyle = gradient;
-    ctx.shadowColor = 'rgba(0,0,0,0.4)';
-    ctx.shadowBlur = 8;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
-    
-    ctx.beginPath();
-    ctx.moveTo(p.x, p.y);
-    ctx.lineTo(p.x + CELL/2 * camera.z, p.y + CELL/4 * camera.z);
-    ctx.lineTo(p.x, p.y + CELL/2 * camera.z);
-    ctx.lineTo(p.x - CELL/2 * camera.z, p.y + CELL/4 * camera.z);
-    ctx.closePath();
-    ctx.fill();
-    
-    // Текстура
-    ctx.strokeStyle = 'rgba(0,0,0,0.15)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i < 4; i++) {
-        ctx.beginPath();
-        ctx.moveTo(p.x - 12 * camera.z + i * 15 * camera.z, p.y + 5 * camera.z);
-        ctx.lineTo(p.x - 18 * camera.z + i * 15 * camera.z, p.y + 15 * camera.z);
-        ctx.stroke();
-    }
-    
-    ctx.restore();
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Небо с динамическим градиентом
-    const skyGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    const nightColor = '#0a1a2a';
-    const dayColor = '#87CEEB';
-    const sunsetColor = '#FF7F50';
-    
-    let skyTop, skyBottom;
-    if (game.time < 0.25) { skyTop = nightColor; skyBottom = '#1a2a3a'; }
-    else if (game.time < 0.5) { skyTop = sunsetColor; skyBottom = dayColor; }
-    else if (game.time < 0.75) { skyTop = dayColor; skyBottom = '#B0E0E6'; }
-    else { skyTop = sunsetColor; skyBottom = nightColor; }
-    
-    skyGradient.addColorStop(0, skyTop);
-    skyGradient.addColorStop(1, skyBottom);
-    ctx.fillStyle = skyGradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Солнце/Луна
-    ctx.save();
-    ctx.shadowBlur = 70;
-    ctx.shadowColor = '#ffd700';
-    ctx.beginPath();
-    ctx.arc(canvas.width - 120, 120, 70, 0, Math.PI * 2);
-    ctx.fillStyle = game.time < 0.5 || game.time > 0.75 ? '#ffd700' : '#fff';
-    ctx.globalAlpha = 0.9;
-    ctx.fill();
-    ctx.restore();
-    
-    // Отрисовка мира
-    for (let r = 0; r < GRID; r++) {
-        for (let c = 0; c < GRID; c++) {
-            drawCell(r, c);
+            // Дверь
+            const doorGeo = new THREE.BoxGeometry(0.8, 1.0, 0.2);
+            const doorMat = new THREE.MeshStandardMaterial({ color: 0x8B4513 });
+            const door = new THREE.Mesh(doorGeo, doorMat);
+            door.castShadow = true;
+            door.receiveShadow = true;
+            door.position.set(0, 0.5, depth/2 + 0.1);
+            group.add(door);
             
-            const buildingId = game.grid[r][c];
-            if (buildingId) {
-                const building = buildings[buildingId];
-                const model = buildingModels[buildingId];
-                drawBuilding3D(r, c, building, model, r === hoverRow && c === hoverCol);
+            // Дополнительные детали в зависимости от типа
+            if (type === 'res') {
+                // Балконы
+                const balconyGeo = new THREE.BoxGeometry(1.2, 0.2, 0.8);
+                const balconyMat = new THREE.MeshStandardMaterial({ color: 0xCCCCCC });
+                const balcony = new THREE.Mesh(balconyGeo, balconyMat);
+                balcony.castShadow = true;
+                balcony.receiveShadow = true;
+                balcony.position.set(width/2 - 0.5, height * 0.8, 0);
+                group.add(balcony);
+            } else if (type === 'com') {
+                // Вывеска
+                const signGeo = new THREE.BoxGeometry(1.5, 0.3, 0.2);
+                const signMat = new THREE.MeshStandardMaterial({ color: 0xffaa00, emissive: new THREE.Color(0x442200) });
+                const sign = new THREE.Mesh(signGeo, signMat);
+                sign.castShadow = true;
+                sign.receiveShadow = true;
+                sign.position.set(0, height + 0.5, depth/2);
+                group.add(sign);
+            } else if (type === 'ind') {
+                // Труба
+                const pipeGeo = new THREE.CylinderGeometry(0.3, 0.3, 1.5);
+                const pipeMat = new THREE.MeshStandardMaterial({ color: 0x888888 });
+                const pipe = new THREE.Mesh(pipeGeo, pipeMat);
+                pipe.castShadow = true;
+                pipe.receiveShadow = true;
+                pipe.position.set(width/2 - 0.5, height + 0.75, -depth/2 + 0.5);
+                group.add(pipe);
             }
-        }
-    }
-    
-    // Погодные эффекты
-    if (game.weather === 1) { // Дождь
-        for (let i = 0; i < 80; i++) {
-            if (Math.random() < 0.1) {
-                ctx.save();
-                ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-                ctx.lineTo(Math.random() * canvas.width + 15, Math.random() * canvas.height + 30);
-                ctx.stroke();
-                ctx.restore();
-            }
-        }
-    } else if (game.weather === 2) { // Снег
-        for (let i = 0; i < 50; i++) {
-            if (Math.random() < 0.05) {
-                ctx.save();
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-                ctx.shadowBlur = 15;
-                ctx.shadowColor = '#fff';
-                ctx.beginPath();
-                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 4, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            }
-        }
-    }
-    
-    updateTimeIndicator();
-}
-
-// Основной цикл с плавной камерой
-function gameLoop() {
-    camera.update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-gameLoop();
-
-// Обработчики управления
-canvas.onmousedown = (e) => {
-    drag = true;
-    lx = e.clientX;
-    ly = e.clientY;
-    lastMouseX = e.clientX;
-    lastMouseY = e.clientY;
-};
-
-canvas.onmouseup = () => {
-    drag = false;
-};
-
-canvas.onmousemove = (e) => {
-    if (drag) {
-        const dx = e.clientX - lx;
-        const dy = e.clientY - ly;
-        camera.move(dx, dy);
-        lx = e.clientX;
-        ly = e.clientY;
-    }
-    
-    // Ховер
-    const rect = canvas.getBoundingClientRect();
-    let mx = e.clientX - rect.left;
-    let my = e.clientY - rect.top;
-    
-    hoverRow = -1;
-    hoverCol = -1;
-    let bestDist = Infinity;
-    
-    for (let r = 0; r < GRID; r++) {
-        for (let c = 0; c < GRID; c++) {
-            const p = iso(r, c);
-            const dist = Math.hypot(mx - p.x, my - p.y);
-            if (dist < 60 && dist < bestDist) {
-                bestDist = dist;
-                hoverRow = r;
-                hoverCol = c;
-            }
-        }
-    }
-};
-
-canvas.onwheel = (e) => {
-    e.preventDefault();
-    camera.zoom(e.deltaY > 0 ? -0.12 : 0.12);
-};
-
-canvas.onclick = (e) => {
-    if (hoverRow !== -1 && hoverCol !== -1 && selected) {
-        build(hoverRow, hoverCol);
-    }
-};
-
-// Игровые функции
-function build(r, c) {
-    const building = buildings[selected];
-    if (!building) return;
-    
-    if (game.money < building.price) {
-        info.innerText = '❌ НЕДОСТАТОЧНО СРЕДСТВ!';
-        return;
-    }
-    
-    if (game.grid[r][c]) {
-        info.innerText = '❌ КЛЕТКА ЗАНЯТА!';
-        return;
-    }
-    
-    game.money -= building.price;
-    game.grid[r][c] = building.id;
-    game.pop += building.pop;
-    game.cnt++;
-    
-    info.innerText = `✅ ПОСТРОЕНО: ${building.name}`;
-    update();
-}
-
-function collect() {
-    let total = 0;
-    for (let r = 0; r < GRID; r++) {
-        for (let c = 0; c < GRID; c++) {
-            const id = game.grid[r][c];
-            if (id) total += buildings[id].inc;
-        }
-    }
-    game.money += total;
-    info.innerText = `💰 СОБРАНО: ${total.toLocaleString()}`;
-    update();
-}
-
-function weather() {
-    game.weather = (game.weather + 1) % 3;
-    const weatherNames = ['☀️ ЯСНО', '🌧️ ДОЖДЬ', '❄️ СНЕГ'];
-    info.innerText = weatherNames[game.weather];
-}
-
-function timeDay() {
-    game.time = (game.time + 0.2) % 1;
-    updateTimeIndicator();
-}
-
-function cancel() {
-    selected = null;
-    info.innerText = '🏗️ ВЫБЕРИТЕ ЗДАНИЕ';
-    document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
-}
-
-function resetGame() {
-    if (confirm('💰 НАЧАТЬ НОВЫЙ ГОРОД?')) {
-        location.reload();
-    }
-}
-
-function update() {
-    document.getElementById('money').innerText = game.money.toLocaleString();
-    document.getElementById('pop').innerText = game.pop.toLocaleString();
-    
-    let totalInc = 0;
-    for (let r = 0; r < GRID; r++) {
-        for (let c = 0; c < GRID; c++) {
-            const id = game.grid[r][c];
-            if (id) totalInc += buildings[id].inc;
-        }
-    }
-    document.getElementById('inc').innerText = totalInc.toLocaleString();
-    document.getElementById('cnt').innerText = `${game.cnt}/1600`;
-}
-
-function updateTimeIndicator() {
-    const indicator = document.getElementById('timeIndicator');
-    if (game.time < 0.2) indicator.innerHTML = '🌙 НОЧЬ';
-    else if (game.time < 0.4) indicator.innerHTML = '🌅 УТРО';
-    else if (game.time < 0.6) indicator.innerHTML = '☀️ ПОЛДЕНЬ';
-    else if (game.time < 0.8) indicator.innerHTML = '🌆 ВЕЧЕР';
-    else indicator.innerHTML = '🌙 НОЧЬ';
-}
-
-// Инициализация UI
-const catsDiv = document.getElementById('cats');
-const listDiv = document.getElementById('list');
-const info = document.getElementById('info');
-
-cats.forEach(cat => {
-    const btn = document.createElement('button');
-    btn.innerHTML = `${cat.e} ${cat.n}`;
-    btn.style.background = `linear-gradient(135deg, ${cat.color}40, ${cat.dark}40)`;
-    btn.onclick = () => {
-        listDiv.innerHTML = '';
-        const filtered = all.filter(b => b.cat === cat.id);
-        
-        filtered.forEach(building => {
-            const item = document.createElement('div');
-            item.className = 'item';
-            item.innerHTML = `
-                <div class="building-preview" style="background: linear-gradient(135deg, ${building.color}80, ${building.dark}80)">
-                    ${building.emoji}
-                </div>
-                <div style="flex:1">
-                    <div style="font-weight:bold; font-size:20px; color:#ffd700">${building.name}</div>
-                    <div style="display:flex; gap:20px; margin-top:8px; font-size:16px;">
-                        <span style="color:#ffd700">💰 ${building.price.toLocaleString()}</span>
-                        <span style="color:#4CAF50">⚡ ${building.inc}</span>
-                        <span style="color:#2196F3">👥 ${building.pop}</span>
-                    </div>
-                </div>
-            `;
             
-            item.onclick = (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
-                item.classList.add('selected');
-                selected = building.id;
-                info.innerText = `🏗️ ВЫБРАНО: ${building.name}`;
+            return group;
+        }
+
+        // Система сетки для размещения
+        const GRID_SIZE = 40;
+        const CELL_SIZE = 3;
+        const grid = [];
+
+        for (let x = 0; x < GRID_SIZE; x++) {
+            grid[x] = [];
+            for (let z = 0; z < GRID_SIZE; z++) {
+                grid[x][z] = null;
+            }
+        }
+
+        // Данные игры
+        let gameData = {
+            money: 50000000,
+            pop: 0,
+            cnt: 0,
+            weather: 0,
+            time: 0.6
+        };
+
+        // Категории
+        const cats = [
+            { id: 'res', name: 'Жилые', emoji: '🏘️', color: 0x4CAF50, accent: 0x81C784 },
+            { id: 'com', name: 'Торговые', emoji: '🏬', color: 0xFF9800, accent: 0xFFB74D },
+            { id: 'ind', name: 'Промышленные', emoji: '🏭', color: 0xF44336, accent: 0xE57373 },
+            { id: 'fun', name: 'Развлечения', emoji: '🎪', color: 0x9C27B0, accent: 0xBA68C8 },
+            { id: 'gov', name: 'Гос', emoji: '🏛️', color: 0x2196F3, accent: 0x64B5F6 }
+        ];
+
+        // Каталог зданий
+        const catalog = [];
+        cats.forEach((cat, ci) => {
+            for (let i = 1; i <= 10; i++) {
+                catalog.push({
+                    id: `b_${cat.id}_${i}`,
+                    cat: cat.id,
+                    name: `${cat.name} уровень ${i}`,
+                    level: i,
+                    price: 100000 * i * (ci + 1),
+                    inc: 5000 * i * (ci + 1),
+                    pop: 50 * i * (ci + 1),
+                    emoji: cat.emoji,
+                    color: cat.color,
+                    accent: cat.accent
+                });
+            }
+        });
+
+        let selectedBuilding = null;
+        let hoveredCell = { x: -1, z: -1 };
+
+        // Вспомогательная сетка для подсветки
+        const highlightMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xffd700,
+            transparent: true,
+            opacity: 0.3,
+            side: THREE.DoubleSide
+        });
+        const highlightGeo = new THREE.BoxGeometry(CELL_SIZE, 0.1, CELL_SIZE);
+        const highlightMesh = new THREE.Mesh(highlightGeo, highlightMaterial);
+        highlightMesh.visible = false;
+        scene.add(highlightMesh);
+
+        // CSS2D метки для эмодзи
+        function createLabel(emoji, x, y, z) {
+            const div = document.createElement('div');
+            div.textContent = emoji;
+            div.style.fontSize = '32px';
+            div.style.fontWeight = 'bold';
+            div.style.textShadow = '2px 2px 4px black';
+            div.style.pointerEvents = 'none';
+            
+            const label = new CSS2DObject(div);
+            label.position.set(x, y, z);
+            return label;
+        }
+
+        // Raycaster для определения позиции мыши
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        // Обработка кликов
+        renderer.domElement.addEventListener('click', (event) => {
+            if (!selectedBuilding) return;
+            
+            // Нормализованные координаты мыши
+            mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+            mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            // Пересечение с плоскостью земли
+            const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+            const target = new THREE.Vector3();
+            raycaster.ray.intersectPlane(plane, target);
+            
+            // Конвертация в координаты сетки
+            const gridX = Math.floor((target.x + GRID_SIZE * CELL_SIZE / 2) / CELL_SIZE);
+            const gridZ = Math.floor((target.z + GRID_SIZE * CELL_SIZE / 2) / CELL_SIZE);
+            
+            if (gridX >= 0 && gridX < GRID_SIZE && gridZ >= 0 && gridZ < GRID_SIZE) {
+                build(gridX, gridZ);
+            }
+        });
+
+        // Обновление подсветки
+        renderer.domElement.addEventListener('mousemove', (event) => {
+            mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+            mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+            
+            raycaster.setFromCamera(mouse, camera);
+            
+            const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+            const target = new THREE.Vector3();
+            raycaster.ray.intersectPlane(plane, target);
+            
+            const gridX = Math.floor((target.x + GRID_SIZE * CELL_SIZE / 2) / CELL_SIZE);
+            const gridZ = Math.floor((target.z + GRID_SIZE * CELL_SIZE / 2) / CELL_SIZE);
+            
+            if (gridX >= 0 && gridX < GRID_SIZE && gridZ >= 0 && gridZ < GRID_SIZE) {
+                hoveredCell.x = gridX;
+                hoveredCell.z = gridZ;
+                
+                const worldX = (gridX - GRID_SIZE/2) * CELL_SIZE + CELL_SIZE/2;
+                const worldZ = (gridZ - GRID_SIZE/2) * CELL_SIZE + CELL_SIZE/2;
+                
+                highlightMesh.position.set(worldX, 0.1, worldZ);
+                highlightMesh.visible = true && selectedBuilding;
+            } else {
+                highlightMesh.visible = false;
+            }
+        });
+
+        // Функция строительства
+        function build(x, z) {
+            const building = catalog.find(b => b.id === selectedBuilding);
+            if (!building) return;
+            
+            if (gameData.money < building.price) {
+                document.getElementById('info').innerText = '❌ Недостаточно средств!';
+                return;
+            }
+            
+            if (grid[x][z]) {
+                document.getElementById('info').innerText = '❌ Клетка занята!';
+                return;
+            }
+            
+            // Создаем здание
+            const model = createBuilding3D(
+                building.cat,
+                building.level,
+                building.color,
+                building.accent
+            );
+            
+            const worldX = (x - GRID_SIZE/2) * CELL_SIZE + CELL_SIZE/2;
+            const worldZ = (z - GRID_SIZE/2) * CELL_SIZE + CELL_SIZE/2;
+            model.position.set(worldX, 0, worldZ);
+            
+            scene.add(model);
+            
+            // Добавляем эмодзи
+            const label = createLabel(building.emoji, worldX, 4 + building.level * 0.8, worldZ);
+            scene.add(label);
+            
+            // Сохраняем в сетке
+            grid[x][z] = {
+                model,
+                label,
+                building
             };
             
-            listDiv.appendChild(item);
-        });
-    };
-    catsDiv.appendChild(btn);
-});
+            gameData.money -= building.price;
+            gameData.pop += building.pop;
+            gameData.cnt++;
+            
+            updateUI();
+            document.getElementById('info').innerText = `✅ Построено: ${building.name}`;
+        }
 
-update();
-</script>
+        // Обновление UI
+        function updateUI() {
+            document.getElementById('money').innerText = gameData.money.toLocaleString();
+            document.getElementById('pop').innerText = gameData.pop.toLocaleString();
+            
+            let totalInc = 0;
+            for (let x = 0; x < GRID_SIZE; x++) {
+                for (let z = 0; z < GRID_SIZE; z++) {
+                    if (grid[x][z]) {
+                        totalInc += grid[x][z].building.inc;
+                    }
+                }
+            }
+            document.getElementById('inc').innerText = totalInc.toLocaleString();
+            document.getElementById('cnt').innerText = `${gameData.cnt}/${GRID_SIZE * GRID_SIZE}`;
+        }
+
+        // Игровые функции
+        window.collect = function() {
+            let total = 0;
+            for (let x = 0; x < GRID_SIZE; x++) {
+                for (let z = 0; z < GRID_SIZE; z++) {
+                    if (grid[x][z]) {
+                        total += grid[x][z].building.inc;
+                    }
+                }
+            }
+            gameData.money += total;
+            updateUI();
+            document.getElementById('info').innerText = `💰 Собрано: ${total.toLocaleString()}`;
+        };
+
+        window.weather = function() {
+            gameData.weather = (gameData.weather + 1) % 3;
+            const weatherNames = ['☀️ Ясно', '🌧️ Дождь', '❄️ Снег'];
+            
+            // Меняем освещение
+            if (gameData.weather === 1) {
+                sunLight.intensity = 0.6;
+                ambientLight.intensity = 0.5;
+            } else if (gameData.weather === 2) {
+                sunLight.intensity = 0.8;
+                ambientLight.intensity = 0.6;
+            } else {
+                sunLight.intensity = 1.2;
+                ambientLight.intensity = 0.4;
+            }
+            
+            document.getElementById('info').innerText = weatherNames[gameData.weather];
+        };
+
+        window.timeDay = function() {
+            gameData.time = (gameData.time + 0.2) % 1;
+            
+            // Меняем цвет освещения
+            if (gameData.time < 0.3) {
+                sunLight.color.setHex(0xffeedd);
+                ambientLight.intensity = 0.2;
+            } else if (gameData.time < 0.6) {
+                sunLight.color.setHex(0xfff5e6);
+                ambientLight.intensity = 0.4;
+            } else {
+                sunLight.color.setHex(0xffaa66);
+                ambientLight.intensity = 0.3;
+            }
+        };
+
+        window.cancel = function() {
+            selectedBuilding = null;
+            highlightMesh.visible = false;
+            document.getElementById('info').innerText = '🏗️ Выберите здание';
+            document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+        };
+
+        window.resetGame = function() {
+            if (confirm('Начать новый город?')) {
+                location.reload();
+            }
+        };
+
+        // Инициализация UI
+        const catsDiv = document.getElementById('cats');
+        const listDiv = document.getElementById('list');
+        
+        cats.forEach(cat => {
+            const btn = document.createElement('button');
+            btn.innerHTML = `${cat.emoji} ${cat.name}`;
+            btn.onclick = () => {
+                listDiv.innerHTML = '';
+                catalog.filter(b => b.cat === cat.id).forEach(building => {
+                    const item = document.createElement('div');
+                    item.className = 'item';
+                    item.innerHTML = `
+                        <div style="font-size: 24px;">${building.emoji}</div>
+                        <div style="flex:1">
+                            <div style="font-weight:bold">${building.name}</div>
+                            <div style="font-size:14px; color:#aaa; display:flex; gap:10px; margin-top:5px;">
+                                <span style="color:#ffd700">💰 ${building.price.toLocaleString()}</span>
+                                <span style="color:#4CAF50">⚡ ${building.inc}</span>
+                                <span style="color:#2196F3">👥 ${building.pop}</span>
+                            </div>
+                        </div>
+                    `;
+                    item.onclick = () => {
+                        document.querySelectorAll('.item').forEach(i => i.classList.remove('selected'));
+                        item.classList.add('selected');
+                        selectedBuilding = building.id;
+                        document.getElementById('info').innerText = `🏗️ Выбрано: ${building.name}`;
+                    };
+                    listDiv.appendChild(item);
+                });
+            };
+            catsDiv.appendChild(btn);
+        });
+
+        // Анимация
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            controls.update();
+            
+            // Анимация подсветки
+            if (highlightMesh.visible) {
+                highlightMesh.material.opacity = 0.3 + Math.sin(Date.now() * 0.005) * 0.1;
+            }
+            
+            renderer.render(scene, camera);
+            labelRenderer.render(scene, camera);
+        }
+        
+        animate();
+
+        // Адаптация к ресайзу
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            labelRenderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        updateUI();
+    </script>
 </body>
 </html>
