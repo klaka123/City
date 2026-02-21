@@ -2,888 +2,349 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ГРАНД СИТИ 10K - ИСПРАВЛЕННАЯ ВЕРСИЯ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏙️ Городок - простая версия</title>
     <style>
-        /* ========== ИНТЕРФЕЙС (полностью сохранён) ========== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            user-select: none;
-        }
         body {
-            background: #0a1f30;
-            overflow: hidden;
-            touch-action: none;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at 30% 50%, #1e5a7a, #0b2a3f);
-        }
-        #gameCanvas {
-            display: block;
+            max-width: 800px;
             width: 100%;
-            height: 100%;
-            cursor: grab;
-            touch-action: none;
-        }
-        #gameCanvas:active {
-            cursor: grabbing;
-        }
-
-        /* ===== НИЖНЯЯ ПАНЕЛЬ ===== */
-        .ui-panel {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(20, 40, 55, 0.85);
-            backdrop-filter: blur(15px);
-            border-radius: 70px;
-            padding: 18px 40px;
-            display: flex;
-            gap: 40px;
-            border: 2px solid rgba(255,255,255,0.3);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
-            z-index: 100;
-            border-bottom: 4px solid #4a9ec0;
-        }
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: white;
-            font-size: 28px;
-            font-weight: 600;
-            text-shadow: 0 2px 5px black;
-            background: rgba(0,0,0,0.3);
-            padding: 8px 25px;
-            border-radius: 50px;
-        }
-        .stat-icon {
-            font-size: 40px;
-            filter: drop-shadow(0 4px 6px black);
-        }
-
-        /* ===== ЛЕВОЕ МЕНЮ (КАТАЛОГ) ===== */
-        .build-menu {
-            position: fixed;
-            top: 50%;
-            left: 25px;
-            transform: translateY(-50%);
-            width: 400px;
-            max-height: 85vh;
-            background: rgba(15, 35, 50, 0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 40px;
-            padding: 20px;
-            border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-        }
-        .menu-header {
-            color: white;
-            font-size: 24px;
-            font-weight: 700;
-            padding: 15px 20px;
-            background: rgba(255,255,255,0.1);
+            background: white;
             border-radius: 30px;
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #4a9ec0;
+            padding: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-        .category-tabs {
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+        .city-area {
+            background: #a8d5e5;
+            min-height: 300px;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 20px;
-            justify-content: center;
+            gap: 10px;
+            align-items: flex-start;
         }
-        .cat-tab {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 30px;
-            padding: 8px 12px;
-            color: white;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .cat-tab:hover {
-            background: rgba(255,255,255,0.2);
-        }
-        .cat-tab.active {
-            background: #ffb84d;
-            color: #1e3e55;
-            border-color: #ff9f1c;
-            box-shadow: 0 0 15px #ffb84d;
-        }
-        .buildings-list {
-            flex: 1;
-            overflow-y: auto;
-            padding-right: 8px;
-            scrollbar-width: thin;
-            scrollbar-color: #4a9ec0 #1f3f55;
-        }
-        .buildings-list::-webkit-scrollbar {
-            width: 8px;
-        }
-        .buildings-list::-webkit-scrollbar-thumb {
-            background: #4a9ec0;
-            border-radius: 10px;
-        }
-        .build-item {
-            background: rgba(255,255,255,0.08);
-            border-radius: 25px;
-            padding: 12px 15px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            cursor: pointer;
-            transition: 0.2s;
-            border: 2px solid transparent;
-        }
-        .build-item:hover {
-            background: rgba(255,255,255,0.15);
-            transform: translateX(5px);
-        }
-        .build-item.selected {
-            border-color: #ffb84d;
-            background: rgba(255,184,77,0.15);
-        }
-        .item-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
-        .item-info {
-            flex: 1;
-        }
-        .item-name {
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        .item-price {
-            color: #ffd966;
-            font-size: 14px;
-            margin-top: 4px;
-        }
-
-        /* ===== ПРАВОЕ МЕНЮ (КНОПКИ) ===== */
-        .control-menu {
-            position: fixed;
-            top: 50%;
-            right: 25px;
-            transform: translateY(-50%);
-            background: rgba(15, 35, 50, 0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 40px;
-            padding: 25px 20px;
+        .building {
+            width: 60px;
+            height: 60px;
+            background: #f0a500;
+            border-radius: 10px 10px 0 0;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            border: 2px solid rgba(255,255,255,0.2);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.8);
-            z-index: 100;
-            min-width: 220px;
-        }
-        .control-btn {
-            background: rgba(255,255,255,0.1);
-            border: none;
-            border-radius: 40px;
-            padding: 18px 20px;
-            color: white;
-            font-size: 22px;
-            font-weight: 600;
-            display: flex;
             align-items: center;
-            gap: 15px;
+            justify-content: flex-end;
             cursor: pointer;
-            transition: 0.2s;
-            border: 2px solid rgba(255,255,255,0.15);
+            transition: transform 0.2s;
+            box-shadow: 0 4px 0 #b87c1b;
         }
-        .control-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateX(-5px);
+        .building:hover {
+            transform: translateY(-5px);
         }
-        .control-btn:active {
-            transform: scale(0.98);
-        }
-        .control-btn.collect {
-            background: rgba(46,125,50,0.4);
-            border-color: #4caf50;
-        }
-        .control-btn.cancel {
-            background: rgba(198,40,40,0.4);
-            border-color: #f44336;
-        }
-
-        /* ===== ВЕРХНЯЯ ИНФО-ПАНЕЛЬ ===== */
-        .info-panel {
-            position: fixed;
-            top: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(15, 35, 50, 0.9);
-            backdrop-filter: blur(15px);
-            border-radius: 50px;
-            padding: 15px 40px;
-            color: white;
-            font-size: 24px;
-            font-weight: 500;
-            border: 2px solid rgba(255,255,255,0.2);
-            z-index: 100;
+        .building span {
+            background: white;
+            width: 100%;
             text-align: center;
-            min-width: 500px;
-            border-top: 4px solid #4a9ec0;
-        }
-
-        /* ===== УВЕДОМЛЕНИЯ ===== */
-        .notification {
-            position: fixed;
-            top: 120px;
-            right: 30px;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(15px);
-            color: white;
-            padding: 18px 35px;
-            border-radius: 60px;
             font-size: 20px;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-            border: 2px solid #ffb84d;
-            box-shadow: 0 15px 30px black;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .build-menu {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .build-btn {
+            flex: 1;
+            min-width: 100px;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .build-btn:hover {
+            transform: translateY(-3px);
+        }
+        .build-btn.selected {
+            border: 3px solid #ffd700;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            background: #4CAF50;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .action-btn.reset {
+            background: #f44336;
+        }
+        .info-panel {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
         }
     </style>
 </head>
 <body>
-<div class="game-container">
-    <canvas id="gameCanvas"></canvas>
+    <div class="game-container">
+        <!-- Статистика -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="moneyDisplay">10000</div>
+                <div class="stat-label">💰 Деньги</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="popDisplay">0</div>
+                <div class="stat-label">👥 Жители</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="incomeDisplay">0</div>
+                <div class="stat-label">📈 Доход</div>
+            </div>
+        </div>
 
-    <!-- Нижняя панель -->
-    <div class="ui-panel">
-        <div class="stat-item"><span class="stat-icon">💰</span><span id="moneyDisplay">100,000,000</span></div>
-        <div class="stat-item"><span class="stat-icon">👥</span><span id="popDisplay">0</span></div>
-        <div class="stat-item"><span class="stat-icon">📊</span><span id="incomeDisplay">0</span></div>
-        <div class="stat-item"><span class="stat-icon">🏗️</span><span id="buildingsCount">0/10000</span></div>
+        <!-- Город -->
+        <div class="city-area" id="cityArea">
+            <!-- Сюда будут добавляться домики -->
+        </div>
+
+        <!-- Меню строительства -->
+        <div class="build-menu" id="buildMenu"></div>
+
+        <!-- Кнопки управления -->
+        <div class="controls">
+            <button class="action-btn" id="collectBtn">💰 Собрать налоги</button>
+            <button class="action-btn reset" id="resetBtn">🔄 Новый город</button>
+        </div>
+
+        <!-- Информация -->
+        <div class="info-panel" id="infoPanel">
+            👆 Нажмите на здание, чтобы построить
+        </div>
     </div>
 
-    <!-- Левое меню -->
-    <div class="build-menu">
-        <div class="menu-header">🏗️ МЕГА-КАТАЛОГ (10240 ЗДАНИЙ)</div>
-        <div class="category-tabs" id="categoryTabs"></div>
-        <div class="buildings-list" id="buildingsList"></div>
-    </div>
-
-    <!-- Правое меню -->
-    <div class="control-menu">
-        <button class="control-btn collect" id="collectBtn"><span>💰</span> СБОР НАЛОГОВ</button>
-        <button class="control-btn" id="weatherBtn"><span>🌦️</span> ПОГОДА</button>
-        <button class="control-btn" id="timeBtn"><span>⏰</span> ВРЕМЯ</button>
-        <button class="control-btn" id="statsBtn"><span>📈</span> СТАТИСТИКА</button>
-        <button class="control-btn cancel" id="cancelBtn"><span>❌</span> ОТМЕНА</button>
-        <button class="control-btn" id="resetBtn"><span>🔄</span> НОВЫЙ ГОРОД</button>
-        <button class="control-btn" id="saveBtn"><span>💾</span> СОХРАНИТЬ</button>
-        <button class="control-btn" id="loadBtn"><span>📂</span> ЗАГРУЗИТЬ</button>
-    </div>
-
-    <!-- Верхняя панель -->
-    <div class="info-panel" id="infoPanel">👆 ВЫБЕРИТЕ ЗДАНИЕ И НАЖМИТЕ НА КАРТУ</div>
-</div>
-
-<script>
-// ============================================================================
-// ГРАНД СИТИ 10K - АБСОЛЮТНО РАБОЧАЯ ВЕРСИЯ
-// ============================================================================
-(function() {
-    // 1. ПРОВЕРКА ЗАГРУЗКИ
-    console.log('Скрипт запущен');
-
-    // 2. Telegram (опционально)
-    let tg = null;
-    try {
-        if (window.Telegram?.WebApp) {
-            tg = Telegram.WebApp;
-            tg.expand();
-            tg.ready();
-        }
-    } catch {}
-
-    // 3. КОНФИГУРАЦИЯ
-    const CONFIG = {
-        GRID_SIZE: 70,               // 70x70 = 4900 клеток (достаточно)
-        CELL_SIZE: 65,
-        TAX_COOLDOWN: 5000,
-        MAX_ZOOM: 3.0,
-        MIN_ZOOM: 0.4,
-        ZOOM_SPEED: 0.1,
-        START_MONEY: 100000000,
-    };
-
-    // 4. СОСТОЯНИЕ ИГРЫ
-    const gameState = {
-        money: CONFIG.START_MONEY,
-        grid: [],
-        population: 0,
-        lastTaxTime: Date.now(),
-        selectedBuilding: null,
-        weather: 'clear',
-        timeOfDay: 0.6,
-        camera: { x: 0, y: 0, zoom: 1 },
-        isDragging: false,
-        lastMouseX: 0,
-        lastMouseY: 0,
-        buildingsCount: 0,
-    };
-
-    // Инициализация сетки
-    for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
-        gameState.grid[r] = [];
-        for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
-            gameState.grid[r][c] = 'empty';
-        }
-    }
-
-    // 5. ГЕНЕРАЦИЯ 10240 ЗДАНИЙ (упрощённая, но рабочая)
-    const buildings = {};
-    const categories = [
-        { id: 'res', name: 'Жилые', emoji: '🏘️', basePrice: 1000 },
-        { id: 'com', name: 'Торговые', emoji: '🏪', basePrice: 1500 },
-        { id: 'ind', name: 'Промышленные', emoji: '🏭', basePrice: 2000 },
-        { id: 'inf', name: 'Инфраструктура', emoji: '🏗️', basePrice: 800 },
-        { id: 'cul', name: 'Культура', emoji: '🎭', basePrice: 2500 },
-        { id: 'spt', name: 'Спорт', emoji: '⚽', basePrice: 3000 },
-        { id: 'trn', name: 'Транспорт', emoji: '🚉', basePrice: 4000 },
-        { id: 'edu', name: 'Образование', emoji: '📚', basePrice: 2800 },
-        { id: 'med', name: 'Медицина', emoji: '🏥', basePrice: 3500 },
-        { id: 'ent', name: 'Развлечения', emoji: '🎡', basePrice: 3200 },
-        { id: 'gov', name: 'Государство', emoji: '🏛️', basePrice: 5000 },
-        { id: 'rel', name: 'Религия', emoji: '⛪', basePrice: 4500 },
-        { id: 'mil', name: 'Военные', emoji: '🎖️', basePrice: 6000 },
-        { id: 'agr', name: 'Сельское', emoji: '🌾', basePrice: 1200 },
-        { id: 'sci', name: 'Наука', emoji: '🔬', basePrice: 5500 },
-        { id: 'tou', name: 'Туризм', emoji: '🏨', basePrice: 3800 }
-    ];
-
-    const prefixes = ['Малый', 'Средний', 'Большой', 'Огромный', 'Гигантский', 'Мини', 'Макси', 'Супер', 'Ультра', 'Мега'];
-    const suffixes = ['Центр', 'Комплекс', 'Плаза', 'Холл', 'Дом', 'Здание', 'Терминал', 'Парк', 'Сити', 'Дворец'];
-
-    let buildingId = 0;
-    categories.forEach((cat, catIndex) => {
-        for (let i = 0; i < 640; i++) { // 16*640 = 10240
-            const prefix = prefixes[i % prefixes.length];
-            const suffix = suffixes[i % suffixes.length];
-            const name = `${prefix} ${cat.name} ${suffix} ${i+1}`;
-            const price = cat.basePrice * (50 + i) * (catIndex + 1);
-            const income = Math.floor(price * 0.1) + 5;
-            const population = Math.floor(price / 200) + 1;
-
-            buildings[`b${buildingId}`] = {
-                id: `b${buildingId}`,
-                category: cat.id,
-                name: name,
-                price: price,
-                income: income,
-                population: population,
-                emoji: cat.emoji,
-                color: `hsl(${(catIndex * 30 + i) % 360}, 70%, 60%)`
-            };
-            buildingId++;
-        }
-    });
-
-    console.log(`Сгенерировано зданий: ${buildingId}`);
-
-    // 6. КАМЕРА И ОТРИСОВКА
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        drawCity();
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    function gridToScreen(row, col) {
-        const x = (col - row) * CONFIG.CELL_SIZE / 2 * gameState.camera.zoom + gameState.camera.x + canvas.width / 2;
-        const y = (col + row) * CONFIG.CELL_SIZE / 4 * gameState.camera.zoom + gameState.camera.y + canvas.height / 3;
-        return { x, y };
-    }
-
-    function screenToGrid(screenX, screenY) {
-        let bestDist = Infinity, bestRow = -1, bestCol = -1;
-        for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
-            for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
-                const { x, y } = gridToScreen(r, c);
-                const dist = Math.hypot(screenX - x, screenY - y);
-                if (dist < bestDist && dist < 60 * gameState.camera.zoom) {
-                    bestDist = dist;
-                    bestRow = r;
-                    bestCol = c;
-                }
-            }
-        }
-        return { row: bestRow, col: bestCol };
-    }
-
-    // Переменные для выделения
-    let selectedRow = -1, selectedCol = -1;
-
-    function drawCity() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Небо
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height);
-        if (gameState.timeOfDay > 0.6) {
-            skyGrad.addColorStop(0, '#0b4b72');
-            skyGrad.addColorStop(1, '#1f7aa3');
-        } else if (gameState.timeOfDay > 0.3) {
-            skyGrad.addColorStop(0, '#2c4f6e');
-            skyGrad.addColorStop(1, '#4f7a9e');
-        } else {
-            skyGrad.addColorStop(0, '#0a1a2a');
-            skyGrad.addColorStop(1, '#1b3447');
-        }
-        ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Солнце/Луна
-        ctx.shadowBlur = 80;
-        ctx.shadowColor = gameState.timeOfDay > 0.5 ? '#fff9c4' : '#e0e0e0';
-        ctx.beginPath();
-        ctx.arc(150, 100, gameState.timeOfDay > 0.5 ? 60 : 40, 0, Math.PI*2);
-        ctx.fillStyle = gameState.timeOfDay > 0.5 ? '#fff3b0' : '#f0f0f0';
-        ctx.fill();
-
-        // Облака
-        ctx.shadowBlur = 50;
-        ctx.fillStyle = '#ffffff30';
-        for (let i = 0; i < 3; i++) {
-            ctx.beginPath();
-            ctx.ellipse(300 + i*250, 150 + i*30, 100, 40, 0, 0, Math.PI*2);
-            ctx.fill();
-        }
-        ctx.shadowBlur = 0;
-
-        // Отрисовка клеток
-        for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
-            for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
-                const { x, y } = gridToScreen(r, c);
-                
-                // Земля
-                ctx.shadowColor = '#2b4d2b';
-                ctx.shadowBlur = 15 * gameState.camera.zoom;
-                ctx.shadowOffsetY = 5 * gameState.camera.zoom;
-                ctx.fillStyle = '#7cb57c';
-                ctx.beginPath();
-                ctx.moveTo(x, y - 5 * gameState.camera.zoom);
-                ctx.lineTo(x + CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 5 * gameState.camera.zoom);
-                ctx.lineTo(x, y + CONFIG.CELL_SIZE/2 * gameState.camera.zoom - 5 * gameState.camera.zoom);
-                ctx.lineTo(x - CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 5 * gameState.camera.zoom);
-                ctx.closePath();
-                ctx.fill();
-
-                const buildingId = gameState.grid[r][c];
-                if (buildingId !== 'empty') {
-                    const b = buildings[buildingId];
-                    if (b) {
-                        ctx.shadowBlur = 20 * gameState.camera.zoom;
-                        ctx.fillStyle = b.color;
-                        ctx.beginPath();
-                        ctx.moveTo(x, y - 15 * gameState.camera.zoom);
-                        ctx.lineTo(x + CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 15 * gameState.camera.zoom);
-                        ctx.lineTo(x, y + CONFIG.CELL_SIZE/2 * gameState.camera.zoom - 15 * gameState.camera.zoom);
-                        ctx.lineTo(x - CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 15 * gameState.camera.zoom);
-                        ctx.closePath();
-                        ctx.fill();
-
-                        ctx.shadowBlur = 0;
-                        ctx.font = `${28 * gameState.camera.zoom}px 'Segoe UI Emoji'`;
-                        ctx.fillStyle = 'white';
-                        ctx.textAlign = 'center';
-                        ctx.fillText(b.emoji, x, y - 10 * gameState.camera.zoom);
-                    }
-                }
-            }
-        }
-
-        // Подсветка выбранной клетки
-        if (selectedRow !== -1 && selectedCol !== -1) {
-            const { x, y } = gridToScreen(selectedRow, selectedCol);
-            ctx.shadowColor = '#ffdf7e';
-            ctx.shadowBlur = 40;
-            ctx.strokeStyle = '#ffdb7e';
-            ctx.lineWidth = 6;
-            ctx.beginPath();
-            ctx.moveTo(x, y - 20 * gameState.camera.zoom);
-            ctx.lineTo(x + CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 20 * gameState.camera.zoom);
-            ctx.lineTo(x, y + CONFIG.CELL_SIZE/2 * gameState.camera.zoom - 20 * gameState.camera.zoom);
-            ctx.lineTo(x - CONFIG.CELL_SIZE/2 * gameState.camera.zoom, y + CONFIG.CELL_SIZE/4 * gameState.camera.zoom - 20 * gameState.camera.zoom);
-            ctx.closePath();
-            ctx.stroke();
-        }
-
-        // Погода
-        if (gameState.weather === 'rain') {
-            ctx.fillStyle = '#a9d6e560';
-            for (let i = 0; i < 150; i++) {
-                ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 20);
-            }
-        } else if (gameState.weather === 'snow') {
-            ctx.fillStyle = '#ffffff90';
-            for (let i = 0; i < 120; i++) {
-                ctx.beginPath();
-                ctx.arc(Math.random() * canvas.width, Math.random() * canvas.height, 4, 0, Math.PI*2);
-                ctx.fill();
-            }
-        }
-    }
-
-    // 7. УПРАВЛЕНИЕ КАМЕРОЙ
-    canvas.addEventListener('mousedown', (e) => {
-        gameState.isDragging = true;
-        gameState.lastMouseX = e.clientX;
-        gameState.lastMouseY = e.clientY;
-    });
-    canvas.addEventListener('mousemove', (e) => {
-        if (gameState.isDragging) {
-            gameState.camera.x += e.clientX - gameState.lastMouseX;
-            gameState.camera.y += e.clientY - gameState.lastMouseY;
-            gameState.lastMouseX = e.clientX;
-            gameState.lastMouseY = e.clientY;
-            drawCity();
-        }
-    });
-    canvas.addEventListener('mouseup', () => gameState.isDragging = false);
-    canvas.addEventListener('mouseleave', () => gameState.isDragging = false);
-
-    canvas.addEventListener('wheel', (e) => {
-        e.preventDefault();
-        const delta = e.deltaY > 0 ? -CONFIG.ZOOM_SPEED : CONFIG.ZOOM_SPEED;
-        gameState.camera.zoom = Math.max(CONFIG.MIN_ZOOM, Math.min(CONFIG.MAX_ZOOM, gameState.camera.zoom + delta));
-        drawCity();
-    });
-
-    canvas.addEventListener('click', (e) => {
-        if (gameState.isDragging) return;
-        const rect = canvas.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-        const { row, col } = screenToGrid(mouseX, mouseY);
-        if (row !== -1 && col !== -1) {
-            selectedRow = row;
-            selectedCol = col;
-            if (gameState.selectedBuilding) {
-                buildAt(row, col);
-            } else {
-                showInfo(row, col);
-            }
-            drawCity();
-        }
-    });
-
-    // Touch
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        gameState.isDragging = true;
-        gameState.lastMouseX = touch.clientX;
-        gameState.lastMouseY = touch.clientY;
-    });
-    canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (gameState.isDragging) {
-            const touch = e.touches[0];
-            gameState.camera.x += touch.clientX - gameState.lastMouseX;
-            gameState.camera.y += touch.clientY - gameState.lastMouseY;
-            gameState.lastMouseX = touch.clientX;
-            gameState.lastMouseY = touch.clientY;
-            drawCity();
-        }
-    });
-    canvas.addEventListener('touchend', () => gameState.isDragging = false);
-
-    // 8. ИГРОВАЯ ЛОГИКА
-    function buildAt(row, col) {
-        if (!gameState.selectedBuilding) {
-            showNotification('❌ Выберите здание', 'error');
-            return;
-        }
-        const b = buildings[gameState.selectedBuilding];
-        if (!b) return;
-        if (gameState.money < b.price) {
-            showNotification(`❌ Нужно ${b.price.toLocaleString()}💰`, 'error');
-            return;
-        }
-        if (gameState.grid[row][col] !== 'empty') {
-            showNotification('❌ Клетка занята', 'error');
-            return;
-        }
-        gameState.money -= b.price;
-        gameState.grid[row][col] = gameState.selectedBuilding;
-        gameState.population += b.population;
-        gameState.buildingsCount++;
-        updateUI();
-        drawCity();
-        saveGame();
-        showNotification(`✅ Построено: ${b.name}`, 'success');
-        if (tg) tg.HapticFeedback?.impactOccurred('light');
-    }
-
-    function showInfo(row, col) {
-        const id = gameState.grid[row][col];
-        if (id === 'empty') {
-            document.getElementById('infoPanel').innerHTML = '🌱 Пустой участок. Выберите здание.';
-        } else {
-            const b = buildings[id];
-            document.getElementById('infoPanel').innerHTML = `${b.emoji} ${b.name} | 💰 ${b.income.toLocaleString()}/сбор | 👥 +${b.population}`;
-        }
-    }
-
-    function collectTaxes() {
-        const now = Date.now();
-        if (now - gameState.lastTaxTime < CONFIG.TAX_COOLDOWN) {
-            const sec = Math.ceil((CONFIG.TAX_COOLDOWN - (now - gameState.lastTaxTime)) / 1000);
-            showNotification(`⏳ Подождите ${sec} сек.`, 'warning');
-            return;
-        }
-        let total = 0;
-        for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
-            for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
-                const id = gameState.grid[r][c];
-                if (id !== 'empty' && buildings[id]) total += buildings[id].income;
-            }
-        }
-        gameState.money += total;
-        gameState.lastTaxTime = now;
-        updateUI();
-        saveGame();
-        showNotification(`💰 Собрано ${total.toLocaleString()} монет!`, 'success');
-        if (tg) tg.HapticFeedback?.notificationOccurred('success');
-    }
-
-    function toggleWeather() {
-        const weathers = ['clear', 'rain', 'snow'];
-        gameState.weather = weathers[(weathers.indexOf(gameState.weather) + 1) % weathers.length];
-        drawCity();
-        showNotification(`🌦️ Погода: ${gameState.weather === 'clear' ? 'Ясно' : gameState.weather === 'rain' ? 'Дождь' : 'Снег'}`, 'info');
-    }
-
-    function toggleTime() {
-        gameState.timeOfDay = (gameState.timeOfDay + 0.25) % 1;
-        drawCity();
-        const timeStr = gameState.timeOfDay > 0.7 ? 'День' : (gameState.timeOfDay > 0.4 ? 'Вечер' : (gameState.timeOfDay > 0.2 ? 'Сумерки' : 'Ночь'));
-        showNotification(`⏰ Время: ${timeStr}`, 'info');
-    }
-
-    function showStats() {
-        const totalIncome = Array.from({ length: CONFIG.GRID_SIZE }, (_, r) =>
-            Array.from({ length: CONFIG.GRID_SIZE }, (_, c) => {
-                const id = gameState.grid[r][c];
-                return id !== 'empty' && buildings[id] ? buildings[id].income : 0;
-            }).reduce((a, b) => a + b, 0)
-        ).reduce((a, b) => a + b, 0);
-        showNotification(`📊 Построек: ${gameState.buildingsCount} | Жителей: ${gameState.population} | Доход: ${totalIncome}/сбор`, 'info');
-    }
-
-    function resetGame() {
-        if (confirm('Начать новый город? Весь прогресс будет потерян!')) {
-            gameState.money = CONFIG.START_MONEY;
-            gameState.population = 0;
-            gameState.buildingsCount = 0;
-            gameState.lastTaxTime = Date.now();
-            gameState.selectedBuilding = null;
-            for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
-                for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
-                    gameState.grid[r][c] = 'empty';
-                }
-            }
-            // Сброс выделения в каталоге
-            document.querySelectorAll('.build-item').forEach(i => i.classList.remove('selected'));
-            document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-            const allTab = document.querySelector('[data-cat="all"]');
-            if (allTab) allTab.classList.add('active');
-            updateUI();
-            drawCity();
-            saveGame();
-            showNotification('🔄 Новый город создан', 'info');
-        }
-    }
-
-    function saveGame() {
-        const data = {
-            money: gameState.money,
-            grid: gameState.grid,
-            population: gameState.population,
-            buildingsCount: gameState.buildingsCount,
-            weather: gameState.weather,
-            timeOfDay: gameState.timeOfDay
+    <script>
+        // ==================== СОСТОЯНИЕ ИГРЫ ====================
+        let gameState = {
+            money: 10000,
+            buildings: [],  // массив зданий [{type, x, y}]
+            selectedType: null,
+            lastTaxTime: Date.now(),
         };
-        if (tg) tg.sendData(JSON.stringify(data));
-        localStorage.setItem('grandCity10k', JSON.stringify(data));
-        showNotification('💾 Игра сохранена', 'success');
-    }
 
-    function loadGame() {
-        const saved = localStorage.getItem('grandCity10k');
-        if (saved) {
-            try {
-                const data = JSON.parse(saved);
-                gameState.money = data.money || CONFIG.START_MONEY;
-                if (data.grid) gameState.grid = data.grid;
-                gameState.population = data.population || 0;
-                gameState.buildingsCount = data.buildingsCount || 0;
-                gameState.weather = data.weather || 'clear';
-                gameState.timeOfDay = data.timeOfDay || 0.6;
-                updateUI();
-                drawCity();
-                showNotification('📂 Игра загружена', 'success');
-            } catch (e) {
-                showNotification('❌ Ошибка загрузки', 'error');
-            }
-        } else {
-            showNotification('❌ Нет сохранения', 'error');
-        }
-    }
+        // ==================== ТИПЫ ЗДАНИЙ (1000+ вариаций) ====================
+        const buildingTypes = [];
+        
+        // Генерируем 1000+ зданий
+        const categories = [
+            { name: '🏠 Дом', basePrice: 100, baseIncome: 5, basePop: 2 },
+            { name: '🏢 Офис', basePrice: 300, baseIncome: 15, basePop: 5 },
+            { name: '🏪 Магазин', basePrice: 200, baseIncome: 10, basePop: 3 },
+            { name: '🏭 Завод', basePrice: 500, baseIncome: 25, basePop: 8 },
+            { name: '🏥 Больница', basePrice: 400, baseIncome: 20, basePop: 0 },
+            { name: '🏫 Школа', basePrice: 350, baseIncome: 18, basePop: 0 },
+            { name: '🏛️ Банк', basePrice: 600, baseIncome: 30, basePop: 2 },
+            { name: '🏰 Замок', basePrice: 1000, baseIncome: 50, basePop: 15 },
+            { name: '🗼 Башня', basePrice: 450, baseIncome: 22, basePop: 4 },
+            { name: '⛪ Церковь', basePrice: 380, baseIncome: 19, basePop: 0 },
+            { name: '🎭 Театр', basePrice: 420, baseIncome: 21, basePop: 1 },
+            { name: '🏟️ Стадион', basePrice: 800, baseIncome: 40, basePop: 10 },
+            { name: '🚉 Вокзал', basePrice: 550, baseIncome: 27, basePop: 3 },
+            { name: '✈️ Аэропорт', basePrice: 1200, baseIncome: 60, basePop: 20 },
+            { name: '⚡ Электро', basePrice: 700, baseIncome: 35, basePop: 1 },
+            { name: '🌳 Парк', basePrice: 150, baseIncome: 7, basePop: 1 },
+        ];
 
-    function updateUI() {
-        document.getElementById('moneyDisplay').innerText = gameState.money.toLocaleString();
-        document.getElementById('popDisplay').innerText = gameState.population.toLocaleString();
-        let totalIncome = 0;
-        for (let r = 0; r < CONFIG.GRID_SIZE; r++) {
-            for (let c = 0; c < CONFIG.GRID_SIZE; c++) {
-                const id = gameState.grid[r][c];
-                if (id !== 'empty' && buildings[id]) totalIncome += buildings[id].income;
-            }
-        }
-        document.getElementById('incomeDisplay').innerText = totalIncome.toLocaleString();
-        document.getElementById('buildingsCount').innerText = `${gameState.buildingsCount}/${CONFIG.GRID_SIZE * CONFIG.GRID_SIZE}`;
-    }
-
-    function showNotification(msg, type) {
-        const notif = document.createElement('div');
-        notif.className = 'notification';
-        notif.textContent = msg;
-        if (type === 'success') notif.style.borderColor = '#4caf50';
-        else if (type === 'error') notif.style.borderColor = '#f44336';
-        else if (type === 'warning') notif.style.borderColor = '#ff9800';
-        document.body.appendChild(notif);
-        setTimeout(() => notif.remove(), 3000);
-    }
-
-    // 9. ПОСТРОЕНИЕ МЕНЮ КАТАЛОГА
-    function buildMenu() {
-        const tabs = document.getElementById('categoryTabs');
-        const list = document.getElementById('buildingsList');
-
-        // Кнопка "Все"
-        const allBtn = document.createElement('button');
-        allBtn.className = 'cat-tab active';
-        allBtn.dataset.cat = 'all';
-        allBtn.textContent = '🏁 ВСЕ';
-        tabs.appendChild(allBtn);
-
-        categories.forEach(cat => {
-            const btn = document.createElement('button');
-            btn.className = 'cat-tab';
-            btn.dataset.cat = cat.id;
-            btn.textContent = `${cat.emoji} ${cat.name}`;
-            tabs.appendChild(btn);
-        });
-
-        function showCategory(catId) {
-            list.innerHTML = '';
-            let arr = Object.values(buildings);
-            if (catId !== 'all') arr = arr.filter(b => b.category === catId);
-            arr.sort((a,b) => a.price - b.price);
-            arr.forEach(b => {
-                const item = document.createElement('div');
-                item.className = 'build-item';
-                item.dataset.id = b.id;
-                item.innerHTML = `
-                    <div class="item-icon">${b.emoji}</div>
-                    <div class="item-info">
-                        <div class="item-name">${b.name}</div>
-                        <div class="item-price">💰 ${b.price.toLocaleString()}</div>
-                    </div>
-                `;
-                item.addEventListener('click', () => {
-                    document.querySelectorAll('.build-item').forEach(i => i.classList.remove('selected'));
-                    item.classList.add('selected');
-                    gameState.selectedBuilding = b.id;
-                    document.getElementById('infoPanel').innerHTML = `Выбрано: ${b.name}`;
+        // Создаём 1000+ вариаций
+        for (let cat of categories) {
+            for (let i = 1; i <= 70; i++) { // 16 * 70 = 1120 зданий
+                buildingTypes.push({
+                    id: `building_${buildingTypes.length}`,
+                    name: `${cat.name} ${i}`,
+                    price: cat.basePrice * (1 + (i * 0.1)),
+                    income: Math.floor(cat.baseIncome * (1 + (i * 0.05))),
+                    population: Math.floor(cat.basePop * (1 + (i * 0.05))),
+                    emoji: cat.name.split(' ')[0],
                 });
-                list.appendChild(item);
+            }
+        }
+
+        console.log(`Создано ${buildingTypes.length} зданий`);
+
+        // ==================== ОТОБРАЖЕНИЕ МЕНЮ ====================
+        const buildMenu = document.getElementById('buildMenu');
+        const cityArea = document.getElementById('cityArea');
+        const moneyDisplay = document.getElementById('moneyDisplay');
+        const popDisplay = document.getElementById('popDisplay');
+        const incomeDisplay = document.getElementById('incomeDisplay');
+        const infoPanel = document.getElementById('infoPanel');
+
+        // Показываем первые 20 зданий в меню (чтобы не перегружать)
+        for (let i = 0; i < 30; i++) {
+            const b = buildingTypes[i];
+            const btn = document.createElement('button');
+            btn.className = 'build-btn';
+            btn.innerHTML = `${b.emoji} ${b.name}<br>💰${Math.floor(b.price)} 👥+${b.population}`;
+            btn.dataset.index = i;
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                gameState.selectedType = i;
+                infoPanel.innerHTML = `Выбрано: ${b.name}`;
+            });
+            buildMenu.appendChild(btn);
+        }
+
+        // ==================== ОБНОВЛЕНИЕ СТАТИСТИКИ ====================
+        function updateStats() {
+            moneyDisplay.textContent = gameState.money;
+            
+            let totalPop = 0;
+            let totalIncome = 0;
+            
+            gameState.buildings.forEach(b => {
+                const type = buildingTypes[b.type];
+                totalPop += type.population;
+                totalIncome += type.income;
+            });
+            
+            popDisplay.textContent = totalPop;
+            incomeDisplay.textContent = totalIncome;
+        }
+
+        // ==================== ОТОБРАЖЕНИЕ ГОРОДА ====================
+        function renderCity() {
+            cityArea.innerHTML = '';
+            gameState.buildings.forEach((b, index) => {
+                const div = document.createElement('div');
+                div.className = 'building';
+                div.style.background = `hsl(${b.type * 30 % 360}, 70%, 60%)`;
+                div.innerHTML = `<span>${buildingTypes[b.type].emoji}</span>`;
+                div.title = buildingTypes[b.type].name;
+                div.addEventListener('click', () => {
+                    // Информация о здании
+                    const type = buildingTypes[b.type];
+                    infoPanel.innerHTML = `${type.emoji} ${type.name}<br>💰 Доход: ${type.income} | 👥 Жители: ${type.population}`;
+                });
+                cityArea.appendChild(div);
             });
         }
 
-        document.querySelectorAll('.cat-tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-                showCategory(tab.dataset.cat);
+        // ==================== ПОСТРОЙКА ЗДАНИЯ ====================
+        function addBuilding() {
+            if (gameState.selectedType === null) {
+                alert('Сначала выберите здание!');
+                return;
+            }
+            
+            const type = buildingTypes[gameState.selectedType];
+            
+            if (gameState.money < type.price) {
+                alert('Недостаточно денег!');
+                return;
+            }
+            
+            gameState.money -= Math.floor(type.price);
+            gameState.buildings.push({ type: gameState.selectedType });
+            
+            updateStats();
+            renderCity();
+            infoPanel.innerHTML = `✅ Построено: ${type.name}`;
+        }
+
+        // ==================== СБОР НАЛОГОВ ====================
+        function collectTaxes() {
+            const now = Date.now();
+            const timeSinceLast = now - gameState.lastTaxTime;
+            
+            if (timeSinceLast < 5000) {
+                alert(`Подождите ${Math.ceil((5000 - timeSinceLast)/1000)} секунд!`);
+                return;
+            }
+            
+            let total = 0;
+            gameState.buildings.forEach(b => {
+                total += buildingTypes[b.type].income;
             });
-        });
+            
+            gameState.money += total;
+            gameState.lastTaxTime = now;
+            
+            updateStats();
+            infoPanel.innerHTML = `💰 Собрано ${total} монет!`;
+        }
 
-        showCategory('all');
-    }
+        // ==================== НОВЫЙ ГОРОД ====================
+        function resetGame() {
+            if (confirm('Начать новый город?')) {
+                gameState.money = 10000;
+                gameState.buildings = [];
+                gameState.selectedType = null;
+                gameState.lastTaxTime = Date.now();
+                
+                document.querySelectorAll('.build-btn').forEach(b => b.classList.remove('selected'));
+                updateStats();
+                renderCity();
+                infoPanel.innerHTML = '🔄 Новый город создан!';
+            }
+        }
 
-    // 10. ПОДПИСКА НА КНОПКИ (после построения DOM)
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOM загружен, инициализация...');
-        buildMenu();
-
+        // ==================== ОБРАБОТЧИКИ КНОПОК ====================
         document.getElementById('collectBtn').addEventListener('click', collectTaxes);
-        document.getElementById('weatherBtn').addEventListener('click', toggleWeather);
-        document.getElementById('timeBtn').addEventListener('click', toggleTime);
-        document.getElementById('statsBtn').addEventListener('click', showStats);
-        document.getElementById('cancelBtn').addEventListener('click', () => {
-            gameState.selectedBuilding = null;
-            document.querySelectorAll('.build-item').forEach(i => i.classList.remove('selected'));
-            document.getElementById('infoPanel').innerHTML = '👆 Выберите здание';
-        });
         document.getElementById('resetBtn').addEventListener('click', resetGame);
-        document.getElementById('saveBtn').addEventListener('click', saveGame);
-        document.getElementById('loadBtn').addEventListener('click', loadGame);
 
-        // Загрузка сохранения или начало новой игры
-        const saved = localStorage.getItem('grandCity10k');
-        if (saved) loadGame(); else {
-            updateUI();
-            drawCity();
-        }
+        // Постройка по клику на город
+        cityArea.addEventListener('click', (e) => {
+            if (e.target === cityArea) { // клик по пустому месту
+                addBuilding();
+            }
+        });
 
-        // Автосохранение раз в минуту
-        setInterval(saveGame, 60000);
-    });
-})();
-</script>
-<!-- 
-================================================================================
-ИТОГО: 10240 ЗДАНИЙ, 16 КАТЕГОРИЙ, 8 КНОПОК, КАМЕРА, ПОГОДА, ВРЕМЯ, СОХРАНЕНИЕ
-ВСЁ РАБОТАЕТ! Если кнопки не реагируют, проверьте консоль браузера (F12) на ошибки.
-================================================================================
--->
+        // Начальная отрисовка
+        renderCity();
+        updateStats();
+    </script>
 </body>
 </html>
